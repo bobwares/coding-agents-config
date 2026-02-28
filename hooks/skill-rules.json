@@ -1,0 +1,119 @@
+{
+  "version": "2.0",
+  "config": {
+    "minConfidenceScore": 3,
+    "showMatchReasons": true,
+    "maxSkillsToShow": 3
+  },
+  "scoring": {
+    "keyword": 2,
+    "keywordPattern": 3,
+    "pathPattern": 4,
+    "directoryMatch": 5,
+    "intentPattern": 4
+  },
+  "directoryMappings": {
+    "app/web/src/app": "pattern-nextjs",
+    "app/web/src/components": "pattern-nextjs",
+    "app/web/src/hooks": "pattern-react-ui",
+    "app/api/src/modules": "pattern-nestjs",
+    "app/api/src/common": "pattern-nestjs",
+    "app/services/enterprise/src/main/java": "pattern-spring",
+    "app/packages/database/schema": "pattern-drizzle",
+    "app/packages/database/migrations": "pattern-drizzle",
+    "app/packages/ui/components": "pattern-shadcn",
+    "app/web/src/app/api/chat": "pattern-vercel-ai"
+  },
+  "skills": {
+    "pattern-nextjs": {
+      "priority": 9,
+      "triggers": {
+        "keywords": ["next.js", "nextjs", "app router", "server component", "client component", "server action", "route handler", "page.tsx", "layout.tsx", "use client", "use server", "revalidate", "metadata"],
+        "keywordPatterns": ["\\bapp router\\b", "\\buse client\\b", "\\buse server\\b", "\\bnext\\.js\\b"],
+        "pathPatterns": ["app/web/src/app/**", "**/page.tsx", "**/layout.tsx", "**/loading.tsx", "**/error.tsx", "**/route.ts"],
+        "intentPatterns": ["(?:create|build|add).*(?:page|layout|route|component).*next", "(?:server|client).*component"]
+      }
+    },
+    "pattern-nestjs": {
+      "priority": 9,
+      "triggers": {
+        "keywords": ["nestjs", "nest.js", "@module", "@controller", "@injectable", "@get", "@post", "@put", "@delete", "guard", "interceptor", "pipe", "dto", "nestjs-zod"],
+        "keywordPatterns": ["@Module\\b", "@Controller\\b", "@Injectable\\b", "@Get\\b", "@Post\\b", "\\bnestjs\\b"],
+        "pathPatterns": ["app/api/src/**", "**/*.controller.ts", "**/*.service.ts", "**/*.module.ts", "**/*.guard.ts", "**/*.dto.ts"],
+        "intentPatterns": ["(?:create|add).*(?:module|controller|service|guard|pipe|interceptor|dto)", "(?:nestjs|nest).*(?:endpoint|api)"]
+      }
+    },
+    "pattern-spring": {
+      "priority": 8,
+      "triggers": {
+        "keywords": ["spring", "spring boot", "java", "jpa", "hibernate", "@restcontroller", "@service", "@repository", "@entity", "@springboottest", "maven", "pom.xml", "bean"],
+        "keywordPatterns": ["@RestController", "@Service", "@Repository", "@Entity", "@SpringBootTest", "spring\\.boot"],
+        "pathPatterns": ["app/services/enterprise/src/main/java/**", "**/*.java", "**/pom.xml", "**/build.gradle"],
+        "intentPatterns": ["(?:spring|java).*(?:controller|service|entity|repository)", "(?:jpa|hibernate).*(?:entity|query|relation)"]
+      }
+    },
+    "pattern-drizzle": {
+      "priority": 8,
+      "triggers": {
+        "keywords": ["drizzle", "schema", "migration", "pgtable", "db.query", "db.insert", "db.update", "db.delete", "db.transaction", "$inferselect", "$inferinsert", "pgEnum", "pgIndex"],
+        "keywordPatterns": ["\\bdrizzle\\b", "\\bpgTable\\b", "\\$inferSelect", "db\\.(?:query|insert|update|delete|transaction)"],
+        "pathPatterns": ["app/packages/database/**", "**/schema/**/*.ts", "**/migrations/**"],
+        "intentPatterns": ["(?:create|add|modify).*(?:schema|table|column|index|migration|relation)", "(?:drizzle|database).*(?:query|transaction)"]
+      }
+    },
+    "pattern-shadcn": {
+      "priority": 7,
+      "triggers": {
+        "keywords": ["shadcn", "shadcn/ui", "radix-ui", "button", "dialog", "sheet", "table", "toast", "form", "input", "card", "badge", "cn(", "cva(", "tailwind"],
+        "keywordPatterns": ["shadcn", "\\bcn\\(", "\\bcva\\(", "@/components/ui"],
+        "pathPatterns": ["app/packages/ui/**", "**/components/ui/**", "**/ui/*.tsx"],
+        "intentPatterns": ["(?:create|build|add).*(?:ui|component|form|dialog|modal|button)", "(?:shadcn|tailwind).*(?:component|style)"]
+      }
+    },
+    "pattern-vercel-ai": {
+      "priority": 8,
+      "triggers": {
+        "keywords": ["vercel ai", "ai sdk", "streamtext", "generatetext", "generateobject", "usechat", "usecompletion", "openai", "anthropic sdk", "embedding", "tool call", "streaming ai"],
+        "keywordPatterns": ["\\bstreamText\\b", "\\bgenerateObject\\b", "\\buseChat\\b", "from 'ai'", "from \"ai\"", "ai/react"],
+        "pathPatterns": ["app/web/src/app/api/chat/**", "**/ai/**/*.ts", "**/ai/**/*.tsx"],
+        "intentPatterns": ["(?:add|implement|build).*(?:ai|chat|streaming|llm|gpt|claude feature)", "(?:stream|generate).*(?:text|response|object)", "(?:tool call|embedding|vector search)"]
+      }
+    },
+    "pattern-testing": {
+      "priority": 9,
+      "triggers": {
+        "keywords": ["vitest", "playwright", "test", "spec", "mock", "factory", "e2e", "coverage", "tdd", "beforeeach", "aftereach", "describe", "it(", "expect("],
+        "keywordPatterns": ["\\bvitest\\b", "\\bplaywrigh\\b", "\\bdescribe\\(", "\\bit\\(", "\\btest\\(", "\\bexpect\\("],
+        "pathPatterns": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "**/e2e/**", "**/__tests__/**", "**/__mocks__/**"],
+        "intentPatterns": ["(?:write|add|create|fix).*(?:test|spec|e2e)", "(?:tdd|test.driven)", "(?:mock|stub|spy).*(?:function|service|module)"],
+        "excludePatterns": ["contest", "protest", "interest", "latest"]
+      }
+    },
+    "pattern-react-ui": {
+      "priority": 7,
+      "triggers": {
+        "keywords": ["loading state", "error state", "empty state", "skeleton", "suspense", "usememo", "usecallback", "usestate", "useeffect", "custom hook", "use prefix"],
+        "keywordPatterns": ["\\buse[A-Z]\\w+\\b", "\\bloading.*state\\b", "\\bempty.*state\\b", "\\berror.*state\\b"],
+        "pathPatterns": ["app/web/src/hooks/**", "**/use*.ts", "**/use*.tsx"],
+        "intentPatterns": ["(?:handle|show|implement).*(?:loading|error|empty).*state", "(?:create|write).*custom.*hook", "(?:loading|error|empty).*(?:state|handling|boundary)"]
+      }
+    },
+    "pattern-api-design": {
+      "priority": 7,
+      "triggers": {
+        "keywords": ["rest api", "api design", "endpoint", "pagination", "cursor", "response envelope", "error code", "openapi", "swagger", "api versioning", "rate limit"],
+        "keywordPatterns": ["\\brest api\\b", "\\bpagination\\b", "\\bopenapi\\b", "\\bswagger\\b", "\\bapi design\\b"],
+        "intentPatterns": ["(?:design|review|create).*api", "(?:paginate|cursor.*based)", "(?:api).*(?:versioning|error.*format|response.*format)"]
+      }
+    },
+    "systematic-debugging": {
+      "priority": 9,
+      "triggers": {
+        "keywords": ["bug", "broken", "failing", "not working", "error", "crash", "undefined", "null pointer", "stack trace", "exception", "debug"],
+        "keywordPatterns": ["\\bbug\\b", "\\bfixing\\b", "\\bnot working\\b", "\\bbroken\\b", "\\bcrash\\b"],
+        "intentPatterns": ["(?:fix|debug|investigate|diagnose).*(?:bug|error|issue|crash|problem)", "(?:why).*(?:not working|broken|failing|undefined)", "(?:something).*(?:wrong|broken|unexpected|weird)"],
+        "excludePatterns": ["fix typo", "fix formatting", "lint fix", "fix spelling"]
+      }
+    }
+  }
+}

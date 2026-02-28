@@ -15,13 +15,21 @@ git clone <repo-url> ~/coding-agents-config
 ```sh
 ln -s ~/coding-agents-config/skills ~/.claude/skills
 ln -s ~/coding-agents-config/agents ~/.claude/agents
+ln -s ~/coding-agents-config/rules ~/.claude/rules
+ln -s ~/coding-agents-config/hooks ~/.claude/hooks
+ln -s ~/coding-agents-config/CLAUDE.md ~/.claude/CLAUDE.md
+ln -s ~/coding-agents-config/settings.json ~/.claude/settings.json
 ```
 
-If `~/.claude/skills` or `~/.claude/agents` already exist, back them up or remove them first:
+If any of these already exist, back them up or remove them first:
 
 ```sh
 mv ~/.claude/skills ~/.claude/skills.bak
 mv ~/.claude/agents ~/.claude/agents.bak
+mv ~/.claude/rules ~/.claude/rules.bak
+mv ~/.claude/hooks ~/.claude/hooks.bak
+mv ~/.claude/CLAUDE.md ~/.claude/CLAUDE.md.bak
+mv ~/.claude/settings.json ~/.claude/settings.json.bak
 ```
 
 ### 3. Create symlinks for Codex
@@ -40,9 +48,13 @@ mv ~/.codex/agents ~/.codex/agents.bak
 ### 4. Verify
 
 ```sh
-ls -la ~/.claude/skills  # should point to ~/coding-agents-config/skills
-ls -la ~/.claude/agents  # should point to ~/coding-agents-config/agents
-ls -la ~/.codex/agents   # should point to ~/coding-agents-config/agents
+ls -la ~/.claude/skills       # should point to ~/coding-agents-config/skills
+ls -la ~/.claude/agents       # should point to ~/coding-agents-config/agents
+ls -la ~/.claude/rules        # should point to ~/coding-agents-config/rules
+ls -la ~/.claude/hooks        # should point to ~/coding-agents-config/hooks
+ls -la ~/.claude/CLAUDE.md    # should point to ~/coding-agents-config/CLAUDE.md
+ls -la ~/.claude/settings.json # should point to ~/coding-agents-config/settings.json
+ls -la ~/.codex/agents        # should point to ~/coding-agents-config/agents
 ```
 
 Open any project with Claude Code or Codex — the skills and agents are now available globally.
@@ -51,6 +63,18 @@ Open any project with Claude Code or Codex — the skills and agents are now ava
 
 ```
 coding-agents-config/
+├── CLAUDE.md        # Global instructions for all projects
+├── settings.json    # Claude Code settings (model, permissions, etc.)
+├── rules/           # Contextual rules loaded into every session
+│   ├── agent-coordination.md
+│   ├── branch-operations.md
+│   └── tech-standards.md
+├── hooks/           # Shell hooks triggered by Claude Code events
+│   ├── audit-log.sh
+│   ├── skill-eval.js
+│   ├── skill-eval.sh
+│   ├── skill-rules.json
+│   └── turn-init.sh
 ├── skills/          # Slash-command skills (each in its own directory)
 │   ├── .system/     # Meta-skills (skill-creator, skill-installer)
 │   ├── analyze/
@@ -59,11 +83,13 @@ coding-agents-config/
 │   ├── project-*/   # Project scaffolding & execution
 │   ├── spec-*/      # Spec planning & task management
 │   └── ...
-└── agents/          # Subagent definitions (markdown files)
-    ├── agent-orchestrator.md
-    ├── agent-code-reviewer.md
-    ├── agent-test-writer.md
-    └── ...
+├── agents/          # Subagent definitions (markdown files)
+│   ├── agent-orchestrator.md
+│   ├── agent-code-reviewer.md
+│   ├── agent-test-writer.md
+│   └── ...
+├── templates/       # Turn lifecycle templates
+└── docs/            # Reference documentation and analysis
 ```
 
 ## Skills (40)

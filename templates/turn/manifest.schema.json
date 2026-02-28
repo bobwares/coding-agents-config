@@ -1,0 +1,181 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Turn Manifest",
+  "description": "Provenance record for one agentic-pipeline turn",
+  "type": "object",
+  "required": ["turnId", "execution", "tasks", "provenance", "outputs"],
+  "properties": {
+    "turnId": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Monotonically increasing turn identifier"
+    },
+    "execution": {
+      "type": "object",
+      "description": "Turn-level execution summary for skill and agent tracking",
+      "required": ["tracePath", "skillsExecuted", "agentsExecuted"],
+      "properties": {
+        "tracePath": {
+          "type": "string",
+          "description": "Path to execution_trace.json for this turn"
+        },
+        "skillsExecuted": {
+          "type": "array",
+          "description": "All skills that were actually executed this turn",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        },
+        "agentsExecuted": {
+          "type": "array",
+          "description": "All agents that were actually executed this turn",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        }
+      }
+    },
+    "tasks": {
+      "type": "array",
+      "description": "One entry per agent task executed this turn",
+      "items": {
+        "type": "object",
+        "required": ["taskId", "agent", "inputs", "outputs", "validations"],
+        "properties": {
+          "taskId": {
+            "type": "string",
+            "description": "Task identifier, e.g. T42-1"
+          },
+          "agent": {
+            "type": "string",
+            "description": "Name of the specialist agent that executed this task",
+            "enum": [
+              "orchestrator",
+              "code-architect",
+              "nextjs-engineer",
+              "nestjs-engineer",
+              "spring-engineer",
+              "drizzle-dba",
+              "ai-engineer",
+              "code-reviewer",
+              "test-writer",
+              "verify-app",
+              "security-auditor",
+              "doc-generator",
+              "git-guardian",
+              "claude"
+            ]
+          },
+          "inputs": {
+            "type": "array",
+            "description": "Input file paths read by this task",
+            "items": { "type": "string" }
+          },
+          "outputs": {
+            "type": "array",
+            "description": "Output files written or modified by this task",
+            "items": {
+              "type": "object",
+              "required": ["path", "sha256"],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "description": "Relative file path from project root"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$",
+                  "description": "SHA-256 hash of file contents after modification"
+                }
+              }
+            }
+          },
+          "validations": {
+            "type": "array",
+            "description": "Quality gate checks run against this task's outputs",
+            "items": {
+              "type": "object",
+              "required": ["rule", "status"],
+              "properties": {
+                "rule": {
+                  "type": "string",
+                  "description": "Validation rule name",
+                  "enum": [
+                    "tests-pass",
+                    "lint-clean",
+                    "typecheck",
+                    "build-succeeds",
+                    "security-scan",
+                    "metadata-headers",
+                    "version-incremented"
+                  ]
+                },
+                "status": {
+                  "type": "string",
+                  "enum": ["pass", "fail", "skipped"]
+                },
+                "detailsPath": {
+                  "type": "string",
+                  "description": "Path to detailed output (e.g. test report), empty string if none"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["promptHash", "tools", "startedAt", "finishedAt"],
+      "properties": {
+        "promptHash": {
+          "type": "string",
+          "description": "SHA-256 hash of the input prompt that initiated this turn"
+        },
+        "tools": {
+          "type": "array",
+          "description": "Claude Code tools used during this turn",
+          "items": {
+            "type": "string",
+            "enum": ["Read", "Write", "Edit", "Bash", "Task", "Glob", "Grep", "WebFetch"]
+          }
+        },
+        "startedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 UTC timestamp when turn began"
+        },
+        "finishedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 UTC timestamp when turn completed"
+        },
+        "activePatternName": {
+          "type": "string",
+          "description": "Name of the implementation pattern used, empty string if none"
+        },
+        "activePatternPath": {
+          "type": "string",
+          "description": "Path to the pattern file, empty string if none"
+        }
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "description": "Consolidated list of all files produced or modified this turn",
+      "items": {
+        "type": "object",
+        "required": ["path", "sha256"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Relative file path from project root"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "SHA-256 hash of file contents"
+          }
+        }
+      }
+    }
+  }
+}

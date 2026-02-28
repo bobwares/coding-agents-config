@@ -1,0 +1,148 @@
+{
+  "env": {
+    "NODE_ENV": "development",
+    "INSIDE_CLAUDE_CODE": "1",
+    "BASH_DEFAULT_TIMEOUT_MS": "300000",
+    "ANTHROPIC_MODEL": "claude-opus-4-5",
+    "ANTHROPIC_SMALL_FAST_MODEL": "claude-haiku-4-5"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git:*)",
+      "Bash(gh:*)",
+      "Bash(pnpm:*)",
+      "Bash(npm:*)",
+      "Bash(npx:*)",
+      "Bash(node:*)",
+      "Bash(tsc:*)",
+      "Bash(mvn:*)",
+      "Bash(gradle:*)",
+      "Bash(java:*)",
+      "Bash(docker compose:*)",
+      "Bash(docker:*)",
+      "Bash(psql:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "Bash(echo:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(mv:*)",
+      "Bash(chmod:*)",
+      "Bash(date:*)",
+      "Bash(jq:*)",
+      "Bash(curl:*)",
+      "Bash(grep:*)",
+      "Bash(sed:*)",
+      "Bash(awk:*)",
+      "Bash(wc:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(sort:*)",
+      "Bash(uniq:*)",
+      "Bash(diff:*)",
+      "Bash(which:*)",
+      "Bash(pwd:*)",
+      "Bash(cd:*)"
+    ],
+    "deny": [
+      "Bash(rm -rf /:*)",
+      "Bash(git push --force main:*)",
+      "Bash(git push -f main:*)",
+      "Bash(npm publish:*)",
+      "Bash(pnpm publish:*)"
+    ],
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(sudo:*)",
+      "Read(.env*)",
+      "Read(**/.env*)",
+      "Read(~/.ssh/**)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CLAUDE_PLUGIN_ROOT=\"$(pwd)/.claude\"; echo \"\\n=== AGENTIC-PIPELINE SESSION START ===\"; echo \"Loading context files...\"; for ctx in context_container context_session context_conventions context_governance context_orchestration context_adr context_skills; do [ -f \"${CLAUDE_PLUGIN_ROOT}/context/${ctx}.md\" ] && echo \"  ✓ ${ctx}.md\" || echo \"  ✗ ${ctx}.md (missing)\"; done; TURNS_INDEX=\"./ai/agentic-pipeline/turns_index.csv\"; if [ -f \"$TURNS_INDEX\" ]; then LAST_TURN=$(tail -n +2 \"$TURNS_INDEX\" | cut -d',' -f1 | sort -n | tail -1); NEXT_TURN=$((LAST_TURN + 1)); echo \"Last turn: ${LAST_TURN} | Next turn: ${NEXT_TURN}\"; else echo \"No turns yet — next turn will be: 1\"; fi; echo \"Governance: ACTIVE (metadata headers + ADR required)\"; echo \"==========================================\"; exit 0",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$(pwd)/.claude/hooks/turn-init.sh\" 2>/dev/null; exit 0",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "echo \"$CLAUDE_USER_PROMPT\" | bash \"$(pwd)/.claude/hooks/skill-eval.sh\" 2>/dev/null; exit 0",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "BRANCH=$(git branch --show-current 2>/dev/null); if [ \"$BRANCH\" = \"main\" ] || [ \"$BRANCH\" = \"master\" ]; then echo \"ERROR: Direct edits to $BRANCH branch are not allowed. Create a feature branch: git checkout -b feature/your-work\" >&2; exit 2; fi; exit 0",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$(pwd)/.claude/hooks/wraudit-log.sh\" 2>/dev/null; exit 0",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILE=\"$CLAUDE_TOOL_RESULT_FILE\"; if [ -f \"$FILE\" ]; then EXT=\"${FILE##*.}\"; case \"$EXT\" in ts|tsx|js|jsx|json|css|md) npx --yes prettier --write \"$FILE\" --log-level=silent 2>/dev/null || true;; esac; fi; exit 0",
+            "timeout": 15
+          },
+          {
+            "type": "command",
+            "command": "FILE=\"$CLAUDE_TOOL_RESULT_FILE\"; if [[ \"$FILE\" == *\"package.json\" ]] && [[ \"$FILE\" != *\"node_modules\"* ]]; then DIR=$(dirname \"$FILE\"); (cd \"$DIR\" && pnpm install --silent 2>/dev/null || npm install --silent 2>/dev/null) & fi; exit 0",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "FILE=\"$CLAUDE_TOOL_RESULT_FILE\"; if [[ \"$FILE\" == *\".test.ts\" ]] || [[ \"$FILE\" == *\".test.tsx\" ]] || [[ \"$FILE\" == *\".spec.ts\" ]]; then (pnpm test --run --reporter=dot 2>/dev/null | tail -5) & fi; exit 0",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "FILE=\"$CLAUDE_TOOL_RESULT_FILE\"; if [[ \"$FILE\" == *\".ts\" ]] || [[ \"$FILE\" == *\".tsx\" ]]; then (pnpm typecheck 2>/dev/null | grep -E '^(error|✓)' | head -5) & fi; exit 0",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "printf '%s | %s | %s' \"$(basename $(pwd))\" \"$(git branch --show-current 2>/dev/null || echo 'no-git')\" \"$(git status --porcelain 2>/dev/null | wc -l | tr -d ' ') changed\""
+  },
+  "includeCoAuthoredBy": true,
+  "cleanupPeriodDays": 90
+}
