@@ -1,6 +1,6 @@
 # coding-agents-config
 
-Shared skills and agent definitions for Claude Code. Symlinked into `~/.claude/` so every project gets access automatically.
+Shared skills and agent definitions for Claude Code and Codex. Symlinked into `~/.claude/` and `~/.codex/` so every project gets access automatically.
 
 ## Setup
 
@@ -10,7 +10,7 @@ Shared skills and agent definitions for Claude Code. Symlinked into `~/.claude/`
 git clone <repo-url> ~/coding-agents-config
 ```
 
-### 2. Create symlinks
+### 2. Create symlinks for Claude Code
 
 ```sh
 ln -s ~/coding-agents-config/skills ~/.claude/skills
@@ -24,14 +24,28 @@ mv ~/.claude/skills ~/.claude/skills.bak
 mv ~/.claude/agents ~/.claude/agents.bak
 ```
 
-### 3. Verify
+### 3. Create symlinks for Codex
+
+```sh
+mkdir -p ~/.codex
+ln -s ~/coding-agents-config/agents ~/.codex/agents
+```
+
+If `~/.codex/agents` already exists, back it up first:
+
+```sh
+mv ~/.codex/agents ~/.codex/agents.bak
+```
+
+### 4. Verify
 
 ```sh
 ls -la ~/.claude/skills  # should point to ~/coding-agents-config/skills
 ls -la ~/.claude/agents  # should point to ~/coding-agents-config/agents
+ls -la ~/.codex/agents   # should point to ~/coding-agents-config/agents
 ```
 
-Open any project with Claude Code — the skills and agents are now available globally.
+Open any project with Claude Code or Codex — the skills and agents are now available globally.
 
 ## Structure
 
