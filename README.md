@@ -10,48 +10,47 @@ Shared skills and agent definitions for Claude Code and Codex. Symlinked into `~
 git clone <repo-url> ~/coding-agents-config
 ```
 
-### 2. Create symlinks for Claude Code
+### 2. Create symlinks (automated)
+
+Run the setup script — it creates all symlinks and backs up any existing files:
 
 ```sh
+bash scripts/setup.sh
+```
+
+Or use the `/config-init` skill from within Claude Code.
+
+<details>
+<summary>Manual symlink commands</summary>
+
+```sh
+# Claude Code
 ln -s ~/coding-agents-config/skills ~/.claude/skills
 ln -s ~/coding-agents-config/agents ~/.claude/agents
 ln -s ~/coding-agents-config/rules ~/.claude/rules
 ln -s ~/coding-agents-config/hooks ~/.claude/hooks
+ln -s ~/coding-agents-config/templates ~/.claude/templates
+ln -s ~/coding-agents-config/scripts ~/.claude/scripts
 ln -s ~/coding-agents-config/CLAUDE.md ~/.claude/CLAUDE.md
 ln -s ~/coding-agents-config/settings.json ~/.claude/settings.json
-```
 
-If any of these already exist, back them up or remove them first:
-
-```sh
-mv ~/.claude/skills ~/.claude/skills.bak
-mv ~/.claude/agents ~/.claude/agents.bak
-mv ~/.claude/rules ~/.claude/rules.bak
-mv ~/.claude/hooks ~/.claude/hooks.bak
-mv ~/.claude/CLAUDE.md ~/.claude/CLAUDE.md.bak
-mv ~/.claude/settings.json ~/.claude/settings.json.bak
-```
-
-### 3. Create symlinks for Codex
-
-```sh
+# Codex
 mkdir -p ~/.codex
 ln -s ~/coding-agents-config/agents ~/.codex/agents
 ```
 
-If `~/.codex/agents` already exists, back it up first:
+If any of these already exist, back them up first (`mv <target> <target>.bak`).
+</details>
 
-```sh
-mv ~/.codex/agents ~/.codex/agents.bak
-```
-
-### 4. Verify
+### 3. Verify
 
 ```sh
 ls -la ~/.claude/skills       # should point to ~/coding-agents-config/skills
 ls -la ~/.claude/agents       # should point to ~/coding-agents-config/agents
 ls -la ~/.claude/rules        # should point to ~/coding-agents-config/rules
 ls -la ~/.claude/hooks        # should point to ~/coding-agents-config/hooks
+ls -la ~/.claude/templates    # should point to ~/coding-agents-config/templates
+ls -la ~/.claude/scripts      # should point to ~/coding-agents-config/scripts
 ls -la ~/.claude/CLAUDE.md    # should point to ~/coding-agents-config/CLAUDE.md
 ls -la ~/.claude/settings.json # should point to ~/coding-agents-config/settings.json
 ls -la ~/.codex/agents        # should point to ~/coding-agents-config/agents
@@ -88,22 +87,24 @@ coding-agents-config/
 │   ├── agent-code-reviewer.md
 │   ├── agent-test-writer.md
 │   └── ...
+├── scripts/         # Automation scripts (setup.sh, project-execute-preflight.sh)
 ├── templates/       # Turn lifecycle templates
 └── docs/            # Reference documentation and analysis
 ```
 
-## Skills (40)
+## Skills (42)
 
 | Category | Skills |
 |---|---|
 | **Git** | `git-checkpoint`, `git-commit-push-pr`, `git-quick-commit`, `git-rollback`, `git-status`, `git-undo`, `github-issue` |
 | **Patterns** | `pattern-api-design`, `pattern-drizzle`, `pattern-nestjs`, `pattern-nextjs`, `pattern-react-ui`, `pattern-shadcn`, `pattern-spring`, `pattern-testing`, `pattern-vercel-ai` |
-| **Project** | `project-create-plan`, `project-execute`, `project-init` |
+| **Project** | `project-create-plan`, `project-execute`, `project-init`, `project-plan` |
 | **Specs** | `spec-epic-start`, `spec-parse-ddd`, `spec-planning`, `spec-prd-list`, `spec-prd-new`, `spec-prd-parse`, `spec-task-next` |
 | **Governance** | `governance`, `governance-adr` |
 | **Session** | `session-start`, `session-end`, `session-context-size` |
 | **Quality** | `verify-all`, `test-and-fix`, `security-scan` |
 | **Debug** | `systematic-debugging`, `diagnose-issue` |
+| **Setup** | `config-init` |
 | **Other** | `analyze`, `makefile-gen`, `mode`, `recreation.gov` |
 
 ## Agents (13)

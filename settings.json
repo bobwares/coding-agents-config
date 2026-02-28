@@ -67,7 +67,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "CLAUDE_PLUGIN_ROOT=\"$(pwd)/.claude\"; echo \"\\n=== AGENTIC-PIPELINE SESSION START ===\"; echo \"Loading context files...\"; for ctx in context_container context_session context_conventions context_governance context_orchestration context_adr context_skills; do [ -f \"${CLAUDE_PLUGIN_ROOT}/context/${ctx}.md\" ] && echo \"  ✓ ${ctx}.md\" || echo \"  ✗ ${ctx}.md (missing)\"; done; TURNS_INDEX=\"./ai/agentic-pipeline/turns_index.csv\"; if [ -f \"$TURNS_INDEX\" ]; then LAST_TURN=$(tail -n +2 \"$TURNS_INDEX\" | cut -d',' -f1 | sort -n | tail -1); NEXT_TURN=$((LAST_TURN + 1)); echo \"Last turn: ${LAST_TURN} | Next turn: ${NEXT_TURN}\"; else echo \"No turns yet — next turn will be: 1\"; fi; echo \"Governance: ACTIVE (metadata headers + ADR required)\"; echo \"==========================================\"; exit 0",
+            "command": "CLAUDE_PLUGIN_ROOT=\"$(pwd)/.claude\"; [ -d \"$CLAUDE_PLUGIN_ROOT\" ] || CLAUDE_PLUGIN_ROOT=\"$HOME/.claude\"; echo \"\\n=== AGENTIC-PIPELINE SESSION START ===\"; echo \"Loading context files...\"; for ctx in context_container context_session context_conventions context_governance context_orchestration context_adr context_skills; do [ -f \"${CLAUDE_PLUGIN_ROOT}/context/${ctx}.md\" ] && echo \"  \u2713 ${ctx}.md\" || echo \"  \u2717 ${ctx}.md (missing)\"; done; TURNS_INDEX=\"./ai/agentic-pipeline/turns_index.csv\"; if [ -f \"$TURNS_INDEX\" ]; then LAST_TURN=$(tail -n +2 \"$TURNS_INDEX\" | cut -d\",\" -f1 | sort -n | tail -1); NEXT_TURN=$((LAST_TURN + 1)); echo \"Last turn: ${LAST_TURN} | Next turn: ${NEXT_TURN}\"; else echo \"No turns yet \u2014 next turn will be: 1\"; fi; echo \"Governance: ACTIVE (metadata headers + ADR required)\"; echo \"==========================================\"; exit 0",
             "timeout": 10
           }
         ]
@@ -78,12 +78,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$(pwd)/.claude/hooks/turn-init.sh\" 2>/dev/null; exit 0",
+            "command": "HOOK_ROOT=\"$(pwd)/.claude/hooks\"; [ -d \"$HOOK_ROOT\" ] || HOOK_ROOT=\"$HOME/.claude/hooks\"; bash \"${HOOK_ROOT}/turn-init.sh\" 2>/dev/null; exit 0",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "echo \"$CLAUDE_USER_PROMPT\" | bash \"$(pwd)/.claude/hooks/skill-eval.sh\" 2>/dev/null; exit 0",
+            "command": "HOOK_ROOT=\"$(pwd)/.claude/hooks\"; [ -d \"$HOOK_ROOT\" ] || HOOK_ROOT=\"$HOME/.claude/hooks\"; echo \"$CLAUDE_USER_PROMPT\" | bash \"${HOOK_ROOT}/skill-eval.sh\" 2>/dev/null; exit 0",
             "timeout": 5
           }
         ]
@@ -105,7 +105,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$(pwd)/.claude/hooks/wraudit-log.sh\" 2>/dev/null; exit 0",
+            "command": "HOOK_ROOT=\"$(pwd)/.claude/hooks\"; [ -d \"$HOOK_ROOT\" ] || HOOK_ROOT=\"$HOME/.claude/hooks\"; bash \"${HOOK_ROOT}/audit-log.sh\" 2>/dev/null; exit 0",
             "timeout": 3
           }
         ]
@@ -132,7 +132,7 @@
           },
           {
             "type": "command",
-            "command": "FILE=\"$CLAUDE_TOOL_RESULT_FILE\"; if [[ \"$FILE\" == *\".ts\" ]] || [[ \"$FILE\" == *\".tsx\" ]]; then (pnpm typecheck 2>/dev/null | grep -E '^(error|✓)' | head -5) & fi; exit 0",
+            "command": "FILE=\"$CLAUDE_TOOL_RESULT_FILE\"; if [[ \"$FILE\" == *\".ts\" ]] || [[ \"$FILE\" == *\".tsx\" ]]; then (pnpm typecheck 2>/dev/null | grep -E '^(error|\u2713)' | head -5) & fi; exit 0",
             "timeout": 5
           }
         ]

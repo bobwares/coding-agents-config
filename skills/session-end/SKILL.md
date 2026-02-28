@@ -36,7 +36,10 @@ Rules:
 
 File: `./ai/agentic-pipeline/turns/turn-${TURN_ID}/pull_request.md`
 
-Use template: `.claude/templates/pr/pull_request_template.md`
+Resolve template path in this order and use the first match:
+1. `./.claude/templates/pr/pull_request_template.md`
+2. `./templates/pr/pull_request_template.md`
+3. `$HOME/.claude/templates/pr/pull_request_template.md`
 
 Fill in:
 - Turn summary (3–5 bullets of what was accomplished)
@@ -51,7 +54,10 @@ Fill in:
 File: `./ai/agentic-pipeline/turns/turn-${TURN_ID}/adr.md`
 
 Apply ADR policy from `.claude/context/context_adr.md`:
-- If architectural decisions were made → Full ADR using `.claude/templates/adr/adr_template.md`
+- If architectural decisions were made -> Full ADR using resolved path:
+  1. `./.claude/templates/adr/adr_template.md`
+  2. `./templates/adr/adr_template.md`
+  3. `$HOME/.claude/templates/adr/adr_template.md`
 - If no architectural decisions → Minimal one-liner
 
 ### Step 2d: Write manifest.json
@@ -66,7 +72,10 @@ shasum -a 256 <file> | cut -d' ' -f1
 sha256sum <file> | cut -d' ' -f1
 ```
 
-Validate against: `.claude/templates/turn/manifest.schema.json`
+Validate against resolved schema path:
+1. `./.claude/templates/turn/manifest.schema.json`
+2. `./templates/turn/manifest.schema.json`
+3. `$HOME/.claude/templates/turn/manifest.schema.json`
 
 Include execution summary:
 - `execution.tracePath`

@@ -14,6 +14,7 @@ if [[ ! -f "$NODE_SCRIPT" ]]; then
   exit 0
 fi
 
-echo "$1" | node "$NODE_SCRIPT" 2>/dev/null
+# Read prompt text from stdin so UserPromptSubmit piping works reliably.
+cat - | node "$NODE_SCRIPT" 2>/dev/null
 
 exit 0

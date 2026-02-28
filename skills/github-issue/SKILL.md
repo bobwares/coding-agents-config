@@ -1,5 +1,5 @@
 ---
-name: fix-issue
+name: github-issue
 description: >-
   End-to-end GitHub issue resolution: read the issue, create a branch, fix, verify, and create a PR.
   Arguments: GitHub issue number.
