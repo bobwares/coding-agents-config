@@ -440,18 +440,19 @@ Post-scaffold runs `pnpm install`, starts Docker, and verifies the workspace bui
 
 The complete automated pipeline:
 
-1. **Parse arguments** — Reads PRD, DDD, and tech stack from `specs/` directory
-2. **Initialize turn lifecycle** — Creates turn directory, session context, turn branch
-3. **Scaffold project** — Invokes `/project-init`
-4. **Parse DDD** — Invokes `/spec-parse-ddd` to produce domain model
-5. **Generate plan** — Invokes `/spec-planning` to produce planning documents
-6. **Parse PRD into epics** — Invokes `/spec-prd-parse` with domain model
-7. **Execute epics** — Creates branches, spawns orchestrator for each epic, runs verification
-8. **Complete turn lifecycle** — Writes all post-execution artifacts, tags commit
+1. **Preflight validate** — Runs `project-execute-preflight.sh` for inputs, skills, agents, and templates
+2. **Parse arguments** — Reads PRD, DDD, and tech stack from `specs/` directory
+3. **Initialize turn lifecycle** — Creates turn directory, session context, turn branch
+4. **Scaffold project** — Invokes `/project-init`
+5. **Parse DDD** — Invokes `/spec-parse-ddd` to produce domain model
+6. **Generate plan** — Invokes `/spec-planning` to produce planning documents
+7. **Parse PRD into epics** — Invokes `/spec-prd-parse` with domain model
+8. **Execute epics** — Creates branches, spawns orchestrator for each epic, runs verification
+9. **Complete turn lifecycle** — Writes all post-execution artifacts, tags commit
 
 **Rules**: Never stops to ask questions (all inputs provided upfront), never skips verification, never commits to main, auto-fixes failures using specialist agents.
 
-**Input files**: `specs/spec-prd.md`, `specs/spec-ddd.md`, `specs/spec-tech-stack.md`
+**Input files**: `specs/spec-prd.md`, `specs/spec-ddd.md`, `specs/spec-tech-stack.md` (optional: `specs/spec-wireframe.md`)
 
 ---
 
@@ -476,6 +477,21 @@ Generates versioned planning documents in `specs/plan/version-<N>/`:
 Conditional outputs: `07-wireframes.md` (if UI), `08-selected-patterns.md`, `09-api-contracts.md` (if API).
 
 **Hard constraints**: No source code, no config files, no writes to `.claude/`. All output under `specs/plan/version-<N>/`.
+
+---
+
+### project-plan
+
+**Command**: `/project-plan`
+**Description**: Compatibility planner entry point. Generates planning docs and epic files without implementation.
+
+Workflow:
+1. Validates PRD/DDD/stack inputs
+2. Runs `/spec-planning`
+3. Runs `/spec-prd-parse`
+4. Reports generated plan + epic paths
+
+**Output**: Planning docs under `specs/plan/` and epic files under `.claude/epics/`.
 
 ---
 

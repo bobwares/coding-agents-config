@@ -1,6 +1,6 @@
 ---
 name: project-init
-description: Scaffold a new full-stack monorepo from a tech stack selection. Creates directory structure, config files, and workspace setup. Run once before /execute.
+description: Scaffold a new full-stack monorepo from a tech stack selection. Creates directory structure, config files, and workspace setup. Run once before /project-execute.
 ---
 
 # Project Init — Monorepo Scaffolder
@@ -502,7 +502,7 @@ Structure created:
   app/packages/database/   Drizzle ORM + PostgreSQL
   app/packages/types/      Shared TypeScript types
 
-Next: /execute will continue with DDD parsing and code generation.
+Next: /project-execute will continue with DDD parsing and code generation.
 ```
 
 ---

@@ -228,5 +228,5 @@ Phases:
 Epic file: .claude/epics/<name>/epic.md
 
 Run /spec-epic-start <name> to begin implementation.
-Or run /execute — the pipeline continues automatically.
+Or run /project-execute - the pipeline continues automatically.
 ```

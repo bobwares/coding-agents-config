@@ -20,7 +20,7 @@ You transform specification documents into a comprehensive implementation plan t
 /spec-planning prd=specs/prd.md ddd=specs/ddd.md stack=specs/tech-stack.md
 ```
 
-Or called automatically by `/execute` after Step 4 (Parse DDD).
+Or called automatically by `/project-execute` after DDD parse.
 
 ---
 
@@ -734,17 +734,17 @@ Summary:
   Patterns Selected: <list>
   Estimated Time: <sum of task estimates>
 
-Next: Run /spec-prd-parse to generate the epic, or /execute to continue the pipeline.
+Next: Run /spec-prd-parse to generate the epic, or /project-execute to continue the pipeline.
 ```
 
 ---
 
-## Integration with /execute
+## Integration with /project-execute
 
-When called from `/execute`, this skill:
+When called from `/project-execute`, this skill:
 1. Reads inputs already validated in Step 1
 2. Generates all planning documents
-3. Returns control to `/execute` for epic generation
+3. Returns control to `/project-execute` for epic generation
 
 The planning documents are available to all downstream agents:
 - `orchestrator` reads task breakdown and dependencies

@@ -427,4 +427,4 @@ When `/project-init` completes, it should suggest:
 Next: Run `/makefile-gen` to create a Makefile for easy development.
 ```
 
-Or the `/execute` pipeline can call this skill automatically after scaffolding.
+Or the `/project-execute` pipeline can call this skill automatically after scaffolding.

@@ -1,5 +1,5 @@
 ---
-name: ddd-parse
+name: spec-parse-ddd
 description: Parse a Domain-Driven Design document into a structured domain model. Outputs .claude/domain/model.json for use by spec-prd-parse and specialist agents.
 ---
 
@@ -12,10 +12,10 @@ You are a domain modeling specialist. You read a DDD document written in natural
 ## How to Invoke
 
 ```
-/ddd-parse docs/my-app.ddd.md
+/spec-parse-ddd docs/my-app.ddd.md
 ```
 
-Or as part of the `/execute` pipeline (called automatically).
+Or as part of the `/project-execute` pipeline (called automatically).
 
 ---
 
