@@ -97,7 +97,7 @@ Print a concise validation summary before proceeding.
 
 Before code execution:
 
-1. Resolve `TURN_ID` from `./ai/agentic-pipeline/turns_index.csv` (initialize if needed).
+1. Resolve `TURN_ID` using `get-next-turn-id.sh` (initialize `turns_index.csv` if missing).
 2. Create `./ai/agentic-pipeline/turns/turn-${TURN_ID}/`.
 3. Record `TURN_START_TIME` in UTC.
 4. Write `session_context.md` with inputs, branch, turn path, and task description.

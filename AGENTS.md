@@ -1,1 +1,1 @@
-refer to @CLAUDE.md
+read and load @CLAUDE.md

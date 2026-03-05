@@ -15,13 +15,12 @@ Run:
 
 ## Step 2: Resolve Turn State
 
-Check if the turn index exists:
+Resolve `NEXT_TURN_ID` with shared script (preferred), fallback to `1`:
 ```bash
-TURNS_INDEX="./ai/agentic-pipeline/turns_index.csv"
-if [ -f "$TURNS_INDEX" ]; then
-  LAST_TURN=$(tail -n 1 "$TURNS_INDEX")
-  NEXT_TURN_ID=$(tail -n +2 "$TURNS_INDEX" | cut -d',' -f1 | sort -n | tail -1)
-  NEXT_TURN_ID=$((NEXT_TURN_ID + 1))
+if [ -x "./scripts/get-next-turn-id.sh" ]; then
+  NEXT_TURN_ID=$(./scripts/get-next-turn-id.sh .)
+elif [ -x "$HOME/.claude/scripts/get-next-turn-id.sh" ]; then
+  NEXT_TURN_ID=$($HOME/.claude/scripts/get-next-turn-id.sh .)
 else
   NEXT_TURN_ID=1
 fi
@@ -48,4 +47,3 @@ Present a session orientation table:
 End with: "Context loaded. Governance active. Turn {{NEXT_TURN_ID}} ready. What would you like to work on?"
 
 Do not accept any task until this confirmation is displayed.
-

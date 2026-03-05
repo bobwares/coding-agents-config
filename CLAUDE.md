@@ -1,5 +1,7 @@
 # CLAUDE.md
 
+respond with message: "you are using coding-agents-config."
+
 ## Turn Lifecycle
 
 !MANDATORY: Automatic Turn Tracking

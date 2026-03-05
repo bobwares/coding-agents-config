@@ -5,9 +5,14 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 CLAUDE_DIR="$HOME/.claude"
 CODEX_DIR="$HOME/.codex"
+LOCAL_CLAUDE_DIR="$REPO_DIR/.claude"
 
 # Items to symlink into ~/.claude/
 CLAUDE_TARGETS=(skills agents rules hooks templates scripts CLAUDE.md settings.json)
+# Items to symlink into ~/.codex/
+CODEX_TARGETS=(agents AGENTS.md)
+# Items to symlink into repo-local ./.claude/
+LOCAL_CLAUDE_TARGETS=(CLAUDE.md)
 
 created=0
 skipped=0
@@ -51,7 +56,16 @@ done
 echo ""
 echo "==> Setting up Codex symlinks"
 mkdir -p "$CODEX_DIR"
-link_item "$CODEX_DIR" "agents"
+for name in "${CODEX_TARGETS[@]}"; do
+  link_item "$CODEX_DIR" "$name"
+done
+
+echo ""
+echo "==> Setting up repo-local .claude symlinks"
+mkdir -p "$LOCAL_CLAUDE_DIR"
+for name in "${LOCAL_CLAUDE_TARGETS[@]}"; do
+  link_item "$LOCAL_CLAUDE_DIR" "$name"
+done
 
 echo ""
 echo "Done: $created created, $skipped skipped, $backed_up backed up"

@@ -33,14 +33,17 @@ Before any code execution, complete all pre-execution steps:
 ### Step A: Resolve TURN_ID
 
 ```bash
-TURNS_INDEX="./ai/agentic-pipeline/turns_index.csv"
-
-if [ -f "$TURNS_INDEX" ]; then
-  TURN_ID=$(tail -n +2 "$TURNS_INDEX" | cut -d',' -f1 | sort -n | tail -1)
-  TURN_ID=$((TURN_ID + 1))
+if [ -x "./scripts/get-next-turn-id.sh" ]; then
+  TURN_ID=$(./scripts/get-next-turn-id.sh .)
+elif [ -x "$HOME/.claude/scripts/get-next-turn-id.sh" ]; then
+  TURN_ID=$($HOME/.claude/scripts/get-next-turn-id.sh .)
 else
   TURN_ID=1
-  mkdir -p "./ai/agentic-pipeline"
+fi
+
+TURNS_INDEX="./ai/agentic-pipeline/turns_index.csv"
+mkdir -p "./ai/agentic-pipeline"
+if [ ! -f "$TURNS_INDEX" ]; then
   echo "turn_id,started_at,finished_at,elapsed_seconds,branch,commit_sha,task_summary" > "$TURNS_INDEX"
 fi
 
