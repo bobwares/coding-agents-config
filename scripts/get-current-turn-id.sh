@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
-# App: coding-agents-config
-# File: scripts/get-current-turn-id.sh
-# Version: 0.1.1
-# Turns: TBD
-# Author: AI Coding Agent (GPT-5)
-# Date: 2026-03-01T01:22:27Z
-# Description: Resolve the current turn id by selecting the highest numeric suffix in the turn artifacts directory.
+# -------------------------------------------------------------------
+# get-current-turn-id.sh
+# Resolve the current turn ID from turn artifacts
+# -------------------------------------------------------------------
+# Version: 1.0.0
+# Author: Claude <noreply@anthropic.com>
+# Created: 2026-03-01
+# Modified: 2026-03-06
+# Description: Resolves the current turn ID by selecting the highest
+#              numeric suffix in the turn artifacts directory.
+# -------------------------------------------------------------------
 
 set -euo pipefail
 

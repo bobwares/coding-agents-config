@@ -26,7 +26,7 @@ bash scripts/setup.sh
 3. Verify with:
 
 ```bash
-ls -la ~/.claude/skills ~/.claude/agents ~/.claude/rules ~/.claude/hooks ~/.claude/templates ~/.claude/scripts ~/.claude/CLAUDE.md ~/.claude/settings.json ~/.codex/agents
+ls -la ~/.claude/skills ~/.claude/agents ~/.claude/rules ~/.claude/hooks ~/.claude/templates ~/.claude/scripts ~/.claude/plugins ~/.claude/CLAUDE.md ~/.claude/settings.json ~/.codex/agents
 ```
 
 4. Confirm all symlinks point to the `coding-agents-config` repo.

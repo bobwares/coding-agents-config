@@ -102,13 +102,13 @@ Description: {{DESCRIPTION}}
 
 Every file has its own version tracked in its metadata header.
 
-| Change Type | Version Bump | Example |
-|-------------|-------------|---------|
-| New file created | Start at `0.1.0` | `0.1.0` |
-| Bug fix, refactor, internal change | Increment PATCH | `0.1.0` → `0.1.1` |
-| New feature added to file | Increment MINOR | `0.1.1` → `0.2.0` |
-| Breaking change to API/contract | Increment MAJOR | `0.2.0` → `1.0.0` |
-| No change to file | No bump | stays same |
+| Change Type                        | Version Bump     | Example           |
+|------------------------------------|------------------|-------------------|
+| New file created                   | Start at `0.1.0` | `0.1.0`           |
+| Bug fix, refactor, internal change | Increment PATCH  | `0.1.0` → `0.1.1` |
+| New feature added to file          | Increment MINOR  | `0.1.1` → `0.2.0` |
+| Breaking change to API/contract    | Increment MAJOR  | `0.2.0` → `1.0.0` |
+| No change to file                  | No bump          | stays same        |
 
 **Turns field**: Append the current TURN_ID each time the file is modified. Example: `Turns: 1, 3, 7`
 
@@ -118,15 +118,15 @@ Every file has its own version tracked in its metadata header.
 
 Format: `<type>/<short-description>[-<task-id>]`
 
-| Type | Use For |
-|------|---------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `chore` | Tooling, build, dependencies |
-| `docs` | Documentation only |
+| Type       | Use For                             |
+|------------|-------------------------------------|
+| `feat`     | New feature                         |
+| `fix`      | Bug fix                             |
+| `chore`    | Tooling, build, dependencies        |
+| `docs`     | Documentation only                  |
 | `refactor` | Internal change, no behavior change |
-| `test` | Adding or improving tests |
-| `perf` | Performance improvement |
+| `test`     | Adding or improving tests           |
+| `perf`     | Performance improvement             |
 
 Examples:
 - `feat/task-assignment-service-T42`
@@ -201,4 +201,33 @@ Before every commit, verify:
 - [ ] Linting passes
 - [ ] No sensitive data in committed files
 - [ ] ADR written (full or minimal) for this turn
+
+---
+
+## 9. Non-Functional Requirements
+
+All production systems must comply with the NFR baseline specification.
+
+**Reference Documents:**
+- `docs/NON_FUNCTIONAL_SPEC.md` — Full NFR specification
+- `docs/NFR_CHECKLIST.md` — Per-project verification checklist
+
+**Key NFR Categories:**
+1. Reliability and Availability (SLOs, resilience patterns)
+2. Observability (metrics, logs, traces, health endpoints)
+3. Logging (structured JSON, required fields, no secrets)
+4. Operations (runbooks, on-call, backups)
+5. Security (auth, secrets, encryption, vulnerability management)
+6. Performance and Scalability (budgets, capacity, limits)
+7. Data Management (classification, retention, migrations)
+8. Deployments (CI/CD, release strategies, feature flags)
+9. Compliance (documentation, environment separation)
+10. UI/Frontend (accessibility, resilience, observability)
+
+**Exception Process:**
+Any NFR exception requires an ADR documenting:
+- Requirement being waived
+- Rationale and risk assessment
+- Mitigations
+- Review date
 

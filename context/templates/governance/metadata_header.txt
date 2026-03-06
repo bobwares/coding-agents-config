@@ -1,0 +1,11 @@
+/**
+ * App: {{APPLICATION_NAME}}
+ * Package: {{PACKAGE_PATH}}
+ * File: {{FILE_NAME}}
+ * Version: {{SEMVER_START_AT_0_1_0}}
+ * Turns: {{APPEND_TURN_NUMBER_ON_CREATE_OR_UPDATE}}
+ * Author: AI Coding Agent ({{MODEL_NAME}})
+ * Date: {{UTC_ISO8601_YYYY_MM_DDThh_mm_ssZ}}
+ * Exports: {{EXPORTED_FUNCTIONS_TYPES_VARIABLES}}
+ * Description: {{DESCRIBE_THE_CLASS_OR_FUNCTION_AND_DOCUMENT_EACH_METHOD_OR_FUNCTION}}
+ */

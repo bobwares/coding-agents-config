@@ -22,25 +22,25 @@ ADRs are stored at: `./ai/agentic-pipeline/turns/turn-${TURN_ID}/adr.md`
 
 ## When to Write a Full ADR
 
-| Scenario | Full ADR Required |
-|----------|:-----------------:|
-| Choosing between design patterns (e.g. repository vs active record) | ✅ |
-| Selecting a new library or framework | ✅ |
-| Changing an API contract or interface | ✅ |
-| Introducing infrastructure (queues, caches, storage) | ✅ |
-| Modifying a data model with trade-offs | ✅ |
-| Changing cross-cutting concerns (auth, logging, error handling) | ✅ |
-| Any decision with significant long-term implications | ✅ |
+| Scenario                                                            | Full ADR Required |
+|---------------------------------------------------------------------|:-----------------:|
+| Choosing between design patterns (e.g. repository vs active record) |         ✅         |
+| Selecting a new library or framework                                |         ✅         |
+| Changing an API contract or interface                               |         ✅         |
+| Introducing infrastructure (queues, caches, storage)                |         ✅         |
+| Modifying a data model with trade-offs                              |         ✅         |
+| Changing cross-cutting concerns (auth, logging, error handling)     |         ✅         |
+| Any decision with significant long-term implications                |         ✅         |
 
 ## When to Write a Minimal ADR
 
-| Scenario | Minimal ADR |
-|----------|:-----------:|
-| Renaming variables or files | ✅ |
-| Bug fix with no design choices | ✅ |
-| Following an already-established pattern | ✅ |
-| Simple refactoring within existing conventions | ✅ |
-| Formatting or style changes | ✅ |
+| Scenario                                       | Minimal ADR |
+|------------------------------------------------|:-----------:|
+| Renaming variables or files                    |      ✅      |
+| Bug fix with no design choices                 |      ✅      |
+| Following an already-established pattern       |      ✅      |
+| Simple refactoring within existing conventions |      ✅      |
+| Formatting or style changes                    |      ✅      |
 
 **Minimal ADR content** (single line):
 ```
