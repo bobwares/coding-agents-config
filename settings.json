@@ -63,6 +63,7 @@
       "Read(~/.ssh/**)"
     ]
   },
+  "model": "haiku",
   "hooks": {
     "SessionStart": [
       {

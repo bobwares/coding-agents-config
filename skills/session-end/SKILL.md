@@ -18,7 +18,26 @@ Run:
 
 If a turn was executed this session (TURN_ID is set), complete all Post-Execution artifacts:
 
-### Step 2a: Update execution_trace.json
+### Step 2a: Update session_context.md
+
+File: `./ai/agentic-pipeline/turns/turn-${TURN_ID}/session_context.md`
+
+**MANDATORY**: Update the pending fields with actual values:
+
+1. Calculate end time: `TURN_END_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")`
+2. Calculate elapsed time from TURN_START_TIME to TURN_END_TIME (format: `Xh Ym Zs` or `Ym Zs`)
+3. Replace `[pending]` values:
+
+| Field | Replace With |
+|-------|--------------|
+| `TURN_END_TIME` | Current UTC timestamp (ISO 8601) |
+| `TURN_ELAPSED_TIME` | Calculated duration |
+| `{{SKILLS_EXECUTED}}` | Comma-separated list of skills actually executed |
+| `{{AGENTS_EXECUTED}}` | Comma-separated list of agents actually executed |
+
+4. Also replace any remaining `[pending - finalize at session-end]` placeholders with actual values.
+
+### Step 2b: Update execution_trace.json
 
 File: `./ai/agentic-pipeline/turns/turn-${TURN_ID}/execution_trace.json`
 
@@ -32,35 +51,45 @@ Rules:
 - Include `claude` in `agentsExecuted` when no specialist agent was spawned
 - Keep values unique and sorted for diff stability
 
-### Step 2b: Write pull_request.md
+### Step 2c: Write pull_request.md
 
-File: `./ai/agentic-pipeline/turns/turn-${TURN_ID}/pull_request.md`
+**MANDATORY**: Read the template file first, then fill in all placeholders.
 
-Resolve template path in this order and use the first match:
-1. `./.claude/templates/pr/pull_request_template.md`
-2. `./templates/pr/pull_request_template.md`
-3. `$HOME/.claude/templates/pr/pull_request_template.md`
+1. **Read template**: `${HOME}/.claude/templates/pull_request_template.md`
+2. **Replace ALL placeholders** with actual values:
 
-Fill in:
-- Turn summary (3–5 bullets of what was accomplished)
-- Start and end timestamps
-- Tasks executed (table)
-- Files added/modified (tables with metadata header descriptions)
-- Execution trace summary (skills and agents executed)
-- Compliance checklist (check all boxes that apply)
+| Placeholder | Value |
+|-------------|-------|
+| `{{TURN_ID}}` | Current turn number |
+| `{{DATE}}` | Today's date (YYYY-MM-DD) |
+| `{{TASK_SUMMARY}}` | One-line summary of what was done |
+| `{{SUMMARY_BULLET_1}}` | First accomplishment |
+| `{{SUMMARY_BULLET_2}}` | Second accomplishment |
+| `{{SUMMARY_BULLET_3}}` | Third accomplishment |
+| `{{TURN_START_TIME}}` | From session_context.md |
+| `{{TURN_END_TIME}}` | Current UTC timestamp |
+| `{{TURN_ELAPSED_TIME}}` | Calculated duration |
+| `{{INPUT_PROMPT_SUMMARY}}` | Summary of user's request |
+| `{{ACTIVE_PATTERN_NAME}}` | Pattern used, or `N/A` |
+| `{{ACTIVE_PATTERN_PATH}}` | Pattern path, or `N/A` |
+| `{{TASK_N}}` / `{{AGENTS_N}}` | Tasks and agents for each row |
+| `{{SKILLS_EXECUTED_LIST}}` | Comma-separated list |
+| `{{AGENTS_EXECUTED_LIST}}` | Comma-separated list |
+| `{{AI_FILE_N}}` | Files added under `./ai/` |
+| `{{TASK}}`, `{{DESCRIPTION_FROM_METADATA}}`, `{{FILE_PATH}}` | Source files added |
+| `{{OLD_VERSION}}`, `{{NEW_VERSION}}` | Version changes for modified files |
 
-### Step 2c: Write adr.md
+3. **Write filled template** to: `./ai/agentic-pipeline/turns/turn-${TURN_ID}/pull_request.md`
+
+### Step 2d: Write adr.md
 
 File: `./ai/agentic-pipeline/turns/turn-${TURN_ID}/adr.md`
 
-Apply ADR policy from `.claude/context/context_adr.md`:
-- If architectural decisions were made -> Full ADR using resolved path:
-  1. `./.claude/templates/adr/adr_template.md`
-  2. `./templates/adr/adr_template.md`
-  3. `$HOME/.claude/templates/adr/adr_template.md`
-- If no architectural decisions → Minimal one-liner
+Apply ADR policy from `rules/adr.md`:
+- If architectural decisions were made → Full ADR using template: `${HOME}/.claude/templates/adr_template.md`
+- If no architectural decisions → Minimal one-liner: `No architectural decision made this turn — [brief description].`
 
-### Step 2d: Write manifest.json
+### Step 2e: Write manifest.json
 
 File: `./ai/agentic-pipeline/turns/turn-${TURN_ID}/manifest.json`
 
@@ -72,24 +101,21 @@ shasum -a 256 <file> | cut -d' ' -f1
 sha256sum <file> | cut -d' ' -f1
 ```
 
-Validate against resolved schema path:
-1. `./.claude/templates/turn/manifest.schema.json`
-2. `./templates/turn/manifest.schema.json`
-3. `$HOME/.claude/templates/turn/manifest.schema.json`
+Validate against schema: `${HOME}/.claude/templates/manifest.schema.json`
 
 Include execution summary:
 - `execution.tracePath`
 - `execution.skillsExecuted`
 - `execution.agentsExecuted`
 
-### Step 2e: Update turns_index.csv
+### Step 2f: Update turns_index.csv
 
 Append row:
 ```
 ${TURN_ID},${TURN_START_TIME},${TURN_END_TIME},${ELAPSED_SECONDS},${BRANCH},${COMMIT_SHA},${TASK_SUMMARY}
 ```
 
-### Step 2f: Tag the commit
+### Step 2g: Tag the commit
 
 ```bash
 git tag turn/${TURN_ID}

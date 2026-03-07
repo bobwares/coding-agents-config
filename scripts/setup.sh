@@ -19,7 +19,7 @@ CODEX_DIR="$HOME/.codex"
 LOCAL_CLAUDE_DIR="$REPO_DIR/.claude"
 
 # Items to symlink into ~/.claude/
-CLAUDE_TARGETS=(skills agents rules hooks templates scripts plugins CLAUDE.md settings.json)
+CLAUDE_TARGETS=(skills agents rules hooks context scripts plugins CLAUDE.md settings.json)
 # Items to symlink into ~/.codex/
 CODEX_TARGETS=(agents AGENTS.md)
 # Items to symlink into repo-local ./.claude/

@@ -2,3 +2,6 @@
 *.sqlite
 *.backup
 .claude/.session-active
+.claude/
+plugins/
+.idea/

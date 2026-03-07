@@ -1,0 +1,16 @@
+turn_id,started_at,finished_at,elapsed_seconds,branch,commit_sha,task_summary
+4,2026-03-04T21:51:19Z,2026-03-04T22:08:13Z,1014,main,24cb8f5cd1bd722ac3cdf2e2b15b880d71fca9d7,Add repo-local .claude/CLAUDE.md symlink and update setup.sh
+14,2026-03-05T15:13:04Z,2026-03-05T15:13:04Z,0,skill-creator,0773a86669c9579354e5ef1f737b587af6424057,Analyze codebase and generate docs/analysis-codebase.md
+13,2026-03-05T15:13:47Z,2026-03-05T15:13:47Z,0,skill-creator,0773a86669c9579354e5ef1f737b587af6424057,Recover partial turn directory artifacts
+15,2026-03-05T16:09:19Z,2026-03-05T16:12:00Z,161,skill-creator,,Add analyze-engineer agent using /analyze skill
+16,2026-03-05T16:14:48Z,2026-03-05T16:18:00Z,192,skill-creator,,Analyze coding-agents-config repository
+18,2026-03-05T16:55:54Z,2026-03-05T16:58:00Z,126,skill-creator,,Comprehensive codebase analysis
+21,2026-03-05T20:11:42Z,2026-03-05T20:14:00Z,138,skill-creator,,fix: pass CLAUDE_USER_PROMPT to turn-init.sh via stdin
+22,2026-03-05T20:22:00Z,2026-03-05T20:27:00Z,300,skill-creator,,fix: extract .prompt from CLAUDE_USER_PROMPT JSON
+26,2026-03-05T23:07:43Z,2026-03-05T23:09:15Z,92,skill-creator,,Created repo-analysis skill
+27,2026-03-05T23:13:08Z,2026-03-05T23:15:30Z,142,skill-creator,,Tested repo-analysis skill
+35,2026-03-06T08:10:56Z,2026-03-06T08:11:30Z,34,skill-creator,,Added metadata header to hooks/turn-init.sh
+36,2026-03-06T08:13:21Z,2026-03-06T08:14:45Z,84,skill-creator,,Added metadata headers to hook and script files
+37,2026-03-06T08:16:57Z,2026-03-06T08:17:45Z,48,skill-creator,,Added Trigger field to hook metadata headers
+43,2026-03-06T09:33:00Z,2026-03-06T09:35:00Z,120,skill-creator,,Refactored hook/skill architecture for session and turn init
+46,2026-03-07T00:15:33Z,2026-03-07T00:17:44Z,131,skill-creator,d6c15fe,Fix turn lifecycle to complete session_context and create post-execution artifacts

@@ -1,0 +1,8 @@
+{
+  "turnId": 39,
+  "startedAt": "2026-03-06T08:22:26Z",
+  "requestedSkillsFromPrompt": [],
+  "skillsExecuted": [],
+  "agentsExecuted": [],
+  "notes": "Finalize skillsExecuted and agentsExecuted during session-end."
+}

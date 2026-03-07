@@ -1,0 +1,39 @@
+{
+  "turnId": 13,
+  "execution": {
+    "tracePath": "./ai/agentic-pipeline/turns/turn-13/execution_trace.json",
+    "skillsExecuted": ["analyze"],
+    "agentsExecuted": ["claude"]
+  },
+  "tasks": [
+    {
+      "taskId": "T13-1",
+      "agent": "claude",
+      "inputs": ["ai/agentic-pipeline/turns/turn-13/session_context.md"],
+      "outputs": [
+        {"path": "ai/agentic-pipeline/turns/turn-13/execution_trace.json", "sha256": "abfea5b0182e293baed302e040c4457c9b64fb19ad375177a1fc2e7854789ec5"},
+        {"path": "ai/agentic-pipeline/turns/turn-13/pull_request.md", "sha256": "1a4a1879eb39127ab4e0ddb3c0fd5737635d06326f773c6d417c8f177561699c"},
+        {"path": "ai/agentic-pipeline/turns/turn-13/adr.md", "sha256": "94ee84a4e0e95cbd10fbb5062421e4243da0a108c9d4961c8f1ac674b56964e7"}
+      ],
+      "validations": [
+        {"rule": "tests-pass", "status": "skipped", "detailsPath": ""},
+        {"rule": "lint-clean", "status": "skipped", "detailsPath": ""},
+        {"rule": "build-succeeds", "status": "skipped", "detailsPath": ""}
+      ]
+    }
+  ],
+  "provenance": {
+    "promptHash": "0694e977f558ca08c184856c008213117946a6051872d0e7eba4601bb20b1d20",
+    "tools": ["Write", "Bash"],
+    "startedAt": "2026-03-05T15:13:47Z",
+    "finishedAt": "2026-03-05T15:13:47Z",
+    "activePatternName": "analyze",
+    "activePatternPath": "skills/analyze/SKILL.md"
+  },
+  "outputs": [
+    {"path": "ai/agentic-pipeline/turns/turn-13/session_context.md", "sha256": "8747a6083bb6216f23c6958e2528cb54462ac2cc5a03b9be9c5aed64433a29ad"},
+    {"path": "ai/agentic-pipeline/turns/turn-13/execution_trace.json", "sha256": "abfea5b0182e293baed302e040c4457c9b64fb19ad375177a1fc2e7854789ec5"},
+    {"path": "ai/agentic-pipeline/turns/turn-13/pull_request.md", "sha256": "1a4a1879eb39127ab4e0ddb3c0fd5737635d06326f773c6d417c8f177561699c"},
+    {"path": "ai/agentic-pipeline/turns/turn-13/adr.md", "sha256": "94ee84a4e0e95cbd10fbb5062421e4243da0a108c9d4961c8f1ac674b56964e7"}
+  ]
+}

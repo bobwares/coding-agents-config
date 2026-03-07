@@ -1,0 +1,9 @@
+{
+  "turnId": 21,
+  "startedAt": "2026-03-05T20:11:42Z",
+  "finishedAt": "2026-03-05T20:14:00Z",
+  "requestedSkillsFromPrompt": [],
+  "skillsExecuted": [],
+  "agentsExecuted": [],
+  "notes": "Bug fix: CLAUDE_USER_PROMPT not passed to turn-init.sh hook"
+}

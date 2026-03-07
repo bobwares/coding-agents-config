@@ -1,0 +1,9 @@
+{
+  "turnId": 35,
+  "startedAt": "2026-03-06T08:10:56Z",
+  "finishedAt": "2026-03-06T08:11:30Z",
+  "requestedSkillsFromPrompt": [],
+  "skillsExecuted": [],
+  "agentsExecuted": [],
+  "notes": "Added metadata header to hooks/turn-init.sh"
+}

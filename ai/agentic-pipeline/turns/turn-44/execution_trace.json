@@ -1,0 +1,7 @@
+{
+  "turnId": 44,
+  "startedAt": "2026-03-06T21:27:57Z",
+  "skillsExecuted": ["session-start", "turn-init"],
+  "agentsExecuted": ["claude"],
+  "notes": "Fixed template usage in turn-init and session-end skills"
+}

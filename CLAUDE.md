@@ -30,9 +30,6 @@ Every task follows this sequence — no exceptions:
 | Execution | 5. Execute task |
 | Post-Execution | 6. Record end time → 7. Write `pull_request.md` → 8. Write `adr.md` → 9. Write `manifest.json` → 10. Update `turns_index.csv` + tag commit |
 
-Invoke `/governance` before writing any source file.
-Invoke `/governance-adr` at Step 8 every turn.
-
 ## Hard Rules
 
 - Never commit to `main` or `master`
