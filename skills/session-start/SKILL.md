@@ -20,6 +20,7 @@ git log --oneline -5
 
 ```bash
 NEXT_TURN_ID=$($HOME/.claude/scripts/get-next-turn-id.sh .)
+echo $NEXT_TURN_ID
 ```
 
 ## Step 3: Display Session Status

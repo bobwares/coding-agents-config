@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "TODO.md",
-                "mode": "source",
+                "file": "docs-2/INDEX.md",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "TODO"
+              "title": "INDEX"
             }
           }
         ]
@@ -78,7 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 411.5
   },
   "right": {
     "id": "66ddf623ce32a09a",
@@ -181,23 +181,29 @@
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
       "bases:Create new base": false,
-      "terminal:Open terminal": false
+      "terminal:Open terminal": false,
+      "obsidian-audio-notes:Quick Audio Note with Transcription": false
     }
   },
   "active": "b7111bedbb79633a",
   "lastOpenFiles": [
-    "Non-functional requirements.md",
-    "Untitled.base",
+    "docs-2/04-plans-and-context/01-optimize-claude-md-plan.md",
+    "analysis-claude-implementation.md",
     "TODO.md",
+    "Install Obsidian Plugin MCP.md",
+    "Non-functional requirements.md",
+    "docs-2/04-plans-and-context/02-session-context-optimization.md",
+    "Untitled.base",
+    "analysis-spec-prd-parse.md",
+    "analysis-skills-and-agents.md",
+    "agents.md",
+    "docs-2/INDEX.md",
+    "docs-2/01-reference/03-hooks-reference.md",
+    "docs-2/01-reference/01-agents-reference-quick.md",
     "claude-memory/MEMORY.md",
     "claude-memory/hooks.md",
     "claude-memory/agents.md",
-    "analysis-skills-and-agents.md",
     "claude-memory/skills.md",
-    "claude-memory",
-    "Install Obsidian Plugin MCP.md",
-    "analysis-claude-implementation.md",
-    "analysis-spec-prd-parse.md",
-    "agents.md"
+    "claude-memory"
   ]
 }

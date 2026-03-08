@@ -1,6 +1,6 @@
 ---
 name: config-init
-description: >-
+description: 
   Set up symlinks from this repo into ~/.claude/ and ~/.codex/.
   Run once after cloning.
 triggers:

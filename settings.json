@@ -139,7 +139,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "printf '%s | %s | %s' \"$(basename $(pwd))\" \"$(git branch --show-current 2>/dev/null || echo 'no-git')\" \"$(git status --porcelain 2>/dev/null | wc -l | tr -d ' ') changed\""
+    "command": "bash ~/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
     "document-skills@anthropic-agent-skills": true,
