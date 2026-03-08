@@ -1,0 +1,9 @@
+{
+  "turnId": 14,
+  "startedAt": "2026-03-05T15:13:04Z",
+  "finishedAt": "2026-03-05T15:13:04Z",
+  "requestedSkillsFromPrompt": ["analyze"],
+  "skillsExecuted": ["analyze"],
+  "agentsExecuted": ["claude"],
+  "notes": "Analyze run completed with local fallback execution."
+}

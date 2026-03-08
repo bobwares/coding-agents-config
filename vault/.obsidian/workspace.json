@@ -1,0 +1,209 @@
+{
+  "main": {
+    "id": "99ad4e92ecb77b19",
+    "type": "split",
+    "children": [
+      {
+        "id": "58bbb8e773d2e1cf",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b7111bedbb79633a",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "docs-2/INDEX.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "INDEX"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "6ab9096dbaf68538",
+    "type": "split",
+    "children": [
+      {
+        "id": "61a7fc2a8493ccba",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "aedcdfa416de386b",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "db2fddfb4f1d0685",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "adaf84e8dc61666a",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 411.5
+  },
+  "right": {
+    "id": "66ddf623ce32a09a",
+    "type": "split",
+    "children": [
+      {
+        "id": "2d5f399dfbf2a1c1",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b30964b7956027a8",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Install Obsidian Plugin MCP.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Install Obsidian Plugin MCP"
+            }
+          },
+          {
+            "id": "8b0071f8e1501144",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Install Obsidian Plugin MCP.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Install Obsidian Plugin MCP"
+            }
+          },
+          {
+            "id": "e9080eb8261565dd",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "69682555556c9661",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "e61e947eea3e5d7a",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Install Obsidian Plugin MCP.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Install Obsidian Plugin MCP"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "terminal:Open terminal": false,
+      "obsidian-audio-notes:Quick Audio Note with Transcription": false
+    }
+  },
+  "active": "b7111bedbb79633a",
+  "lastOpenFiles": [
+    "docs-2/04-plans-and-context/01-optimize-claude-md-plan.md",
+    "analysis-claude-implementation.md",
+    "TODO.md",
+    "Install Obsidian Plugin MCP.md",
+    "Non-functional requirements.md",
+    "docs-2/04-plans-and-context/02-session-context-optimization.md",
+    "Untitled.base",
+    "analysis-spec-prd-parse.md",
+    "analysis-skills-and-agents.md",
+    "agents.md",
+    "docs-2/INDEX.md",
+    "docs-2/01-reference/03-hooks-reference.md",
+    "docs-2/01-reference/01-agents-reference-quick.md",
+    "claude-memory/MEMORY.md",
+    "claude-memory/hooks.md",
+    "claude-memory/agents.md",
+    "claude-memory/skills.md",
+    "claude-memory"
+  ]
+}

@@ -63,13 +63,14 @@
       "Read(~/.ssh/**)"
     ]
   },
+  "model": "haiku",
   "hooks": {
     "SessionStart": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "CLAUDE_PLUGIN_ROOT=\"$(pwd)/.claude\"; [ -d \"$CLAUDE_PLUGIN_ROOT\" ] || CLAUDE_PLUGIN_ROOT=\"$HOME/.claude\"; echo \"\\n=== AGENTIC-PIPELINE SESSION START ===\"; echo \"Loading context files...\"; for ctx in context_container context_session context_conventions context_governance context_orchestration context_adr context_skills; do [ -f \"${CLAUDE_PLUGIN_ROOT}/context/${ctx}.md\" ] && echo \"  ✓ ${ctx}.md\" || echo \"  ✗ ${ctx}.md (missing)\"; done; if [ -x \"./scripts/get-next-turn-id.sh\" ]; then NEXT_TURN=$(./scripts/get-next-turn-id.sh . 2>/dev/null || echo 1); elif [ -x \"$HOME/.claude/scripts/get-next-turn-id.sh\" ]; then NEXT_TURN=$($HOME/.claude/scripts/get-next-turn-id.sh . 2>/dev/null || echo 1); else NEXT_TURN=1; fi; if [ \"${NEXT_TURN}\" -gt 1 ] 2>/dev/null; then LAST_TURN=$((NEXT_TURN - 1)); echo \"Last turn: ${LAST_TURN} | Next turn: ${NEXT_TURN}\"; else echo \"No turns yet — next turn will be: 1\"; fi; echo \"Governance: ACTIVE (metadata headers + ADR required)\"; echo \"==========================================\"; exit 0",
+            "command": "HOOK_ROOT=\"$(pwd)/hooks\"; [ -d \"$HOOK_ROOT\" ] || HOOK_ROOT=\"$HOME/.claude/hooks\"; bash \"${HOOK_ROOT}/session-start.sh\" 2>/dev/null; exit 0",
             "timeout": 10
           }
         ]
@@ -80,13 +81,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "HOOK_ROOT=\"$(pwd)/.claude/hooks\"; [ -d \"$HOOK_ROOT\" ] || HOOK_ROOT=\"$HOME/.claude/hooks\"; bash \"${HOOK_ROOT}/turn-init.sh\" 2>/dev/null; exit 0",
+            "command": "HOOK_ROOT=\"$(pwd)/.claude/hooks\"; [ -d \"$HOOK_ROOT\" ] || HOOK_ROOT=\"$HOME/.claude/hooks\"; echo \"$CLAUDE_USER_PROMPT\" | bash \"${HOOK_ROOT}/turn-init.sh\" 2>/dev/null; exit 0",
             "timeout": 10
-          },
-          {
-            "type": "command",
-            "command": "HOOK_ROOT=\"$(pwd)/.claude/hooks\"; [ -d \"$HOOK_ROOT\" ] || HOOK_ROOT=\"$HOME/.claude/hooks\"; echo \"$CLAUDE_USER_PROMPT\" | bash \"${HOOK_ROOT}/skill-eval.sh\" 2>/dev/null; exit 0",
-            "timeout": 5
           }
         ]
       }
@@ -143,7 +139,19 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "printf '%s | %s | %s' \"$(basename $(pwd))\" \"$(git branch --show-current 2>/dev/null || echo 'no-git')\" \"$(git status --porcelain 2>/dev/null | wc -l | tr -d ' ') changed\""
+    "command": "bash ~/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "document-skills@anthropic-agent-skills": true,
+    "example-skills@anthropic-agent-skills": true
+  },
+  "extraKnownMarketplaces": {
+    "anthropic-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/skills"
+      }
+    }
   },
   "skipDangerousModePermissionPrompt": true
 }

@@ -1,0 +1,9 @@
+{
+  "turnId": 13,
+  "startedAt": "2026-03-05T15:13:47Z",
+  "finishedAt": "2026-03-05T15:13:47Z",
+  "requestedSkillsFromPrompt": ["analyze"],
+  "skillsExecuted": ["analyze"],
+  "agentsExecuted": ["claude"],
+  "notes": "Recovery completion for partially initialized turn."
+}

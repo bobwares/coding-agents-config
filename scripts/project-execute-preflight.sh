@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
-# Preflight validator for /project-execute one-turn pipeline.
-# Validates inputs and local environment before generation starts.
+# -------------------------------------------------------------------
+# project-execute-preflight.sh
+# Preflight validator for /project-execute pipeline
+# -------------------------------------------------------------------
+# Version: 1.0.0
+# Author: Claude <noreply@anthropic.com>
+# Created: 2026-03-06
+# Modified: 2026-03-06
+# Description: Validates inputs and local environment before the
+#              /project-execute one-turn pipeline generation starts.
+# -------------------------------------------------------------------
 
 set -u
 

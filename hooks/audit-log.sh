@@ -1,7 +1,16 @@
-#!/bin/bash
-# Audit Logger — agentic-pipeline
-# Logs all Bash invocations for debugging and compliance.
-# Fires on PreToolUse(Bash). Exits 0 always (never blocks).
+#!/usr/bin/env bash
+# -------------------------------------------------------------------
+# audit-log.sh
+# Agentic pipeline audit logging hook
+# -------------------------------------------------------------------
+# Version: 1.0.0
+# Author: Claude <noreply@anthropic.com>
+# Created: 2026-03-06
+# Modified: 2026-03-06
+# Trigger: PreToolUse(Bash)
+# Description: Logs all Bash invocations for debugging and compliance.
+#              Exits 0 always (never blocks).
+# -------------------------------------------------------------------
 
 AUDIT_DIR="${CLAUDE_PROJECT_DIR:-.}/.claude/audit"
 LOG_FILE="$AUDIT_DIR/commands.log"

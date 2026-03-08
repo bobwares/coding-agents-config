@@ -1,10 +1,10 @@
 ---
 name: analyze
 description: >-
-  Analyze code, architecture, or documents and produce a markdown report in the docs directory.
+  Analyze code, architecture, repos, repositories, apps, applications or documents and produce a markdown report in the docs directory.
   Runs in isolation to minimize token usage.
 triggers:
-  - "when user asks for analysis of codebase, architecture, or documents"
+  - "when user asks for analysis of code, architecture, repos, repositories, apps, applications or documents"
   - "analyze"
   - "review"
   - "audit"

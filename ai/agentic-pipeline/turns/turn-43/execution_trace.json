@@ -1,0 +1,9 @@
+{
+  "turnId": 43,
+  "startedAt": "2026-03-06T09:33:00Z",
+  "finishedAt": "2026-03-06T09:35:00Z",
+  "requestedSkillsFromPrompt": [],
+  "skillsExecuted": [],
+  "agentsExecuted": [],
+  "notes": "Refactored hook/skill architecture - hooks output directives, skills do heavy lifting"
+}

@@ -1,0 +1,9 @@
+{
+  "turnId": 37,
+  "startedAt": "2026-03-06T08:16:57Z",
+  "finishedAt": "2026-03-06T08:17:45Z",
+  "requestedSkillsFromPrompt": [],
+  "skillsExecuted": [],
+  "agentsExecuted": [],
+  "notes": "Added Trigger field to hook script metadata headers"
+}

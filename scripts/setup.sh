@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
-# setup.sh — Create symlinks from coding-agents-config into ~/.claude/ and ~/.codex/
+# -------------------------------------------------------------------
+# setup.sh
+# Create symlinks for coding-agents-config
+# -------------------------------------------------------------------
+# Version: 1.0.0
+# Author: Claude <noreply@anthropic.com>
+# Created: 2026-03-06
+# Modified: 2026-03-06
+# Description: Creates symlinks from coding-agents-config into
+#              ~/.claude/ and ~/.codex/ directories.
+# -------------------------------------------------------------------
+
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
@@ -8,7 +19,7 @@ CODEX_DIR="$HOME/.codex"
 LOCAL_CLAUDE_DIR="$REPO_DIR/.claude"
 
 # Items to symlink into ~/.claude/
-CLAUDE_TARGETS=(skills agents rules hooks templates scripts CLAUDE.md settings.json)
+CLAUDE_TARGETS=(skills agents rules hooks context scripts plugins CLAUDE.md settings.json)
 # Items to symlink into ~/.codex/
 CODEX_TARGETS=(agents AGENTS.md)
 # Items to symlink into repo-local ./.claude/

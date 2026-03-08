@@ -1,0 +1,9 @@
+{
+  "turnId": 22,
+  "startedAt": "2026-03-05T20:22:00Z",
+  "finishedAt": "2026-03-05T20:27:00Z",
+  "requestedSkillsFromPrompt": [],
+  "skillsExecuted": [],
+  "agentsExecuted": [],
+  "notes": "Bug fix: extract .prompt field from CLAUDE_USER_PROMPT JSON"
+}

@@ -1,0 +1,47 @@
+{
+  "turnId": 14,
+  "execution": {
+    "tracePath": "./ai/agentic-pipeline/turns/turn-14/execution_trace.json",
+    "skillsExecuted": ["analyze"],
+    "agentsExecuted": ["claude"]
+  },
+  "tasks": [
+    {
+      "taskId": "T14-1",
+      "agent": "claude",
+      "inputs": [
+        "skills/analyze/SKILL.md",
+        "README.md",
+        "settings.json",
+        "hooks/turn-init.sh",
+        "scripts/setup.sh"
+      ],
+      "outputs": [
+        {
+          "path": "docs/analysis-codebase.md",
+          "sha256": "93e98b2d2f779721a6ef76e1a40028a147b49e5aadf78f860633218137eedd4a"
+        }
+      ],
+      "validations": [
+        { "rule": "tests-pass", "status": "skipped", "detailsPath": "" },
+        { "rule": "lint-clean", "status": "skipped", "detailsPath": "" },
+        { "rule": "build-succeeds", "status": "skipped", "detailsPath": "" }
+      ]
+    }
+  ],
+  "provenance": {
+    "promptHash": "7a54d74f151d7201a20a3da4d9ae9a1571cd295e4cb5d2d4b77a2198469244df",
+    "tools": ["Read", "Write", "Bash", "Grep"],
+    "startedAt": "2026-03-05T15:13:04Z",
+    "finishedAt": "2026-03-05T15:13:04Z",
+    "activePatternName": "analyze",
+    "activePatternPath": "skills/analyze/SKILL.md"
+  },
+  "outputs": [
+    { "path": "docs/analysis-codebase.md", "sha256": "93e98b2d2f779721a6ef76e1a40028a147b49e5aadf78f860633218137eedd4a" },
+    { "path": "ai/agentic-pipeline/turns/turn-14/session_context.md", "sha256": "79be0351575639b65fd3f81c49d9aa2eea4a8176becc37a1b8abfc78a3170aa7" },
+    { "path": "ai/agentic-pipeline/turns/turn-14/execution_trace.json", "sha256": "240eb9671b98cf93a6efbd6e49330ac179517029f9fd2fa6a7a1af95ba002490" },
+    { "path": "ai/agentic-pipeline/turns/turn-14/pull_request.md", "sha256": "1a51182056cde1ae6012a9f388a3096514545e8fa33bd04243e26c2fab86a512" },
+    { "path": "ai/agentic-pipeline/turns/turn-14/adr.md", "sha256": "593599d5ac28416083ca0030bdf1639ef44e05b94b6834bbd95f569345294f1d" }
+  ]
+}
