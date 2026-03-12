@@ -8,7 +8,7 @@ disable-model-invocation: false
 
 # Fix GitHub Issue
 
-Issue: $ARGUMENTS
+Issue: $ARGUMENTS 
 
 ## Read Issue
 

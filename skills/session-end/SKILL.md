@@ -18,9 +18,9 @@ Run:
 
 If a turn was executed this session (TURN_ID is set), complete all Post-Execution artifacts:
 
-### Step 2a: Update session_context.md
+### Step 2a: Update turn_context.md
 
-File: `./ai/agentic-pipeline/turns/turn-${TURN_ID}/session_context.md`
+File: `./ai/agentic-pipeline/turns/turn-${TURN_ID}/turn_context.md`
 
 **MANDATORY**: Update the pending fields with actual values:
 
@@ -28,10 +28,10 @@ File: `./ai/agentic-pipeline/turns/turn-${TURN_ID}/session_context.md`
 2. Calculate elapsed time from TURN_START_TIME to TURN_END_TIME (format: `Xh Ym Zs` or `Ym Zs`)
 3. Replace `[pending]` values:
 
-| Field | Replace With |
-|-------|--------------|
-| `TURN_END_TIME` | Current UTC timestamp (ISO 8601) |
-| `TURN_ELAPSED_TIME` | Calculated duration |
+| Field                 | Replace With                                     |
+|-----------------------|--------------------------------------------------|
+| `TURN_END_TIME`       | Current UTC timestamp (ISO 8601)                 |
+| `TURN_ELAPSED_TIME`   | Calculated duration                              |
 | `{{SKILLS_EXECUTED}}` | Comma-separated list of skills actually executed |
 | `{{AGENTS_EXECUTED}}` | Comma-separated list of agents actually executed |
 
@@ -58,26 +58,26 @@ Rules:
 1. **Read template**: `${HOME}/.claude/templates/pull_request_template.md`
 2. **Replace ALL placeholders** with actual values:
 
-| Placeholder | Value |
-|-------------|-------|
-| `{{TURN_ID}}` | Current turn number |
-| `{{DATE}}` | Today's date (YYYY-MM-DD) |
-| `{{TASK_SUMMARY}}` | One-line summary of what was done |
-| `{{SUMMARY_BULLET_1}}` | First accomplishment |
-| `{{SUMMARY_BULLET_2}}` | Second accomplishment |
-| `{{SUMMARY_BULLET_3}}` | Third accomplishment |
-| `{{TURN_START_TIME}}` | From session_context.md |
-| `{{TURN_END_TIME}}` | Current UTC timestamp |
-| `{{TURN_ELAPSED_TIME}}` | Calculated duration |
-| `{{INPUT_PROMPT_SUMMARY}}` | Summary of user's request |
-| `{{ACTIVE_PATTERN_NAME}}` | Pattern used, or `N/A` |
-| `{{ACTIVE_PATTERN_PATH}}` | Pattern path, or `N/A` |
-| `{{TASK_N}}` / `{{AGENTS_N}}` | Tasks and agents for each row |
-| `{{SKILLS_EXECUTED_LIST}}` | Comma-separated list |
-| `{{AGENTS_EXECUTED_LIST}}` | Comma-separated list |
-| `{{AI_FILE_N}}` | Files added under `./ai/` |
-| `{{TASK}}`, `{{DESCRIPTION_FROM_METADATA}}`, `{{FILE_PATH}}` | Source files added |
-| `{{OLD_VERSION}}`, `{{NEW_VERSION}}` | Version changes for modified files |
+| Placeholder                                                  | Value                              |
+|--------------------------------------------------------------|------------------------------------|
+| `{{TURN_ID}}`                                                | Current turn number                |
+| `{{DATE}}`                                                   | Today's date (YYYY-MM-DD)          |
+| `{{TASK_SUMMARY}}`                                           | One-line summary of what was done  |
+| `{{SUMMARY_BULLET_1}}`                                       | First accomplishment               |
+| `{{SUMMARY_BULLET_2}}`                                       | Second accomplishment              |
+| `{{SUMMARY_BULLET_3}}`                                       | Third accomplishment               |
+| `{{TURN_START_TIME}}`                                        | From session_context.md            |
+| `{{TURN_END_TIME}}`                                          | Current UTC timestamp              |
+| `{{TURN_ELAPSED_TIME}}`                                      | Calculated duration                |
+| `{{INPUT_PROMPT_SUMMARY}}`                                   | Summary of user's request          |
+| `{{ACTIVE_PATTERN_NAME}}`                                    | Pattern used, or `N/A`             |
+| `{{ACTIVE_PATTERN_PATH}}`                                    | Pattern path, or `N/A`             |
+| `{{TASK_N}}` / `{{AGENTS_N}}`                                | Tasks and agents for each row      |
+| `{{SKILLS_EXECUTED_LIST}}`                                   | Comma-separated list               |
+| `{{AGENTS_EXECUTED_LIST}}`                                   | Comma-separated list               |
+| `{{AI_FILE_N}}`                                              | Files added under `./ai/`          |
+| `{{TASK}}`, `{{DESCRIPTION_FROM_METADATA}}`, `{{FILE_PATH}}` | Source files added                 |
+| `{{OLD_VERSION}}`, `{{NEW_VERSION}}`                         | Version changes for modified files |
 
 3. **Write filled template** to: `./ai/agentic-pipeline/turns/turn-${TURN_ID}/pull_request.md`
 
@@ -85,8 +85,8 @@ Rules:
 
 File: `./ai/agentic-pipeline/turns/turn-${TURN_ID}/adr.md`
 
-Apply ADR policy from `rules/adr.md`:
-- If architectural decisions were made → Full ADR using template: `${HOME}/.claude/templates/adr_template.md`
+Apply ADR policy from `adr.md`:
+- If architectural decisions were made → complete full ADR using template.
 - If no architectural decisions → Minimal one-liner: `No architectural decision made this turn — [brief description].`
 
 ### Step 2e: Write manifest.json

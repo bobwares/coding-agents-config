@@ -11,14 +11,10 @@
             "id": "b7111bedbb79633a",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "docs-2/INDEX.md",
-                "mode": "preview",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "INDEX"
+              "title": "New tab"
             }
           }
         ]
@@ -187,23 +183,38 @@
   },
   "active": "b7111bedbb79633a",
   "lastOpenFiles": [
-    "docs-2/04-plans-and-context/01-optimize-claude-md-plan.md",
-    "analysis-claude-implementation.md",
-    "TODO.md",
-    "Install Obsidian Plugin MCP.md",
-    "Non-functional requirements.md",
+    "docs-2/04-plans-and-context/03-session-context-optimization-gpt-5.md",
     "docs-2/04-plans-and-context/02-session-context-optimization.md",
-    "Untitled.base",
-    "analysis-spec-prd-parse.md",
-    "analysis-skills-and-agents.md",
-    "agents.md",
-    "docs-2/INDEX.md",
+    "docs-2/04-plans-and-context/01-optimize-claude-md-plan.md",
+    "docs-2/03-analysis/10-2026-03-05-coding-agents-config-codebase-analysis.md",
+    "docs-2/03-analysis/09-tech-standards-analysis.md",
+    "docs-2/03-analysis/08-codex-one-turn-readiness-analysis.md",
+    "docs-2/03-analysis/07-this-repo-analysis.md",
+    "docs-2/03-analysis/06-coding-agents-config-repository-analysis.md",
+    "docs-2/03-analysis/05-coding-agents-config-analysis.md",
+    "docs-2/03-analysis/04-skills-and-agents-ecosystem-analysis.md",
+    "docs-2/03-analysis/03-spec-prd-parse-analysis.md",
+    "docs-2/03-analysis/02-claude-implementation-analysis.md",
+    "docs-2/03-analysis/01-codebase-analysis-summary.md",
+    "docs-2/02-standards-and-contracts/03-project-execute-golden-path-contract.md",
+    "docs-2/02-standards-and-contracts/02-nfr-checklist.md",
+    "docs-2/02-standards-and-contracts/01-non-functional-spec-global-baseline.md",
+    "docs-2/01-reference/05-skills-reference-detailed.md",
+    "docs-2/01-reference/04-skills-reference-quick.md",
     "docs-2/01-reference/03-hooks-reference.md",
+    "docs-2/01-reference/02-agents-reference-detailed.md",
     "docs-2/01-reference/01-agents-reference-quick.md",
-    "claude-memory/MEMORY.md",
+    "docs-2/INDEX.md",
+    "docs-2/04-plans-and-context",
+    "docs-2/03-analysis",
+    "docs-2/02-standards-and-contracts",
+    "docs-2/01-reference",
+    "docs-2",
+    "claude-memory/skills.md",
     "claude-memory/hooks.md",
     "claude-memory/agents.md",
-    "claude-memory/skills.md",
-    "claude-memory"
+    "claude-memory/MEMORY.md",
+    "claude-memory",
+    "Untitled.base"
   ]
 }
