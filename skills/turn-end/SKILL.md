@@ -1,10 +1,10 @@
 ---
-name: session-end
-description: Complete turn lifecycle post-execution artifacts and save session state. Run at the end of every session or after completing a turn.
+name: turn-end
+description: Complete turn lifecycle post-execution artifacts. Run at the end of every coding task.
 disable-model-invocation: false
 ---
 
-# Session End
+# Turn End
 
 ## Step 1: Capture Git State
 
@@ -35,7 +35,7 @@ File: `./ai/agentic-pipeline/turns/turn-${TURN_ID}/turn_context.md`
 | `{{SKILLS_EXECUTED}}` | Comma-separated list of skills actually executed |
 | `{{AGENTS_EXECUTED}}` | Comma-separated list of agents actually executed |
 
-4. Also replace any remaining `[pending - finalize at session-end]` placeholders with actual values.
+4. Also replace any remaining `[pending - finalize at turn-end]` placeholders with actual values.
 
 ### Step 2b: Update execution_trace.json
 
@@ -138,14 +138,14 @@ Report:
 
 ```
 ═══════════════════════════════════════════════════════════
-  SESSION END — Turn ${TURN_ID} Complete
+  TURN END — Turn ${TURN_ID} Complete
 ═══════════════════════════════════════════════════════════
-  ARTIFACTS    │ session_context.md ✓
+  ARTIFACTS    │ turn_context.md ✓
                │ pull_request.md ✓
                │ adr.md ✓
                │ manifest.json ✓
                │ turns_index.csv updated ✓
                │ git tag turn/${TURN_ID} ✓
 ═══════════════════════════════════════════════════════════
-Session saved. See you next time!
+Turn complete. See you next time!
 ```

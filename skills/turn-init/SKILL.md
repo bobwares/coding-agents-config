@@ -65,7 +65,7 @@ echo "Coding Agent: $CODING_AGENT"
 
 Get the next turn ID:
 ```bash
-TURN_ID=$($HOME/.claude/scripts/get-next-turn-id.sh .)
+TURN_ID=$(./skills/turn-init/scripts/get-next-turn-id.sh .)
 echo $TURN_ID
 ```
 
@@ -98,7 +98,7 @@ echo $TURN_DIR
 | `{{ACTIVE_BRANCH}}`                                  | Current git branch                                    |
 | `{{TASK_DESCRIPTION}}`                               | First 500 chars of user prompt                        |
 | `{{respond with the first 50 lines of the prompt.}}` | The user's full prompt (up to 50 lines)               |
-| `{{DOMAIN_SKILL}}`                                   | Primary skill being used, or `none`                   |
+| `{{DOMAIN_SKILL}}`                                   | List of skills used during turn or `none`             |
 | `{{SKILLS_REQUESTED_FROM_PROMPT}}`                   | Skills explicitly requested, or `none`                |
 | `{{SKILLS_EXECUTED}}`                                | `[pending - finalize at session-end]`                 |
 | `{{AGENTS_EXECUTED}}`                                | `[pending - finalize at session-end]`                 |
@@ -140,7 +140,7 @@ After displaying status, proceed to execute the user's original request.
 
 ## IMPORTANT: Post-Execution Requirement
 
-**After completing the user's task, you MUST run `/session-end` to:**
+**After completing the user's task, you MUST run `/turn-end` to:**
 - Update `turn_context.md` with TURN_END_TIME and TURN_ELAPSED_TIME
 - Create `pull_request.md`
 - Create `adr.md`
@@ -148,4 +148,4 @@ After displaying status, proceed to execute the user's original request.
 - Update `turns_index.csv`
 - Tag the commit
 
-A turn is incomplete without these artifacts. Do not end the conversation until `/session-end` has been executed.
+A turn is incomplete without these artifacts. Do not end the conversation until `/turn-end` has been executed.

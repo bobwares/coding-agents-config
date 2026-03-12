@@ -19,7 +19,7 @@ git log --oneline -5
 
 CLAUDE_PLUGIN_ROOT=$CLAUDE_PLUGIN_ROOT
 
-NEXT_TURN_ID=$(/.claude/scripts/get-current-turn.sh .)
+NEXT_TURN_ID=$(scripts/get-current-turn.sh .)
 echo "BRANCH=$(git branch --show-current)"
 echo "NEXT_TURN_ID=$NEXT_TURN_ID"
 ```
