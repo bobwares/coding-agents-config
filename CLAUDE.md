@@ -14,11 +14,7 @@ Every coding task follows this sequence — no exceptions:
 ## Rules
 
 
--  Before Every Coding Task
-
-Run `/turn-init`
-
-
+-  Before Every Coding Task Run `/turn-init`.
 - Never commit to `main` or `master`
 - Never skip post-execution steps, even on failure
 - Every source file gets a metadata header
@@ -26,10 +22,3 @@ Run `/turn-init`
 - Branch format: `<type>/<description>[-T<id>]`
 - Tag every turn: `git tag turn/${TURN_ID}`
 - ADR is mandatory every turn — full or minimal
-
-
-## Container
-
-- Session
-  - Task
-    - turns 

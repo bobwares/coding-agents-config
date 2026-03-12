@@ -10,13 +10,13 @@ Mode: $ARGUMENTS
 
 ## Available Modes
 
-| Mode | Behavior |
-|------|---------|
-| `architect` | Read-only. Design and document only. No code changes. |
-| `code` | Default. Full implementation mode. |
-| `debug` | Investigation first. Must state root cause before fixing. |
-| `review` | Read-only. Review and comment only. No changes. |
-| `test` | TDD. Write failing test before any implementation. |
+| Mode        | Behavior                                                  |
+|-------------|-----------------------------------------------------------|
+| `architect` | Read-only. Design and document only. No code changes.     |
+| `code`      | Default. Full implementation mode.                        |
+| `debug`     | Investigation first. Must state root cause before fixing. |
+| `review`    | Read-only. Review and comment only. No changes.           |
+| `test`      | TDD. Write failing test before any implementation.        |
 
 ## Activate Mode
 

@@ -12,7 +12,7 @@ triggers:
 # Config Init
 
 Set up all symlinks from `coding-agents-config` into `~/.claude/` and `~/.codex/`.
-
+[.zshrc](..%2F..%2F..%2F.zshrc)
 ## Procedure
 
 1. Run the setup script:
