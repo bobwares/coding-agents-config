@@ -1,4 +1,12 @@
-# Session Context — Turn {{TURN_ID}}
+# Turn Context — Turn {{TURN_ID}}
+
+
+## User Prompt
+
+{{respond with the first 50 lines of the prompt.}}
+
+
+## Variables
 
 | Variable               | Value                                           |
 |------------------------|-------------------------------------------------|
@@ -9,15 +17,15 @@
 | TARGET_PROJECT         | {{TARGET_PROJECT}}                              |
 | CURRENT_TURN_DIRECTORY | {{CURRENT_TURN_DIRECTORY}}                      |
 | EXECUTION_TRACE_FILE   | {{CURRENT_TURN_DIRECTORY}}/execution_trace.json |
+| CLI_NAME               | {{CLI_NAME}}                                    |
+| MODEL_ID               | {{MODEL_ID}}                                    |
 | CODING_AGENT           | {{CODING_AGENT}}                                |
 | Active Branch          | {{ACTIVE_BRANCH}}                               |
 | Task Description       | {{TASK_DESCRIPTION}}                            |
 
 
 
-## User Prompt
 
-{{respond with the first 50 lines of the prompt.}}
 
 
 ## Activated Skills

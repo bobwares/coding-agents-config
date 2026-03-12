@@ -1,6 +1,6 @@
 ---
 name: turn-init
-description: Initialize a new turn directory and session context. Run at the start of every coding task.
+description: "Initialize a new turn directory and turn context. Run at the start of every coding task."
 disable-model-invocation: false
 ---
 
@@ -8,17 +8,65 @@ disable-model-invocation: false
 
 Initialize the turn directory and artifacts for provenance tracking.
 
-## Step 1: Resolve Turn ID
+## Step 1: Detect CLI and Capture Model Info
+
+Different AI coding CLIs expose model information via environment variables. Use fallback detection:
+
+```bash
+# Detect which CLI is running and get model ID
+if [ -n "$ANTHROPIC_MODEL" ]; then
+  # Claude Code
+  CLI_NAME="claude-code"
+  MODEL_ID="$ANTHROPIC_MODEL"
+elif [ -n "$CODEX_MODEL" ]; then
+  # OpenAI Codex CLI
+  CLI_NAME="codex"
+  MODEL_ID="$CODEX_MODEL"
+elif [ -n "$OPENAI_MODEL" ]; then
+  # OpenAI generic
+  CLI_NAME="openai"
+  MODEL_ID="$OPENAI_MODEL"
+elif [ -n "$AI_MODEL" ]; then
+  # Generic AI CLI
+  CLI_NAME="ai-cli"
+  MODEL_ID="$AI_MODEL"
+else
+  # Unknown - use fallback
+  CLI_NAME="unknown"
+  MODEL_ID="unknown"
+fi
+
+# Derive friendly name from model ID
+# "claude-opus-4-5" → "Claude Opus 4.5"
+# "gpt-4o" → "Gpt 4o"
+MODEL_NAME=$(echo "$MODEL_ID" | sed 's/-/ /g' | sed 's/4 5/4.5/g' | sed 's/\b\(.\)/\u\1/g')
+
+# Coding agent label for artifacts
+CODING_AGENT="AI Coding Agent ($MODEL_NAME)"
+
+echo "CLI: $CLI_NAME"
+echo "Model ID: $MODEL_ID"
+echo "Model Name: $MODEL_NAME"
+echo "Coding Agent: $CODING_AGENT"
+```
+
+**Environment Variables by CLI:**
+
+| CLI         | Model Variable    | Detection Variable     |
+|-------------|-------------------|------------------------|
+| Claude Code | `ANTHROPIC_MODEL` | `INSIDE_CLAUDE_CODE=1` |
+| Codex       | `CODEX_MODEL`     | `INSIDE_CODEX=1`       |
+| OpenAI      | `OPENAI_MODEL`    | -                      |
+| Generic     | `AI_MODEL`        | -                      |
+
+**Extending for new CLIs:** Add an `elif` branch checking for that CLI's model environment variable.
+
+## Step 2: Resolve Turn ID
 
 Get the next turn ID:
 ```bash
-if [ -x "./scripts/get-next-turn-id.sh" ]; then
-  TURN_ID=$(./scripts/get-next-turn-id.sh .)
-elif [ -x "$HOME/.claude/scripts/get-next-turn-id.sh" ]; then
-  TURN_ID=$($HOME/.claude/scripts/get-next-turn-id.sh .)
-else
-  TURN_ID=1
-fi
+TURN_ID=$($HOME/.claude/scripts/get-next-turn-id.sh .)
+echo $TURN_ID
 ```
 
 ## Step 2: Create Turn Directory
@@ -26,13 +74,14 @@ fi
 ```bash
 TURN_DIR="./ai/agentic-pipeline/turns/turn-${TURN_ID}"
 mkdir -p "$TURN_DIR"
+echo $TURN_DIR
 ```
 
-## Step 3: Initialize session_context.md
+## Step 3: Initialize turn_context.md
 
 **MANDATORY**: Read the template file first, then fill in all placeholders.
 
-1. **Read template**: `${HOME}/.claude/templates/session_context.md`
+1. **Read template**: `./turn_context.md`
 2. **Replace ALL placeholders** with actual values:
 
 | Placeholder                                          | Value                                                 |
@@ -43,7 +92,9 @@ mkdir -p "$TURN_DIR"
 | `{{TURN_ELAPSED_TIME}}`                              | Leave as `[pending]`                                  |
 | `{{TARGET_PROJECT}}`                                 | Absolute path to project root                         |
 | `{{CURRENT_TURN_DIRECTORY}}`                         | `./ai/agentic-pipeline/turns/turn-${TURN_ID}`         |
-| `{{CODING_AGENT}}`                                   | `Claude Opus 4.5` (or current model)                  |
+| `{{CLI_NAME}}`                                       | Value of `$CLI_NAME` from Step 1                      |
+| `{{MODEL_ID}}`                                       | Value of `$MODEL_ID` from Step 1                      |
+| `{{CODING_AGENT}}`                                   | Value of `$CODING_AGENT` from Step 1                  |
 | `{{ACTIVE_BRANCH}}`                                  | Current git branch                                    |
 | `{{TASK_DESCRIPTION}}`                               | First 500 chars of user prompt                        |
 | `{{respond with the first 50 lines of the prompt.}}` | The user's full prompt (up to 50 lines)               |
@@ -54,7 +105,7 @@ mkdir -p "$TURN_DIR"
 | `{{TASK_TYPE}}`                                      | Type of task (e.g., `bug-fix`, `feature`, `refactor`) |
 | `{{ASSIGNED_AGENT}}`                                 | Agent handling the task, or `claude`                  |
 
-3. **Write filled template** to: `./ai/agentic-pipeline/turns/turn-${TURN_ID}/session_context.md`
+3. **Write filled template** to: `./ai/agentic-pipeline/turns/turn-${TURN_ID}/turn_context.md`
 
 ## Step 4: Initialize execution_trace.json
 
@@ -90,7 +141,7 @@ After displaying status, proceed to execute the user's original request.
 ## IMPORTANT: Post-Execution Requirement
 
 **After completing the user's task, you MUST run `/session-end` to:**
-- Update `session_context.md` with TURN_END_TIME and TURN_ELAPSED_TIME
+- Update `turn_context.md` with TURN_END_TIME and TURN_ELAPSED_TIME
 - Create `pull_request.md`
 - Create `adr.md`
 - Create `manifest.json`
