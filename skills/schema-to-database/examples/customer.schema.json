@@ -1,0 +1,35 @@
+{
+  "entity": "Customer",
+  "tableName": "customers",
+  "fields": [
+    {
+      "name": "id",
+      "type": "uuid",
+      "primaryKey": true,
+      "nullable": false
+    },
+    {
+      "name": "firstName",
+      "type": "string",
+      "maxLength": 100,
+      "nullable": false
+    },
+    {
+      "name": "lastName",
+      "type": "string",
+      "maxLength": 100,
+      "nullable": false
+    },
+    {
+      "name": "email",
+      "type": "string",
+      "nullable": false,
+      "unique": true
+    },
+    {
+      "name": "createdAt",
+      "type": "timestamp",
+      "nullable": false
+    }
+  ]
+}

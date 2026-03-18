@@ -66,7 +66,7 @@ Rules:
 | `{{SUMMARY_BULLET_1}}`                                       | First accomplishment               |
 | `{{SUMMARY_BULLET_2}}`                                       | Second accomplishment              |
 | `{{SUMMARY_BULLET_3}}`                                       | Third accomplishment               |
-| `{{TURN_START_TIME}}`                                        | From session_context.md            |
+| `{{TURN_START_TIME}}`                                        | From turn_context.md               |
 | `{{TURN_END_TIME}}`                                          | Current UTC timestamp              |
 | `{{TURN_ELAPSED_TIME}}`                                      | Calculated duration                |
 | `{{INPUT_PROMPT_SUMMARY}}`                                   | Summary of user's request          |

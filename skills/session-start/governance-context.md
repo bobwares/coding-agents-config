@@ -11,6 +11,7 @@ Enforce mandatory coding standards on every file written or modified. These rule
 **Every source file** (TypeScript, JavaScript, Java, Python, SQL, shell scripts, YAML infrastructure files) **must begin with a metadata header comment**.
 
 Explicit exemption list:
+
 - globals.css
 - turbo.json
 - binary files
@@ -33,6 +34,26 @@ Explicit exemption list:
  * Date: {{UTC_ISO8601}}
  * Exports: {{EXPORTED_SYMBOLS}}
  * Description: {{DESCRIPTION}}
+ * Log:
+ * {{turn_number}}, {{version}}, {{YYYY/MM/DD}}, {{HH:MM AM/PM}}, {{coding_agent_and_model}}
+ */
+```
+
+**Example:**
+```typescript
+/**
+ * App: base-node-fullstack
+ * Package: api
+ * File: user.service.ts
+ * Version: 0.1.1
+ * Turns: 1, 2
+ * Author: AI Coding Agent (Claude Opus 4.5)
+ * Date: 2026-03-18T14:30:00Z
+ * Exports: UserService
+ * Description: Service for managing user entities
+ * Log:
+ * 1, 0.1.0, 2026/03/15, 10:00 AM, Claude Opus 4.5
+ * 2, 0.1.1, 2026/03/18, 02:30 PM, Claude Opus 4.5
  */
 ```
 
@@ -47,6 +68,26 @@ Explicit exemption list:
  * Author: AI Coding Agent ({{MODEL_NAME}})
  * Date: {{UTC_ISO8601}}
  * Description: {{DESCRIPTION}}
+ * Log:
+ * {{turn_number}}, {{version}}, {{YYYY/MM/DD}}, {{HH:MM AM/PM}}, {{coding_agent_and_model}}
+ */
+```
+
+**Example:**
+```java
+/**
+ * App: enterprise-api
+ * Package: com.example.service
+ * File: TaskService.java
+ * Version: 0.2.0
+ * Turns: 5, 8, 12
+ * Author: AI Coding Agent (Claude Opus 4.5)
+ * Date: 2026-03-18T16:45:00Z
+ * Description: Service for task management operations
+ * Log:
+ * 5, 0.1.0, 2026/03/10, 09:15 AM, Claude Opus 4.5
+ * 8, 0.1.1, 2026/03/14, 03:20 PM, Codex GPT-5
+ * 12, 0.2.0, 2026/03/18, 04:45 PM, Claude Opus 4.5
  */
 ```
 
@@ -60,6 +101,24 @@ Turns: {{TURN_NUMBER}}
 Author: AI Coding Agent ({{MODEL_NAME}})
 Date: {{UTC_ISO8601}}
 Description: {{DESCRIPTION}}
+Log:
+{{turn_number}}, {{version}}, {{YYYY/MM/DD}}, {{HH:MM AM/PM}}, {{coding_agent_and_model}}
+"""
+```
+
+**Example:**
+```python
+"""
+App: data-pipeline
+File: transform.py
+Version: 0.1.2
+Turns: 3, 4
+Author: AI Coding Agent (Claude Opus 4.5)
+Date: 2026-03-18T11:00:00Z
+Description: Data transformation utilities
+Log:
+3, 0.1.0, 2026/03/12, 08:30 AM, Claude Opus 4.5
+4, 0.1.2, 2026/03/18, 11:00 AM, Claude Opus 4.5
 """
 ```
 
@@ -72,6 +131,21 @@ Description: {{DESCRIPTION}}
 # Author: AI Coding Agent ({{MODEL_NAME}})
 # Date: {{UTC_ISO8601}}
 # Description: {{DESCRIPTION}}
+# Log:
+# {{turn_number}}, {{version}}, {{YYYY/MM/DD}}, {{HH:MM AM/PM}}, {{coding_agent_and_model}}
+```
+
+**Example:**
+```bash
+# App: base-node-fullstack
+# File: deploy.sh
+# Version: 0.1.0
+# Turns: 7
+# Author: AI Coding Agent (Claude Opus 4.5)
+# Date: 2026-03-18T09:00:00Z
+# Description: Deployment script for production environment
+# Log:
+# 7, 0.1.0, 2026/03/18, 09:00 AM, Claude Opus 4.5
 ```
 
 ### SQL
@@ -83,6 +157,22 @@ Description: {{DESCRIPTION}}
 -- Author: AI Coding Agent ({{MODEL_NAME}})
 -- Date: {{UTC_ISO8601}}
 -- Description: {{DESCRIPTION}}
+-- Log:
+-- {{turn_number}}, {{version}}, {{YYYY/MM/DD}}, {{HH:MM AM/PM}}, {{coding_agent_and_model}}
+```
+
+**Example:**
+```sql
+-- App: base-node-fullstack
+-- File: 001_create_users.sql
+-- Version: 0.1.1
+-- Turns: 2, 6
+-- Author: AI Coding Agent (Claude Opus 4.5)
+-- Date: 2026-03-18T13:15:00Z
+-- Description: Migration to create users table
+-- Log:
+-- 2, 0.1.0, 2026/03/08, 02:00 PM, Claude Opus 4.5
+-- 6, 0.1.1, 2026/03/18, 01:15 PM, Claude Opus 4.5
 ```
 
 ---
