@@ -115,7 +115,30 @@ Append row:
 ${TURN_ID},${TURN_START_TIME},${TURN_END_TIME},${ELAPSED_SECONDS},${BRANCH},${COMMIT_SHA},${TASK_SUMMARY}
 ```
 
-### Step 2g: Tag the commit
+### Step 2g: Stage and Commit All Generated Files
+
+**MANDATORY**: Stage all files generated during the turn and commit them.
+
+```bash
+# Stage turn artifacts
+git add ./ai/agentic-pipeline/turns/turn-${TURN_ID}/
+
+# Stage any other modified/new files in the working directory
+git add -A
+
+# Commit with standard format
+git commit -m "AI Coding Agent Change:
+- ${TASK_SUMMARY}
+- Generate turn artifacts for turn-${TURN_ID}
+- Update turns_index.csv"
+```
+
+Include 3-5 imperative bullet points summarizing:
+- The main task accomplished
+- Key files created or modified
+- Turn artifacts generated
+
+### Step 2h: Tag the commit
 
 ```bash
 git tag turn/${TURN_ID}
@@ -124,15 +147,7 @@ git push origin turn/${TURN_ID}
 
 ---
 
-## Step 3: Handle Uncommitted Work
-
-If there are uncommitted changes:
-Ask: "There are uncommitted changes. Would you like to commit before ending? (yes/no)"
-If yes: spawn `git-guardian` to create a commit following the `AI Coding Agent Change:` format.
-
----
-
-## Step 4: Confirm Completion
+## Step 3: Confirm Completion
 
 Report:
 
@@ -145,7 +160,9 @@ Report:
                │ adr.md ✓
                │ manifest.json ✓
                │ turns_index.csv updated ✓
-               │ git tag turn/${TURN_ID} ✓
+  GIT          │ All files staged ✓
+               │ Committed ✓
+               │ Tagged turn/${TURN_ID} ✓
 ═══════════════════════════════════════════════════════════
 Turn complete. See you next time!
 ```

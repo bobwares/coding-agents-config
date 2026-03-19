@@ -1,0 +1,40 @@
+{
+  "turnId": "52",
+  "version": "1.0.0",
+  "generatedAt": "2026-03-19T22:11:14Z",
+  "artifacts": {
+    "turn_context.md": {
+      "sha256": "74c79df7c8c7bd4abb05bc4d259406141ad5f477e8839e34962493931a1c0865",
+      "size": 3211
+    },
+    "execution_trace.json": {
+      "sha256": "567264464f041857a7a92b09ba6367aa6aa4ead99bbea0e32e5877c37c078638",
+      "size": 254
+    },
+    "pull_request.md": {
+      "sha256": "da04b7f68c24068223e07aadef201a60cd22b644d12db3049b97e75924d40c22",
+      "size": 2799
+    },
+    "adr.md": {
+      "sha256": "453c742fc58f509749128d28a26fe0d6d0bd32cffbf15c141709eff6a90843af",
+      "size": 1955
+    }
+  },
+  "execution": {
+    "tracePath": "./ai/agentic-pipeline/turns/turn-52/execution_trace.json",
+    "skillsExecuted": ["session-start", "turn-init", "turn-end"],
+    "agentsExecuted": ["claude"]
+  },
+  "task": {
+    "summary": "Update DSL skills to accept file path input",
+    "filesModified": [
+      "skills/app-from-dsl/SKILL.md",
+      "skills/dsl-model-interpreter/SKILL.md",
+      "skills/prisma-persistence/SKILL.md",
+      "skills/nestjs-crud-resource/SKILL.md",
+      "skills/field-mapper-generator/SKILL.md",
+      "skills/react-form-page/SKILL.md",
+      "skills/http-test-artifacts/SKILL.md"
+    ]
+  }
+}
