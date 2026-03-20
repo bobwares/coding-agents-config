@@ -66,7 +66,7 @@ Rules:
 | `{{SUMMARY_BULLET_1}}`                                       | First accomplishment               |
 | `{{SUMMARY_BULLET_2}}`                                       | Second accomplishment              |
 | `{{SUMMARY_BULLET_3}}`                                       | Third accomplishment               |
-| `{{TURN_START_TIME}}`                                        | From session_context.md            |
+| `{{TURN_START_TIME}}`                                        | From turn_context.md               |
 | `{{TURN_END_TIME}}`                                          | Current UTC timestamp              |
 | `{{TURN_ELAPSED_TIME}}`                                      | Calculated duration                |
 | `{{INPUT_PROMPT_SUMMARY}}`                                   | Summary of user's request          |
@@ -115,7 +115,44 @@ Append row:
 ${TURN_ID},${TURN_START_TIME},${TURN_END_TIME},${ELAPSED_SECONDS},${BRANCH},${COMMIT_SHA},${TASK_SUMMARY}
 ```
 
-### Step 2g: Tag the commit
+### Step 2g: Stage and Commit All Generated Files
+
+**MANDATORY**: Stage all files generated during the turn and commit them.
+
+**Embedded repo guard**: Before staging, detect nested Git directories that would block root-repo staging:
+
+```bash
+find . -type d -name .git -not -path './.git' -prune | sort
+```
+
+If the command returns paths such as `./app/web/.git`:
+- Treat it as a workflow error unless the project intentionally uses a nested repo or submodule.
+- Do not assume root-level `git add -A` will pick up new files under that tree.
+- Move or remove the accidental nested `.git` directory before final staging, then rerun staging from the root repo.
+
+```bash
+# Stage source paths explicitly so app code is not missed
+git add app/api/src app/api/test app/web/src app/web/tests app/packages 2>/dev/null || true
+
+# Stage turn artifacts
+git add ./ai/agentic-pipeline/turns/turn-${TURN_ID}/
+
+# Stage any other modified/new files in the working directory
+git add -A
+
+# Commit with standard format
+git commit -m "AI Coding Agent Change:
+- ${TASK_SUMMARY}
+- Generate turn artifacts for turn-${TURN_ID}
+- Update turns_index.csv"
+```
+
+Include 3-5 imperative bullet points summarizing:
+- The main task accomplished
+- Key files created or modified
+- Turn artifacts generated
+
+### Step 2h: Tag the commit
 
 ```bash
 git tag turn/${TURN_ID}
@@ -124,15 +161,7 @@ git push origin turn/${TURN_ID}
 
 ---
 
-## Step 3: Handle Uncommitted Work
-
-If there are uncommitted changes:
-Ask: "There are uncommitted changes. Would you like to commit before ending? (yes/no)"
-If yes: spawn `git-guardian` to create a commit following the `AI Coding Agent Change:` format.
-
----
-
-## Step 4: Confirm Completion
+## Step 3: Confirm Completion
 
 Report:
 
@@ -145,7 +174,9 @@ Report:
                │ adr.md ✓
                │ manifest.json ✓
                │ turns_index.csv updated ✓
-               │ git tag turn/${TURN_ID} ✓
+  GIT          │ All files staged ✓
+               │ Committed ✓
+               │ Tagged turn/${TURN_ID} ✓
 ═══════════════════════════════════════════════════════════
 Turn complete. See you next time!
 ```

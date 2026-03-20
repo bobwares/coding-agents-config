@@ -1,1 +1,1 @@
-read and load @CLAUDE.md
+read and load ~/.claude/CLAUDE.md

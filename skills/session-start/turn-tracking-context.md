@@ -4,12 +4,12 @@ Every coding task is a turn. Turns are non-negotiable.
 
 ## Every Turn Requires
 
-| Artifact             | Path                                           | When           |
-|----------------------|------------------------------------------------|----------------|
-| `session_context.md` | `./ai/agentic-pipeline/turns/turn-${TURN_ID}/` | Pre-execution  |
-| `pull_request.md`    | `./ai/agentic-pipeline/turns/turn-${TURN_ID}/` | Post-execution |
-| `adr.md`             | `./ai/agentic-pipeline/turns/turn-${TURN_ID}/` | Post-execution |
-| `manifest.json`      | `./ai/agentic-pipeline/turns/turn-${TURN_ID}/` | Post-execution |
+| Artifact          | Path                                           | When           |
+|-------------------|------------------------------------------------|----------------|
+| `turn_context.md` | `./ai/agentic-pipeline/turns/turn-${TURN_ID}/` | Pre-execution  |
+| `pull_request.md` | `./ai/agentic-pipeline/turns/turn-${TURN_ID}/` | Post-execution |
+| `adr.md`          | `./ai/agentic-pipeline/turns/turn-${TURN_ID}/` | Post-execution |
+| `manifest.json`   | `./ai/agentic-pipeline/turns/turn-${TURN_ID}/` | Post-execution |
 
 ## Post-Execution Always Runs
 

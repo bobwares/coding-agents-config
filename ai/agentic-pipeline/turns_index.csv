@@ -14,3 +14,5 @@ turn_id,started_at,finished_at,elapsed_seconds,branch,commit_sha,task_summary
 37,2026-03-06T08:16:57Z,2026-03-06T08:17:45Z,48,skill-creator,,Added Trigger field to hook metadata headers
 43,2026-03-06T09:33:00Z,2026-03-06T09:35:00Z,120,skill-creator,,Refactored hook/skill architecture for session and turn init
 46,2026-03-07T00:15:33Z,2026-03-07T00:17:44Z,131,skill-creator,d6c15fe,Fix turn lifecycle to complete session_context and create post-execution artifacts
+51,2026-03-17T01:04:44Z,2026-03-17T01:08:19Z,215,turn/T51,bc1add4,Add unit and e2e test generation to code-entity-to-crud skill
+52,2026-03-19T12:00:00Z,2026-03-19T22:11:14Z,36674,turn/T51,c650b19,Update DSL skills to accept file path input

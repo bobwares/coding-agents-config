@@ -1,0 +1,1 @@
+I want turn-end to add all generated files to git at the end of the turn.  include ./ai files.
