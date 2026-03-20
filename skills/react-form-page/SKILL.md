@@ -144,7 +144,7 @@ export function {Entity}Form({ mode, initialData, onSubmit }: {Entity}FormProps)
   const isUSA = formData.homeAddress?.country === 'USA';
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} autoComplete="off">
       {/* Form sections */}
     </form>
   );
@@ -157,8 +157,8 @@ export function {Entity}Form({ mode, initialData, onSubmit }: {Entity}FormProps)
 |------------|-----------------|
 | `text-field` | `<input type="text">` |
 | `number-field` | `<input type="number">` |
-| `email-field` | `<input type="email">` |
-| `password-field` | `<input type="password">` |
+| `email-field` | `<input type="email" autoComplete="off">` |
+| `password-field` | `<input type="password" autoComplete="new-password">` |
 | `phone-field` | `<input type="tel">` with mask |
 | `select` | `<select>` with options |
 | `checkbox` | `<input type="checkbox">` |
@@ -426,6 +426,7 @@ pnpm run test
 - **data-testid attributes**: Required for all interactive elements
 - **Controlled inputs**: All fields use React state
 - **No external form libraries**: Plain React state management
+- **Prevent browser autofill**: Add `autoComplete="off"` to `<form>`, use `autoComplete="new-password"` for password fields, and `autoComplete="off"` for email fields in entity forms (not login forms)
 
 ## Non-Goals
 

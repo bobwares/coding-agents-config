@@ -1,6 +1,6 @@
 # coding-agents-config
 
-Shared skills and agent definitions for Claude Code and Codex. Symlinked into `~/.claude/` and `~/.codex/` so every project gets access automatically.
+Agentic pipeline configuration for Claude Code. Enforces turn-based workflow with provenance tracking, branch protection, and governance rules.
 
 ## Setup
 
@@ -18,25 +18,16 @@ Run the setup script — it creates all symlinks and backs up any existing files
 bash scripts/setup.sh
 ```
 
-Or use the `/config-init` skill from within Claude Code.
-
 <details>
 <summary>Manual symlink commands</summary>
 
 ```sh
-# Claude Code
 ln -s ~/coding-agents-config/skills ~/.claude/skills
-ln -s ~/coding-agents-config/agents ~/.claude/agents
-ln -s ~/coding-agents-config/rules ~/.claude/rules
 ln -s ~/coding-agents-config/hooks ~/.claude/hooks
 ln -s ~/coding-agents-config/templates ~/.claude/templates
 ln -s ~/coding-agents-config/scripts ~/.claude/scripts
 ln -s ~/coding-agents-config/CLAUDE.md ~/.claude/CLAUDE.md
 ln -s ~/coding-agents-config/settings.json ~/.claude/settings.json
-
-# Codex
-mkdir -p ~/.codex
-ln -s ~/coding-agents-config/agents ~/.codex/agents
 ```
 
 If any of these already exist, back them up first (`mv <target> <target>.bak`).
@@ -45,51 +36,41 @@ If any of these already exist, back them up first (`mv <target> <target>.bak`).
 ### 3. Verify
 
 ```sh
-ls -la ~/.claude/skills       # should point to ~/coding-agents-config/skills
-ls -la ~/.claude/agents       # should point to ~/coding-agents-config/agents
-ls -la ~/.claude/rules        # should point to ~/coding-agents-config/rules
-ls -la ~/.claude/hooks        # should point to ~/coding-agents-config/hooks
-ls -la ~/.claude/templates    # should point to ~/coding-agents-config/templates
-ls -la ~/.claude/scripts      # should point to ~/coding-agents-config/scripts
-ls -la ~/.claude/CLAUDE.md    # should point to ~/coding-agents-config/CLAUDE.md
+ls -la ~/.claude/skills        # should point to ~/coding-agents-config/skills
+ls -la ~/.claude/hooks         # should point to ~/coding-agents-config/hooks
+ls -la ~/.claude/templates     # should point to ~/coding-agents-config/templates
+ls -la ~/.claude/CLAUDE.md     # should point to ~/coding-agents-config/CLAUDE.md
 ls -la ~/.claude/settings.json # should point to ~/coding-agents-config/settings.json
-ls -la ~/.codex/agents        # should point to ~/coding-agents-config/agents
 ```
-
-Open any project with Claude Code or Codex — the skills and agents are now available globally.
 
 ## Structure
 
 ```
 coding-agents-config/
-├── CLAUDE.md        # Global instructions for all projects
-├── settings.json    # Claude Code settings (model, permissions, etc.)
-├── rules/           # Contextual rules loaded into every session
-│   ├── agent-coordination.md
-│   ├── branch-operations.md
-│   └── tech-standards.md
-├── hooks/           # Shell hooks triggered by Claude Code events
-│   ├── audit-log.sh
-│   ├── skill-eval.js
-│   ├── skill-eval.sh
-│   ├── skill-rules.json
-│   └── turn-init.sh
-├── skills/          # Slash-command skills (each in its own directory)
-│   ├── .system/     # Meta-skills (skill-creator, skill-installer)
-│   ├── analyze/
-│   ├── git-*/       # Git workflow skills
-│   ├── pattern-*/   # Framework pattern libraries
-│   ├── project-*/   # Project scaffolding & execution
-│   ├── spec-*/      # Spec planning & task management
+├── CLAUDE.md           # Global instructions — turn protocol, branch rules
+├── AGENTS.md           # Agent loader directive
+├── settings.json       # Claude Code settings (model, permissions)
+├── hooks/              # Shell hooks triggered by Claude Code events
+│   └── branch-guard.sh # Prevents edits on main/master
+├── skills/             # Slash-command skills
+│   ├── .system/        # Meta-skills (skill-creator, skill-installer)
+│   ├── session-start/  # Initialize session context
+│   ├── turn-init/      # Create turn directory and artifacts
+│   ├── turn-end/       # Finalize turn with PR, ADR, manifest
+│   ├── branch-guard/   # Create turn branch if on main
+│   └── ...             # Other skills
+├── templates/          # Turn lifecycle templates
+│   ├── adr_template.md
+│   ├── pull_request_template.md
+│   ├── manifest.schema.json
 │   └── ...
-├── agents/          # Subagent definitions (markdown files)
-│   ├── agent-orchestrator.md
-│   ├── agent-code-reviewer.md
-│   ├── agent-test-writer.md
-│   └── ...
-├── scripts/         # Automation scripts (setup.sh, project-execute-preflight.sh)
-├── templates/       # Turn lifecycle templates
-└── docs/            # Reference documentation and analysis
+├── scripts/            # Automation scripts
+│   └── setup.sh
+├── ai/                 # Turn artifacts directory
+│   └── agentic-pipeline/turns/
+├── plugins/            # Plugin management
+├── prompts/            # Prompt templates
+└── docs/               # Reference documentation
 ```
 
 ## Execution Flow
@@ -179,38 +160,44 @@ flowchart TB
 | **Execution** | Execute task → Add headers → Bump versions | Modified files |
 | **Turn End** | Update context → Write PR → ADR → Manifest → Index → Tag | 5 artifacts complete |
 
-## Skills (42)
+## Skills (9)
 
-| Category | Skills |
-|---|---|
-| **Git** | `git-checkpoint`, `git-commit-push-pr`, `git-quick-commit`, `git-rollback`, `git-status`, `git-undo`, `github-issue` |
-| **Patterns** | `pattern-api-design`, `pattern-drizzle`, `pattern-nestjs`, `pattern-nextjs`, `pattern-react-ui`, `pattern-shadcn`, `pattern-spring`, `pattern-testing`, `pattern-vercel-ai` |
-| **Project** | `project-create-plan`, `project-execute`, `project-init`, `project-plan` |
-| **Specs** | `spec-epic-start`, `spec-parse-ddd`, `spec-planning`, `spec-prd-list`, `spec-prd-new`, `spec-prd-parse`, `spec-task-next` |
-| **Governance** | `governance`, `governance-adr` |
-| **Session** | `session-start`, `session-end`, `session-context-size` |
-| **Quality** | `verify-all`, `test-and-fix`, `security-scan` |
-| **Debug** | `systematic-debugging`, `diagnose-issue` |
-| **Setup** | `config-init` |
-| **Other** | `analyze`, `makefile-gen`, `mode`, `recreation.gov` |
+| Category | Skill | Description |
+|----------|-------|-------------|
+| **Session** | `session-start` | Initialize session, load context docs |
+| **Turn** | `turn-init` | Create turn directory and initial artifacts |
+| | `turn-end` | Finalize turn with PR, ADR, manifest |
+| | `branch-guard` | Create turn branch if on main/master |
+| **Scaffolding** | `schema-to-database` | Generate DB tables and entity code from JSON schema |
+| | `nest-prisma-resource` | Generate NestJS CRUD resource with Prisma |
+| | `nestjs-customer-crud-scaffold` | Scaffold NestJS customer CRUD app |
+| | `code-entity-to-crud` | Entity to CRUD generation |
+| **Utility** | `helloworld` | Test skill invocation |
 
-## Agents (13)
+### Meta-Skills (.system)
 
-| Agent | Role |
-|---|---|
-| `orchestrator` | Master coordinator for multi-step tasks |
-| `code-reviewer` | Senior engineer code review |
-| `code-architect` | System design and architecture |
-| `test-writer` | TDD specialist (Vitest, JUnit 5, Playwright) |
-| `verify-app` | Full quality gate (typecheck, lint, test, build) |
-| `git-guardian` | Git workflow (commits, push, PRs) |
-| `security-auditor` | OWASP Top 10 and secrets scanning |
-| `doc-generator` | JSDoc, README, OpenAPI, CHANGELOG |
-| `ai-engineer` | Vercel AI SDK integration |
-| `nextjs-engineer` | Next.js 15 App Router specialist |
-| `nestjs-engineer` | NestJS modules, controllers, services |
-| `spring-engineer` | Spring WebFlux + R2DBC reactive APIs |
-| `drizzle-dba` | Drizzle ORM + PostgreSQL schemas and queries |
+| Skill | Description |
+|-------|-------------|
+| `skill-creator` | Create new skills with SKILL.md |
+| `skill-installer` | Install skills from marketplaces |
+
+## Templates
+
+| Template | Purpose |
+|----------|---------|
+| `adr_template.md` | Architecture Decision Record format |
+| `pull_request_template.md` | PR description format |
+| `manifest.schema.json` | Turn manifest JSON schema |
+| `metadata_header.txt` | Source file header format |
+| `branch_naming.md` | Branch naming conventions |
+| `commit_message.md` | Commit message format |
+| `tech-stack.template.md` | Tech stack documentation |
+
+## Hooks
+
+| Hook | Trigger | Purpose |
+|------|---------|---------|
+| `branch-guard.sh` | PreToolUse(Edit) | Block edits on main/master |
 
 ## Adding a new skill
 

@@ -13,7 +13,7 @@
 | TURN_ID                | {{TURN_ID}}                                     |
 | TURN_START_TIME        | {{TURN_START_TIME}}                             |
 | TURN_END_TIME          | {{TURN_END_TIME}}                               |
-| TURN_ELAPSED_TIME      | {{TURN_ELAPSED_TIME}}                           |
+| TURN_ELAPSED_TIME      | {{TURN_END_TIME}} - {{TURN_START_TIME}}         |
 | TARGET_PROJECT         | {{TARGET_PROJECT}}                              |
 | CURRENT_TURN_DIRECTORY | {{CURRENT_TURN_DIRECTORY}}                      |
 | EXECUTION_TRACE_FILE   | {{CURRENT_TURN_DIRECTORY}}/execution_trace.json |
@@ -22,9 +22,6 @@
 | CODING_AGENT           | {{CODING_AGENT}}                                |
 | Active Branch          | {{ACTIVE_BRANCH}}                               |
 | Task Description       | {{TASK_DESCRIPTION}}                            |
-
-
-
 
 
 

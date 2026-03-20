@@ -119,7 +119,21 @@ ${TURN_ID},${TURN_START_TIME},${TURN_END_TIME},${ELAPSED_SECONDS},${BRANCH},${CO
 
 **MANDATORY**: Stage all files generated during the turn and commit them.
 
+**Embedded repo guard**: Before staging, detect nested Git directories that would block root-repo staging:
+
 ```bash
+find . -type d -name .git -not -path './.git' -prune | sort
+```
+
+If the command returns paths such as `./app/web/.git`:
+- Treat it as a workflow error unless the project intentionally uses a nested repo or submodule.
+- Do not assume root-level `git add -A` will pick up new files under that tree.
+- Move or remove the accidental nested `.git` directory before final staging, then rerun staging from the root repo.
+
+```bash
+# Stage source paths explicitly so app code is not missed
+git add app/api/src app/api/test app/web/src app/web/tests app/packages 2>/dev/null || true
+
 # Stage turn artifacts
 git add ./ai/agentic-pipeline/turns/turn-${TURN_ID}/
 

@@ -1,3 +1,8 @@
+---
+name: code-entity-to-crud
+description: Generate complete CRUD (Module, Service, Controller, DTOs) from any TypeORM/JPA entity. Supports TypeScript/NestJS, Java/Spring Reactive (WebFlux + R2DBC), and Java/Spring JPA.
+---
+
 # Entity to CRUD
 
 Generate complete CRUD (Module, Service, Controller, DTOs) from any TypeORM/JPA entity.

@@ -101,13 +101,15 @@ This orchestrator invokes child skills in order:
 | 1 | `dsl-model-interpreter` | Validate and parse DSL YAML files |
 | 2 | `prisma-persistence` | Generate Prisma schema from persistence model |
 | 3 | `nestjs-crud-resource` | Generate NestJS module, controller, service, DTOs |
-| 4 | `field-mapper-generator` | Generate mapper utilities |
-| 5 | `react-form-page` | Generate React form and list pages |
-| 6 | `http-test-artifacts` | Generate HTTP request files |
+| 4 | `observability-nestjs` | Add structured logging, correlation IDs, request tracing |
+| 5 | `field-mapper-generator` | Generate mapper utilities |
+| 6 | `react-form-page` | Generate React form and list pages |
+| 7 | `http-test-artifacts` | Generate HTTP request files |
 
 ## Repository Patterns Reproduced
 
 - **Monorepo structure**: `app/api/` (NestJS), `app/web/` (Next.js), `app/packages/` (shared)
+- **Root repo ownership**: Generated code under `app/api/src/`, `app/web/src/`, `app/web/tests/`, and `app/packages/` must remain tracked by the root repo. If a scaffold creates `app/web/.git` or another nested `.git`, remove or relocate it before final Git staging.
 - **Module-per-entity**: Each entity gets its own NestJS module directory
 - **Schema-driven validation**: DTOs use class-validator decorators
 - **Prisma as ORM**: Single `schema.prisma` with all models
@@ -222,7 +224,18 @@ Run validation:
 cd app/api && pnpm run build && pnpm run test
 ```
 
-### Step 6: Generate Mappers
+### Step 6: Configure Observability
+
+```
+Invoke: observability-nestjs
+Input:
+  api_path: app/api
+Output: Logger configuration, middleware, interceptors
+```
+
+This step runs once per app (not per entity). Skip if observability is already configured.
+
+### Step 8: Generate Mappers
 
 ```
 Invoke: field-mapper-generator
@@ -232,7 +245,7 @@ Input:
 Output: Mapper utility functions
 ```
 
-### Step 7: Generate Frontend
+### Step 9: Generate Frontend
 
 ```
 Invoke: react-form-page
@@ -248,7 +261,7 @@ Run validation:
 cd app/web && pnpm run build && pnpm run test
 ```
 
-### Step 8: Generate HTTP Tests
+### Step 10: Generate HTTP Tests
 
 ```
 Invoke: http-test-artifacts
@@ -258,7 +271,7 @@ Input:
 Output: http/{resource}-*.http files
 ```
 
-### Step 9: Final Validation Loop
+### Step 11: Final Validation Loop
 
 1. Run full test suite: `pnpm run test` (root)
 2. Start API and verify health: `curl http://localhost:3001/health`
