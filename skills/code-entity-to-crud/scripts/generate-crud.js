@@ -449,6 +449,16 @@ export class ${pascal}Module {}
   fs.writeFileSync(path.join(outputBase, `${kebab}.module.ts`), module);
 
   // Generate Unit Tests for Service
+  // Pre-compute field mappings for test templates
+  const mockFieldsTs = inputFields.map(f => {
+    const val = f.type === 'string' ? `'test-${f.name}'` : f.type === 'number' ? '1' : f.type.includes('Date') ? 'new Date()' : 'null';
+    return `    ${f.name}: ${val},`;
+  }).join('\n');
+  const createDtoFieldsTs = inputFields.filter(f => !f.nullable).map(f => {
+    const val = f.type === 'string' ? `'test-${f.name}'` : f.type === 'number' ? '1' : 'null';
+    return `        ${f.name}: ${val},`;
+  }).join('\n');
+
   const serviceSpec = `/**
  * @file ${kebab}.service.spec.ts
  * @description Unit tests for ${pascal}Service
@@ -471,7 +481,7 @@ describe('${pascal}Service', () => {
 
   const mock${pascal}: ${pascal} = {
     id: 'test-uuid-1234',
-${inputFields.map(f => \`    ${f.name}: ${f.type === 'string' ? \`'test-${f.name}'\` : f.type === 'number' ? '1' : f.type.includes('Date') ? 'new Date()' : 'null'},\`).join('\\n')}
+${mockFieldsTs}
     createdAt: new Date(),
     updatedAt: new Date(),
   } as ${pascal};
@@ -508,7 +518,7 @@ ${inputFields.map(f => \`    ${f.name}: ${f.type === 'string' ? \`'test-${f.name
   describe('create', () => {
     it('should create a new ${camel}', async () => {
       const createDto: Create${pascal}Dto = {
-${inputFields.filter(f => !f.nullable).map(f => \`        ${f.name}: ${f.type === 'string' ? \`'test-${f.name}'\` : f.type === 'number' ? '1' : 'null'},\`).join('\\n')}
+${createDtoFieldsTs}
       };
 
       mockRepository.create.mockReturnValue(mock${pascal});
@@ -619,6 +629,12 @@ ${inputFields.filter(f => !f.nullable).map(f => \`        ${f.name}: ${f.type ==
 });
 `;
 
+  // Pre-compute E2E valid data fields
+  const e2eValidDataFields = inputFields.filter(f => !f.nullable).map(f => {
+    const val = f.type === 'string' ? `'e2e-test-${f.name}'` : f.type === 'number' ? '1' : f.type.includes('Date') ? `'2024-01-01T00:00:00.000Z'` : 'null';
+    return `    ${f.name}: ${val},`;
+  }).join('\n');
+
   // Generate E2E Tests for Controller
   const e2eSpec = `/**
  * @file ${kebab}.e2e-spec.ts
@@ -640,7 +656,7 @@ describe('${pascal}Controller (e2e)', () => {
   let created${pascal}Id: string;
 
   const valid${pascal}Data = {
-${inputFields.filter(f => !f.nullable).map(f => \`    ${f.name}: ${f.type === 'string' ? \`'e2e-test-${f.name}'\` : f.type === 'number' ? '1' : f.type.includes('Date') ? \`'2024-01-01T00:00:00.000Z'\` : 'null'},\`).join('\\n')}
+${e2eValidDataFields}
   };
 
   beforeAll(async () => {
@@ -1044,6 +1060,16 @@ ${inputFields.map(f => {
 }
 `;
 
+  // Pre-compute Java reactive test field setters
+  const javaReactiveTestSetters = inputFields.map(f => {
+    const val = f.type === 'String' ? `"test-${f.name}"` : f.type === 'Integer' || f.type === 'Long' ? '1' : 'null';
+    return `        test${pascal}.set${toPascalCase(f.name)}(${val});`;
+  }).join('\n');
+  const javaReactiveCreateDtoSetters = inputFields.filter(f => !f.nullable).map(f => {
+    const val = f.type === 'String' ? `"test-${f.name}"` : f.type === 'Integer' || f.type === 'Long' ? '1' : 'null';
+    return `        createDto.set${toPascalCase(f.name)}(${val});`;
+  }).join('\n');
+
   // Unit Test for Service
   const serviceTest = `/**
  * ${pascal}ServiceTest.java
@@ -1087,10 +1113,10 @@ class ${pascal}ServiceTest {
     void setUp() {
         test${pascal} = new ${pascal}();
         test${pascal}.setId("test-uuid-1234");
-${inputFields.map(f => \`        test${pascal}.set${toPascalCase(f.name)}(${f.type === 'String' ? \`"test-${f.name}"\` : f.type === 'Integer' || f.type === 'Long' ? '1' : 'null'});\`).join('\\n')}
+${javaReactiveTestSetters}
 
         createDto = new Create${pascal}Dto();
-${inputFields.filter(f => !f.nullable).map(f => \`        createDto.set${toPascalCase(f.name)}(${f.type === 'String' ? \`"test-${f.name}"\` : f.type === 'Integer' || f.type === 'Long' ? '1' : 'null'});\`).join('\\n')}
+${javaReactiveCreateDtoSetters}
 
         updateDto = new Update${pascal}Dto();
         updateDto.set${toPascalCase(inputFields[0]?.name || 'name')}("updated-value");
@@ -1168,6 +1194,9 @@ ${inputFields.filter(f => !f.nullable).map(f => \`        createDto.set${toPasca
 }
 `;
 
+  // Pre-compute JSON body for Java reactive controller test
+  const javaReactiveBodyJson = '{' + inputFields.filter(f => !f.nullable).map(f => `\\"${f.name}\\": \\"test\\"`).join(', ') + '}';
+
   // E2E Test for Controller
   const controllerTest = `/**
  * ${pascal}ControllerTest.java
@@ -1213,7 +1242,7 @@ class ${pascal}ControllerTest {
         webTestClient.post()
             .uri("/api/${pluralKebab}")
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue("{${inputFields.filter(f => !f.nullable).map(f => \`\\"${f.name}\\": \\"test\\"\`).join(', ')}}")
+            .bodyValue("${javaReactiveBodyJson}")
             .exchange()
             .expectStatus().isCreated()
             .expectBody()
@@ -1560,6 +1589,16 @@ ${inputFields.map(f => {
 }
 `;
 
+  // Pre-compute Java JPA test field setters
+  const javaJpaTestSetters = inputFields.map(f => {
+    const val = f.type === 'String' ? `"test-${f.name}"` : f.type === 'Integer' || f.type === 'Long' ? '1' : 'null';
+    return `        test${pascal}.set${toPascalCase(f.name)}(${val});`;
+  }).join('\n');
+  const javaJpaCreateDtoSetters = inputFields.filter(f => !f.nullable).map(f => {
+    const val = f.type === 'String' ? `"test-${f.name}"` : f.type === 'Integer' || f.type === 'Long' ? '1' : 'null';
+    return `        createDto.set${toPascalCase(f.name)}(${val});`;
+  }).join('\n');
+
   // Unit Test for Service
   const serviceTest = `/**
  * ${pascal}ServiceTest.java
@@ -1608,10 +1647,10 @@ class ${pascal}ServiceTest {
     void setUp() {
         test${pascal} = new ${pascal}();
         test${pascal}.setId("test-uuid-1234");
-${inputFields.map(f => \`        test${pascal}.set${toPascalCase(f.name)}(${f.type === 'String' ? \`"test-${f.name}"\` : f.type === 'Integer' || f.type === 'Long' ? '1' : 'null'});\`).join('\\n')}
+${javaJpaTestSetters}
 
         createDto = new Create${pascal}Dto();
-${inputFields.filter(f => !f.nullable).map(f => \`        createDto.set${toPascalCase(f.name)}(${f.type === 'String' ? \`"test-${f.name}"\` : f.type === 'Integer' || f.type === 'Long' ? '1' : 'null'});\`).join('\\n')}
+${javaJpaCreateDtoSetters}
 
         updateDto = new Update${pascal}Dto();
         updateDto.set${toPascalCase(inputFields[0]?.name || 'name')}("updated-value");
@@ -1686,6 +1725,12 @@ ${inputFields.filter(f => !f.nullable).map(f => \`        createDto.set${toPasca
 }
 `;
 
+  // Pre-compute Java JPA controller test DTO setters
+  const javaJpaControllerDtoSetters = inputFields.filter(f => !f.nullable).map(f => {
+    const val = f.type === 'String' ? `"test"` : '1';
+    return `        dto.set${toPascalCase(f.name)}(${val});`;
+  }).join('\n');
+
   // E2E Test for Controller
   const controllerTest = `/**
  * ${pascal}ControllerTest.java
@@ -1735,7 +1780,7 @@ class ${pascal}ControllerTest {
         when(service.create(any(Create${pascal}Dto.class))).thenReturn(entity);
 
         Create${pascal}Dto dto = new Create${pascal}Dto();
-${inputFields.filter(f => !f.nullable).map(f => \`        dto.set${toPascalCase(f.name)}(${f.type === 'String' ? \`"test"\` : '1'});\`).join('\\n')}
+${javaJpaControllerDtoSetters}
 
         mockMvc.perform(post("/api/${pluralKebab}")
                 .contentType(MediaType.APPLICATION_JSON)
