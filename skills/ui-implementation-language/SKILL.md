@@ -538,29 +538,71 @@ options: lookup:countries
 - id: customerTable
   type: table
   source: customers
+  sortable: true
   columns:
     - id: firstName
       label: First Name
       value: item.firstName
+      sortable: true
+    - id: lastName
+      label: Last Name
+      value: item.lastName
+      sortable: true
+    - id: actions
+      label: Actions
+      sortable: false
 ```
 
 ### Fields
 
-| Field        | Required | Type     | Notes                   |
-| ------------ | -------: | -------- | ----------------------- |
-| `id`         |      Yes | `string` | Table identifier        |
-| `type`       |      Yes | `string` | Must be `table`         |
-| `source`     |      Yes | `string` | Data collection binding |
-| `columns`    |      Yes | `array`  | Column definitions      |
-| `rowActions` |       No | `array`  | Row-level actions       |
+| Field        | Required | Type      | Notes                        |
+| ------------ | -------: | --------- | ---------------------------- |
+| `id`         |      Yes | `string`  | Table identifier             |
+| `type`       |      Yes | `string`  | Must be `table`              |
+| `source`     |      Yes | `string`  | Data collection binding      |
+| `columns`    |      Yes | `array`   | Column definitions           |
+| `rowActions` |       No | `array`   | Row-level actions            |
+| `sortable`   |       No | `boolean` | Enable column sorting (default: false) |
 
 ### Column Contract
 
-| Field   | Required | Type     | Notes                  |
-| ------- | -------: | -------- | ---------------------- |
-| `id`    |      Yes | `string` | Column identifier      |
-| `label` |      Yes | `string` | Column header          |
-| `value` |      Yes | `string` | Bound value expression |
+| Field      | Required | Type      | Notes                                    |
+| ---------- | -------: | --------- | ---------------------------------------- |
+| `id`       |      Yes | `string`  | Column identifier                        |
+| `label`    |      Yes | `string`  | Column header                            |
+| `value`    |      Yes | `string`  | Bound value expression                   |
+| `sortable` |       No | `boolean` | Column is sortable (inherits from table) |
+| `ui`       |       No | `object`  | Column UI metadata (testId, width)       |
+
+### Table Sorting Pattern
+
+When `sortable: true`, generate clickable column headers:
+
+```tsx
+type SortDirection = "asc" | "desc" | null;
+type SortColumn = "firstName" | "lastName" | null;
+
+const [sortColumn, setSortColumn] = useState<SortColumn>(null);
+const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+
+const handleSort = (column: SortColumn) => {
+  if (sortColumn === column) {
+    if (sortDirection === "asc") setSortDirection("desc");
+    else if (sortDirection === "desc") {
+      setSortColumn(null);
+      setSortDirection(null);
+    } else setSortDirection("asc");
+  } else {
+    setSortColumn(column);
+    setSortDirection("asc");
+  }
+};
+
+// Column header with sort indicator
+<th onClick={() => handleSort("firstName")} className="sortable">
+  First Name {sortColumn === "firstName" ? (sortDirection === "asc" ? "↑" : "↓") : "↕"}
+</th>
+```
 
 ## Action Contract
 
@@ -821,6 +863,7 @@ expr: props.country === 'USA'
 2. `two-column`
 3. `three-column`
 4. `stack`
+5. `shell` — application shell with regions
 
 ### Width Tokens
 
@@ -830,6 +873,184 @@ expr: props.country === 'USA'
 4. `lg`
 5. `xl`
 6. `full`
+
+## Shell Contract
+
+A shell defines the shared application frame that wraps multiple pages.
+
+```yaml
+shell:
+  id: app-shell
+  title: My App
+  layout:
+    type: shell
+    structure:
+      - region: sidebar
+        position: left
+        width: 240
+        collapsible: true
+        collapsedWidth: 64
+      - region: topNav
+        position: top
+        height: 60
+      - region: main
+        position: center
+  navigation:
+    sidebar:
+      id: main-nav
+      collapsible: true
+      items: []
+    topNav:
+      id: top-nav
+      left: []
+      right: []
+  contentSlot:
+    id: main-content
+    region: main
+    renderChildren: true
+```
+
+### Shell Fields
+
+| Field         | Required | Type     | Notes                          |
+| ------------- | -------: | -------- | ------------------------------ |
+| `id`          |      Yes | `string` | Unique shell identifier        |
+| `title`       |       No | `string` | Application title              |
+| `layout`      |      Yes | `object` | Shell layout structure         |
+| `navigation`  |       No | `object` | Navigation configuration       |
+| `contentSlot` |      Yes | `object` | Where child pages are rendered |
+
+### Shell Region Contract
+
+| Field           | Required | Type      | Notes                              |
+| --------------- | -------: | --------- | ---------------------------------- |
+| `region`        |      Yes | `string`  | Region identifier                  |
+| `position`      |      Yes | `string`  | `left`, `right`, `top`, `center`   |
+| `width`         |       No | `number`  | Width in pixels (sidebar)          |
+| `height`        |       No | `number`  | Height in pixels (topNav)          |
+| `collapsible`   |       No | `boolean` | Whether region can collapse        |
+| `collapsedWidth`|       No | `number`  | Width when collapsed               |
+| `ui`            |       No | `object`  | Rendering metadata (testId)        |
+
+### Page Shell Binding
+
+Pages bind to a shell using `shell` and `renderIn`:
+
+```yaml
+page:
+  id: customer-list
+  route: /customers
+  shell: app-shell
+  renderIn: main-content
+```
+
+| Field      | Required | Type     | Notes                           |
+| ---------- | -------: | -------- | ------------------------------- |
+| `shell`    |       No | `string` | Reference to shell id           |
+| `renderIn` |       No | `string` | Content slot id to render into  |
+
+## Collapsible Sidebar Pattern
+
+When `collapsible: true` on a sidebar region:
+
+1. Generate a toggle button in the sidebar header
+2. When collapsed, show only icons (no labels)
+3. Apply `collapsed` CSS class to sidebar element
+4. Persist state locally (optional)
+
+```tsx
+const [collapsed, setCollapsed] = useState(false);
+
+<aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
+  <button onClick={() => setCollapsed(!collapsed)}>
+    {collapsed ? "»" : "«"}
+  </button>
+  {/* Navigation items */}
+</aside>
+```
+
+## Top Navigation Contract
+
+Top navigation appears above the main content area.
+
+```yaml
+topNav:
+  id: top-nav
+  position: top
+  left:
+    - id: app-title
+      type: text
+      value: Commerce App
+  right:
+    - id: user-greeting
+      type: text
+      value: "Welcome, User"
+```
+
+| Field    | Required | Type    | Notes                     |
+| -------- | -------: | ------- | ------------------------- |
+| `id`     |      Yes | `string`| Navigation identifier     |
+| `position`|     Yes | `string`| Must be `top`             |
+| `left`   |       No | `array` | Items on the left side    |
+| `right`  |       No | `array` | Items on the right side   |
+
+## Modal Dialog Contract
+
+Modal dialogs are centered overlays for confirmations or forms.
+
+```yaml
+confirm:
+  type: modal-dialog
+  position: center
+  title: Delete Customer
+  message: "Are you sure you want to delete {row.firstName}?"
+  confirmLabel: Delete
+  cancelLabel: Cancel
+  variant: danger
+  ui:
+    testId: confirm-dialog
+```
+
+### Modal Dialog Fields
+
+| Field         | Required | Type     | Notes                              |
+| ------------- | -------: | -------- | ---------------------------------- |
+| `type`        |      Yes | `string` | Must be `modal-dialog`             |
+| `position`    |       No | `string` | `center` (default), `top`          |
+| `title`       |      Yes | `string` | Dialog title                       |
+| `message`     |      Yes | `string` | Dialog message (supports binding)  |
+| `confirmLabel`|       No | `string` | Confirm button text                |
+| `cancelLabel` |       No | `string` | Cancel button text                 |
+| `variant`     |       No | `string` | `default`, `danger`                |
+| `ui`          |       No | `object` | Rendering metadata (testId)        |
+
+### Modal Dialog Implementation
+
+Generators must produce centered modal dialogs using:
+
+```tsx
+<dialog className="confirm-dialog" data-testid="confirm-dialog">
+  <div className="confirm-dialog-content">
+    <h2>{title}</h2>
+    <p>{message}</p>
+    <div className="confirm-dialog-actions">
+      <button onClick={onCancel}>{cancelLabel}</button>
+      <button onClick={onConfirm}>{confirmLabel}</button>
+    </div>
+  </div>
+</dialog>
+```
+
+CSS positioning must center the dialog:
+
+```css
+.confirm-dialog-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+```
 
 ## Testing Metadata
 

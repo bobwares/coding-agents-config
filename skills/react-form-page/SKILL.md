@@ -102,18 +102,52 @@ This skill receives **parsed content** from the `dsl-model-interpreter`, not raw
 
 ### Directory Structure
 
+When pages specify `shell` and `renderIn`, generate inside a Next.js route group:
+
 ```
-app/web/src/app/{resources}/
-  page.tsx              # List page
-  new/
-    page.tsx            # Create page
-  [id]/
-    page.tsx            # View page
-    edit/
-      page.tsx          # Edit page
-  {entity}-form.tsx     # Shared form component
-  {entity}-form.test.tsx
-  {entity}-list.tsx     # List component
+app/web/src/app/(dashboard)/
+  layout.tsx            # Dashboard layout with shell
+  page.tsx              # Home/landing page content
+  {resources}/
+    page.tsx            # List page
+    CustomerTable.tsx   # Table component with modal dialog
+    new/
+      page.tsx          # Create page
+    [id]/
+      edit/
+        page.tsx        # Edit page
+        EditForm.tsx    # Edit form wrapper
+app/web/src/components/
+  DashboardShell.tsx    # Shared shell component
+  ui/
+    ConfirmDialog.tsx   # Centered modal dialog component
+```
+
+### Shell-Based Layout Pattern
+
+When DSL pages specify `shell: app-shell` and `renderIn: main-content`:
+
+1. Generate a route group (e.g., `(dashboard)`) for shell-wrapped pages
+2. Create a shared layout.tsx that wraps children with the shell
+3. Generate page content without standalone page structure
+4. Content renders inside the shell's main content area
+
+```tsx
+// app/web/src/app/(dashboard)/layout.tsx
+import { DashboardShell } from "@/components/DashboardShell";
+
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  return <DashboardShell>{children}</DashboardShell>;
+}
+
+// app/web/src/app/(dashboard)/customers/page.tsx
+export default function CustomerListPage() {
+  return (
+    <div className="page-content">
+      {/* Page content without shell wrapper */}
+    </div>
+  );
+}
 ```
 
 ### Form Component Pattern
@@ -155,14 +189,46 @@ export function {Entity}Form({ mode, initialData, onSubmit }: {Entity}FormProps)
 
 | DSL `type` | React Component |
 |------------|-----------------|
-| `text-field` | `<input type="text">` |
+| `text-field` | `<input type="text" autoComplete="off">` |
 | `number-field` | `<input type="number">` |
 | `email-field` | `<input type="email" autoComplete="off">` |
 | `password-field` | `<input type="password" autoComplete="new-password">` |
-| `phone-field` | `<input type="tel">` with mask |
+| `phone-field` | `<input type="tel" autoComplete="off">` with mask |
 | `select` | `<select>` with options |
 | `checkbox` | `<input type="checkbox">` |
 | `button` | `<button type="submit">` |
+
+### Phone Number Mask Pattern
+
+Implement phone formatting as-you-type for `phone-field` widgets:
+
+```tsx
+/**
+ * Formats a phone number string as user types: (XXX) XXX-XXXX
+ * Strips non-digits, then applies mask progressively.
+ */
+export function formatPhoneNumber(value: string): string {
+  const digits = value.replace(/\D/g, "").slice(0, 10);
+  if (digits.length === 0) return "";
+  if (digits.length <= 3) return `(${digits}`;
+  if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+}
+
+// Usage in form component:
+const handlePhoneChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const formatted = formatPhoneNumber(e.target.value);
+  updateField("phone", formatted);
+};
+
+<input
+  type="tel"
+  value={form.phone}
+  onChange={handlePhoneChange}
+  placeholder="(555) 123-4567"
+  autoComplete="off"
+/>
+```
 
 ### Conditional Rendering Pattern
 
@@ -184,6 +250,167 @@ export function {Entity}Form({ mode, initialData, onSubmit }: {Entity}FormProps)
 <input
   disabled={formData.sameAsHomeAddress}
   data-testid="customer-billing-address-line1"
+/>
+```
+
+### DashboardShell Component Pattern
+
+Generate a shared shell component with collapsible sidebar and top navigation:
+
+```tsx
+// app/web/src/components/DashboardShell.tsx
+"use client";
+
+import { useState, ReactNode } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+interface DashboardShellProps {
+  children: ReactNode;
+}
+
+export function DashboardShell({ children }: DashboardShellProps) {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const pathname = usePathname();
+
+  const isActive = (path: string) => {
+    if (path === "/") return pathname === "/";
+    return pathname.startsWith(path);
+  };
+
+  return (
+    <div className="dashboard-layout">
+      <aside className={`sidebar ${sidebarCollapsed ? "collapsed" : ""}`}>
+        <div className="sidebar-header">
+          <h2 className={sidebarCollapsed ? "hidden" : ""}>App Title</h2>
+          <button
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            className="sidebar-toggle"
+            data-testid="sidebar-toggle"
+          >
+            {sidebarCollapsed ? "»" : "«"}
+          </button>
+        </div>
+        <nav className="sidebar-nav">
+          {/* Navigation items from DSL */}
+        </nav>
+      </aside>
+
+      <div className="dashboard-content">
+        <header className="top-nav" data-testid="top-nav">
+          <div className="top-nav-left">{/* Left items */}</div>
+          <div className="top-nav-right">{/* Right items */}</div>
+        </header>
+
+        <main className="dashboard-main" data-testid="main-content">
+          {children}
+        </main>
+      </div>
+    </div>
+  );
+}
+```
+
+### ConfirmDialog Modal Pattern
+
+Generate a centered modal dialog for confirmations:
+
+```tsx
+// app/web/src/components/ui/ConfirmDialog.tsx
+"use client";
+
+import { useEffect, useRef } from "react";
+
+interface ConfirmDialogProps {
+  open: boolean;
+  title: string;
+  message: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
+  variant?: "danger" | "default";
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+export function ConfirmDialog({
+  open,
+  title,
+  message,
+  confirmLabel = "Confirm",
+  cancelLabel = "Cancel",
+  variant = "default",
+  onConfirm,
+  onCancel,
+}: ConfirmDialogProps) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (open) dialog.showModal();
+    else dialog.close();
+  }, [open]);
+
+  if (!open) return null;
+
+  return (
+    <dialog ref={dialogRef} className="confirm-dialog" data-testid="confirm-dialog">
+      <div className="confirm-dialog-content">
+        <h2>{title}</h2>
+        <p>{message}</p>
+        <div className="confirm-dialog-actions">
+          <button onClick={onCancel}>{cancelLabel}</button>
+          <button
+            className={variant === "danger" ? "btn-danger-solid" : "btn-primary"}
+            onClick={onConfirm}
+          >
+            {confirmLabel}
+          </button>
+        </div>
+      </div>
+    </dialog>
+  );
+}
+```
+
+### Delete Confirmation Pattern
+
+Replace `window.confirm` with centered modal dialog:
+
+```tsx
+// In table/list components
+const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+const [itemToDelete, setItemToDelete] = useState<Item | null>(null);
+
+const openDeleteDialog = (item: Item) => {
+  setItemToDelete(item);
+  setDeleteDialogOpen(true);
+};
+
+const closeDeleteDialog = () => {
+  setDeleteDialogOpen(false);
+  setItemToDelete(null);
+};
+
+const handleDelete = async () => {
+  if (!itemToDelete) return;
+  await api.delete(itemToDelete.id);
+  closeDeleteDialog();
+  router.refresh();
+};
+
+// In JSX:
+<button onClick={() => openDeleteDialog(item)}>Delete</button>
+
+<ConfirmDialog
+  open={deleteDialogOpen}
+  title="Delete Item"
+  message={`Are you sure you want to delete ${itemToDelete?.name}?`}
+  confirmLabel="Delete"
+  cancelLabel="Cancel"
+  variant="danger"
+  onConfirm={handleDelete}
+  onCancel={closeDeleteDialog}
 />
 ```
 
@@ -426,7 +653,8 @@ pnpm run test
 - **data-testid attributes**: Required for all interactive elements
 - **Controlled inputs**: All fields use React state
 - **No external form libraries**: Plain React state management
-- **Prevent browser autofill**: Add `autoComplete="off"` to `<form>`, use `autoComplete="new-password"` for password fields, and `autoComplete="off"` for email fields in entity forms (not login forms)
+- **Prevent browser autofill**: Add `autoComplete="off"` to `<form>` and all text/email inputs. Use `autoComplete="new-password"` for password fields. This applies to entity forms (not login forms where autofill is desired).
+- **Phone number mask**: Apply input formatting mask for `phone-field` widgets using the `formatPhoneNumber` utility
 
 ## Non-Goals
 

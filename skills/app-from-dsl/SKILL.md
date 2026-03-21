@@ -12,7 +12,7 @@ Generate a complete full-stack CRUD application from DSL YAML specifications.
 Orchestrate child skills to produce:
 - NestJS backend (module, controller, service, DTOs)
 - Prisma persistence layer (schema, migrations)
-- React frontend (form pages, list page)
+- React frontend (**ALL pages** in `ui/pages/` including forms, lists, dashboards, and landing pages)
 - Field mappers (API-to-persistence, form-to-API)
 - HTTP test artifacts (`.http` request files)
 - Unit and integration tests
@@ -73,7 +73,7 @@ Before invoking downstream skills, this orchestrator:
       "persistence": ["customer.persistence.model.yaml"]
     },
     "mappers": ["customer-form-to-api.mapper.yaml", "..."],
-    "pages": ["customer-create.page.yaml", "..."],
+    "pages": ["customer-create.page.yaml", "landing.page.yaml", "..."],
     "backend": ["customer.backend.yaml"],
     "lookups": ["countries.lookup.yaml", "..."]
   },
@@ -88,7 +88,10 @@ Before invoking downstream skills, this orchestrator:
 |--------|----------|
 | NestJS module | `app/api/src/{entity}/` |
 | Prisma schema | `app/api/prisma/schema.prisma` |
-| React pages | `app/web/src/app/{resource}/` |
+| Dashboard shell | `app/web/src/components/DashboardShell.tsx` |
+| Confirm dialog | `app/web/src/components/ui/ConfirmDialog.tsx` |
+| Dashboard layout | `app/web/src/app/(dashboard)/layout.tsx` |
+| React pages | `app/web/src/app/(dashboard)/{resource}/` |
 | HTTP tests | `http/{resource}-*.http` |
 | Unit tests | `app/api/test/`, `app/web/src/**/*.test.tsx` |
 
@@ -190,8 +193,13 @@ The interpreter will verify these DSL files exist (for directory input):
 - `models/persistence/{entity}.persistence.model.yaml`
 - `models/ui/{entity}-form.model.yaml`
 - `backend/{entity}.backend.yaml`
-- `ui/pages/{entity}-create.page.yaml`
+- `ui/pages/*.page.yaml` — **ALL pages**, not just entity-specific ones (includes landing, dashboard, navigation pages)
 - `mappers/{entity}-*.mapper.yaml`
+
+**IMPORTANT**: Process ALL `.page.yaml` files in `ui/pages/`, regardless of naming convention. This includes:
+- Entity CRUD pages (`{entity}-create.page.yaml`, `{entity}-list.page.yaml`, etc.)
+- Dashboard/landing pages (`landing.page.yaml`, `home.page.yaml`)
+- Navigation pages, settings pages, or any other application pages
 
 ### Step 4: Generate Persistence Layer
 
@@ -245,16 +253,47 @@ Input:
 Output: Mapper utility functions
 ```
 
-### Step 9: Generate Frontend
+### Step 9: Generate Shell Components
+
+If DSL includes a shell definition (in `landing.page.yaml` or similar):
+
+**Generate shared shell components:**
+```
+Output:
+  - app/web/src/components/DashboardShell.tsx
+  - app/web/src/components/ui/ConfirmDialog.tsx
+  - app/web/src/app/(dashboard)/layout.tsx
+```
+
+**Shell includes:**
+- Collapsible left sidebar navigation
+- Top navigation bar
+- Main content area slot
+- State management for sidebar collapse
+
+**ConfirmDialog includes:**
+- Centered modal positioning
+- Danger variant for delete confirmations
+- Keyboard escape handling
+- Focus management
+
+### Step 10: Generate Frontend
 
 ```
 Invoke: react-form-page
 Input:
   parsed_pages: {interpreter_output.pages}
   parsed_ui_model: {interpreter_output.models.ui}
+  parsed_shell: {interpreter_output.shell}
   dsl_context: {resolved_context}
-Output: React components and pages
+Output: React components and pages inside route group
 ```
+
+**When pages specify `shell` and `renderIn`:**
+- Generate pages inside `(dashboard)` route group
+- Pages render content only (no standalone page structure)
+- Content appears in shell's main content area
+- Use ConfirmDialog instead of window.confirm for delete actions
 
 Run validation:
 ```bash
