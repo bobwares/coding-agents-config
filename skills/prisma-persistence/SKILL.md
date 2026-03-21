@@ -22,11 +22,11 @@ Create:
 
 ## Inputs
 
-| Input | Description | Required |
-|-------|-------------|----------|
-| `parsed_model` | Parsed persistence model object from `dsl-model-interpreter` | **Yes** |
-| `dsl_context` | DSL context with path metadata from orchestrator | **Yes** |
-| `entity` | PascalCase model name | **Yes** |
+| Input          | Description                                                  | Required |
+|----------------|--------------------------------------------------------------|----------|
+| `parsed_model` | Parsed persistence model object from `dsl-model-interpreter` | **Yes**  |
+| `dsl_context`  | DSL context with path metadata from orchestrator             | **Yes**  |
+| `entity`       | PascalCase model name                                        | **Yes**  |
 
 ### Input Contract
 

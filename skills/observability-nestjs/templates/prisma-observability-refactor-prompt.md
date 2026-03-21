@@ -19,7 +19,7 @@ Implement backend observability so the application logs:
 
 Do not generate a sample app. Inspect the current codebase first, then refactor the real implementation.
 
-Use npm for any package changes.
+Use pnpm for any package changes.
 
 ## Repository Inspection Requirements
 
