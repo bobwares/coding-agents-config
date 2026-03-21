@@ -34,7 +34,7 @@ The `app-from-dsl` skill orchestrates a complete code generation pipeline that p
           │                   │                   │
           │                   ▼                   │
           │          ┌──────────────────┐         │
-          │          │observability-nestjs│        │
+          │          │nestjs-observability│        │
           │          │   (Logging)      │         │
           │          └──────────────────┘         │
           │                   │                   │
@@ -61,7 +61,7 @@ The `app-from-dsl` skill orchestrates a complete code generation pipeline that p
 | 1 | `dsl-model-interpreter` | Parse and validate DSL YAML files | `dsl_path`, `entity` | Parsed models, mappers, pages, backend specs |
 | 2 | `prisma-persistence` | Generate Prisma schema from persistence model | `parsed_model`, `dsl_context` | `schema.prisma`, migrations |
 | 3 | `nestjs-crud-resource` | Generate NestJS module, controller, service, DTOs | `parsed_backend`, `parsed_api_model`, `dsl_context` | Module, controller, service, DTOs |
-| 4 | `observability-nestjs` | Add structured logging, correlation IDs, tracing | `api_path` | Logger config, middleware, interceptors |
+| 4 | `nestjs-observability` | Add structured logging, correlation IDs, tracing | `api_path` | Logger config, middleware, interceptors |
 | 5 | `field-mapper-generator` | Generate transformation functions between layers | `parsed_mappers`, `dsl_context` | Mapper utilities |
 | 6 | `react-form-page` | Generate React form and list pages | `parsed_pages`, `parsed_ui_model`, `dsl_context` | React components and pages |
 | 7 | `http-test-artifacts` | Generate `.http` request files for testing | `parsed_backend`, `dsl_context` | HTTP test files |
@@ -178,7 +178,7 @@ The orchestrator will:
 2. Parse all DSL YAML files via `dsl-model-interpreter`
 3. Generate Prisma schema via `prisma-persistence`
 4. Generate NestJS backend via `nestjs-crud-resource`
-5. Configure observability via `observability-nestjs`
+5. Configure observability via `nestjs-observability`
 6. Generate mappers via `field-mapper-generator`
 7. Generate React frontend via `react-form-page`
 8. Generate HTTP tests via `http-test-artifacts`

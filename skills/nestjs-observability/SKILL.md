@@ -1,5 +1,5 @@
 ---
-name: observability-nestjs
+name: nestjs-observability
 description: Refactor a NestJS backend that uses Prisma to add structured backend observability, including API request logging, error logging, Prisma query logging, correlation IDs, redaction, configurable log levels, and configurable log destinations.
 version: 1.0.0
 author: OpenAI
@@ -16,7 +16,7 @@ tags:
   - refactor
 ---
 
-# observability-nestjs
+# nestjs-observability
 
 ## Purpose
 

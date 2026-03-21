@@ -104,7 +104,7 @@ This orchestrator invokes child skills in order:
 | 1 | `dsl-model-interpreter` | Validate and parse DSL YAML files |
 | 2 | `prisma-persistence` | Generate Prisma schema from persistence model |
 | 3 | `nestjs-crud-resource` | Generate NestJS module, controller, service, DTOs |
-| 4 | `observability-nestjs` | Add structured logging, correlation IDs, request tracing |
+| 4 | `nestjs-observability` | Add structured logging, correlation IDs, request tracing |
 | 5 | `field-mapper-generator` | Generate mapper utilities |
 | 6 | `react-form-page` | Generate React form and list pages |
 | 7 | `http-test-artifacts` | Generate HTTP request files |
@@ -235,7 +235,7 @@ cd app/api && pnpm run build && pnpm run test
 ### Step 6: Configure Observability
 
 ```
-Invoke: observability-nestjs
+Invoke: nestjs-observability
 Input:
   api_path: app/api
 Output: Logger configuration, middleware, interceptors
