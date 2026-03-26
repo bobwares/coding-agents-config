@@ -15,8 +15,10 @@ Agent: AI Coding Agent (Claude Opus 4.5)
 | `react-form-page` | 357 | React form and page generation |
 | `field-mapper-generator` | 321 | Layer transformation code |
 | `http-test-artifacts` | 364 | HTTP request file generation |
+| `test-implementation-sync` | 220 | Prevent test/implementation misalignment |
+| `prisma-guidelines` | 180 | Prisma development constraints and anti-patterns |
 
-**Total**: 7 skills, 2,045 lines of procedural instructions
+**Total**: 9 skills, 2,445 lines of procedural instructions
 
 ## Reference Materials Created
 
@@ -25,6 +27,7 @@ Agent: AI Coding Agent (Claude Opus 4.5)
 | `dsl-model-interpreter/references/DSL-SCHEMA.md` | Complete YAML schema reference |
 | `nestjs-crud-resource/references/NESTJS-PATTERNS.md` | NestJS code patterns |
 | `react-form-page/references/REACT-PATTERNS.md` | React form code patterns |
+| `test-implementation-sync/references/quick-checklist.md` | Pre-test verification checklist |
 
 ## Repository Areas Analyzed
 
@@ -52,8 +55,11 @@ Agent: AI Coding Agent (Claude Opus 4.5)
 
 - **Validation**: Integrated into DTOs (backend) and form component (frontend)
 - **Logging**: Established in turn 9, not part of per-entity generation
-- **Testing**: Required output of each generation skill, not standalone
 - **Authentication**: Not present in repository patterns
+
+### Quality Assurance Skills
+
+8. **`test-implementation-sync`**: Added after Turn 1 exposed test/implementation drift. Ensures tests read actual implementations before asserting method names, DTO fields, and enum values. Prevents TS2339, TS2345, TS2554, TS2564 errors.
 
 ## Mismatches Discovered
 
