@@ -82,6 +82,8 @@ This skill receives **parsed content** from the `dsl-model-interpreter`, not raw
 
 ## Outputs
 
+**CRITICAL: Generate ONE FILE PER HTTP VERB. Do NOT combine requests into a single file.**
+
 | Output | Location |
 |--------|----------|
 | POST request | `http/{resources}-post.http` |
@@ -90,6 +92,18 @@ This skill receives **parsed content** from the `dsl-model-interpreter`, not raw
 | PATCH/PUT | `http/{resources}-patch.http` |
 | DELETE | `http/{resources}-delete.http` |
 | Health check | `http/health-get.http` |
+
+**VIOLATION: Creating `{resources}.http` with all requests combined is WRONG.**
+
+For `customers` resource, you MUST create exactly these 6 files:
+```
+http/health-get.http
+http/customers-post.http
+http/customers-get-all.http
+http/customers-get-by-id.http
+http/customers-patch.http
+http/customers-delete.http
+```
 
 ## Dependencies
 
@@ -423,10 +437,12 @@ HTTP files ARE the tests. Each file should cover:
 
 ## Constraints
 
+- **ONE FILE PER VERB**: Each HTTP method gets its own file. NEVER combine into single file.
 - **Metadata header**: Every file starts with header comment block
 - **Variable naming**: Use `@camelCase` for variables
 - **Realistic data**: Sample payloads should be realistic, not `"string"` placeholders
 - **UUID format**: Use valid UUID format for IDs
+- **File count validation**: After generation, verify exactly 6 files exist (health + 5 CRUD operations)
 
 ## Non-Goals
 

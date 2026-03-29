@@ -17,9 +17,9 @@ git branch --show-current
 git status --short
 git log --oneline -5
 
-CLAUDE_PLUGIN_ROOT=$CLAUDE_PLUGIN_ROOT
+SKILL_DIR="${CLAUDE_SKILL_DIR:-$HOME/.claude/skills/session-start}"
 
-NEXT_TURN_ID=$(scripts/get-current-turn.sh .)
+NEXT_TURN_ID=$("$SKILL_DIR/scripts/get-current-turn.sh" .)
 echo "BRANCH=$(git branch --show-current)"
 echo "NEXT_TURN_ID=$NEXT_TURN_ID"
 ```

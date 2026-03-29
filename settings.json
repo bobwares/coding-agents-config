@@ -5,7 +5,7 @@
     "INSIDE_CLAUDE_CODE": "1",
     "BASH_DEFAULT_TIMEOUT_MS": "300000",
     "ANTHROPIC_MODEL": "claude-opus-4-5-20251101",
-    "ANTHROPIC_SMALL_FAST_MODEL": "claude-haiku-4-5-20251001"
+    "ANTHROPIC_SMALL_FAST_MODEL": "claude-sonnet-4-6"
   },
   "includeCoAuthoredBy": true,
   "permissions": {
@@ -93,6 +93,7 @@
       }
     }
   },
+  "voiceEnabled": true,
   "skipDangerousModePermissionPrompt": true,
-  "voiceEnabled": true
+  "model": "opus"
 }

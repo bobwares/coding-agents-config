@@ -1,0 +1,32 @@
+{
+  "turnId": 54,
+  "date": "2026-03-21",
+  "taskSummary": "Document app-from-dsl skill dependencies",
+  "artifacts": [
+    {
+      "file": "ai/agentic-pipeline/turns/turn-54/turn_context.md",
+      "sha256": "eb15300326bdfa118d2f37854e952fb80cbcfd68c3144aec4d903f795d94aeb3"
+    },
+    {
+      "file": "ai/agentic-pipeline/turns/turn-54/execution_trace.json",
+      "sha256": "7df03a2658b284ff4dc7dad907101685214572a089bb342aa1f563d21d170bba"
+    },
+    {
+      "file": "ai/agentic-pipeline/turns/turn-54/pull_request.md",
+      "sha256": "a9090688a6cf3bd594ee7e558199bcfbcc433a7b8b0e1ab5314d67a9e427c6e5"
+    },
+    {
+      "file": "ai/agentic-pipeline/turns/turn-54/adr.md",
+      "sha256": "554c2360f9bc768a61c887296763f382f96f81adc407a1ee81d81c915fbe5010"
+    },
+    {
+      "file": "docs/app-nextjs-nestjs-prisma.md",
+      "sha256": "c94580bb4a9945672e55c14ad7ea0d390d1f7999c72acf0a9c3054130634e452"
+    }
+  ],
+  "execution": {
+    "tracePath": "./ai/agentic-pipeline/turns/turn-54/execution_trace.json",
+    "skillsExecuted": ["turn-end", "turn-init"],
+    "agentsExecuted": ["claude"]
+  }
+}

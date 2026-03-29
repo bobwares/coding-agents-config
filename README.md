@@ -169,7 +169,7 @@ flowchart TB
 | | `turn-end` | Finalize turn with PR, ADR, manifest |
 | | `branch-guard` | Create turn branch if on main/master |
 | **Scaffolding** | `schema-to-database` | Generate DB tables and entity code from JSON schema |
-| | `nest-prisma-resource` | Generate NestJS CRUD resource with Prisma |
+| | `nestjs-prisma-resource` | Generate NestJS CRUD resource with Prisma |
 | | `nestjs-customer-crud-scaffold` | Scaffold NestJS customer CRUD app |
 | | `code-entity-to-crud` | Entity to CRUD generation |
 | **Utility** | `helloworld` | Test skill invocation |

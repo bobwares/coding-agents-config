@@ -1,5 +1,5 @@
 ---
-name: nest-prisma-resource
+name: nestjs-prisma-resource
 description: Generate a complete NestJS CRUD resource backed by Prisma from an input schema. Creates the same practical artifact set as `nest g resource`, but with deterministic schema-driven DTOs, service, controller, module, Prisma integration, and required package.json updates.
 version: 0.1.0
 author: Bobwares
@@ -12,7 +12,7 @@ tags:
   - npm
 ---
 
-# nest-prisma-resource
+# nestjs-prisma-resource
 
 ## Purpose
 

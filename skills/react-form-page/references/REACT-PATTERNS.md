@@ -367,3 +367,107 @@ const usStates = [
   ))}
 </select>
 ```
+
+## Phone Number Mask Pattern
+
+```tsx
+/**
+ * Formats a phone number string as user types: (XXX) XXX-XXXX
+ */
+export function formatPhoneNumber(value: string): string {
+  const digits = value.replace(/\D/g, "").slice(0, 10);
+  if (digits.length === 0) return "";
+  if (digits.length <= 3) return `(${digits}`;
+  if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+}
+
+// Usage:
+const handlePhoneChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const formatted = formatPhoneNumber(e.target.value);
+  updateField("phone", formatted);
+};
+
+<input
+  type="tel"
+  value={form.phone}
+  onChange={handlePhoneChange}
+  placeholder="(555) 123-4567"
+  autoComplete="off"
+/>
+```
+
+## Table Sorting Pattern
+
+```tsx
+type SortDirection = "asc" | "desc" | null;
+type SortColumn = "firstName" | "lastName" | "email" | "phone" | "city" | null;
+
+export function DataTable({ data }: { data: Item[] }) {
+  const [sortColumn, setSortColumn] = useState<SortColumn>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+
+  const handleSort = (column: SortColumn) => {
+    if (sortColumn === column) {
+      if (sortDirection === "asc") {
+        setSortDirection("desc");
+      } else if (sortDirection === "desc") {
+        setSortColumn(null);
+        setSortDirection(null);
+      } else {
+        setSortDirection("asc");
+      }
+    } else {
+      setSortColumn(column);
+      setSortDirection("asc");
+    }
+  };
+
+  const getSortIndicator = (column: SortColumn) => {
+    if (sortColumn !== column) return " ↕";
+    if (sortDirection === "asc") return " ↑";
+    if (sortDirection === "desc") return " ↓";
+    return " ↕";
+  };
+
+  const sorted = [...data].sort((a, b) => {
+    if (!sortColumn || !sortDirection) return 0;
+    const aVal = a[sortColumn] ?? "";
+    const bVal = b[sortColumn] ?? "";
+    const comparison = String(aVal).localeCompare(String(bVal));
+    return sortDirection === "asc" ? comparison : -comparison;
+  });
+
+  return (
+    <table className="data-table">
+      <thead>
+        <tr>
+          <th onClick={() => handleSort("firstName")} className="sortable">
+            First Name{getSortIndicator("firstName")}
+          </th>
+          {/* ... more columns */}
+        </tr>
+      </thead>
+      <tbody>
+        {sorted.map((item) => (
+          <tr key={item.id}>...</tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+```
+
+CSS for sortable columns:
+
+```css
+.data-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.15s;
+}
+
+.data-table th.sortable:hover {
+  color: var(--accent);
+}
+```

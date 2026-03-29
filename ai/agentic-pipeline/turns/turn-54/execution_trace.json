@@ -1,0 +1,8 @@
+{
+  "turnId": "54",
+  "startedAt": "2026-03-21T17:33:26Z",
+  "finishedAt": "2026-03-21T17:35:02Z",
+  "skillsExecuted": ["turn-end", "turn-init"],
+  "agentsExecuted": ["claude"],
+  "notes": "Document app-from-dsl skill dependencies"
+}
