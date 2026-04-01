@@ -1,27 +1,39 @@
-# Turn Tracking Rules
+# Task and Turn Tracking Rules
 
-Every coding task is a turn. Turns are non-negotiable.
+Every coding task prompt executes within a task branch and produces one turn.
 
 ## Every Turn Requires
 
-| Artifact          | Path                                           | When           |
-|-------------------|------------------------------------------------|----------------|
-| `turn_context.md` | `./ai/agentic-pipeline/turns/turn-${TURN_ID}/` | Pre-execution  |
-| `pull_request.md` | `./ai/agentic-pipeline/turns/turn-${TURN_ID}/` | Post-execution |
-| `adr.md`          | `./ai/agentic-pipeline/turns/turn-${TURN_ID}/` | Post-execution |
-| `manifest.json`   | `./ai/agentic-pipeline/turns/turn-${TURN_ID}/` | Post-execution |
+| Artifact | Path | When |
+|---|---|---|
+| `turn_context.md` | `./ai/agentic-pipeline/tasks/task-${TASK_ID}/turns/turn-${TURN_ID}/` | Pre-execution |
+| `execution_trace.json` | `./ai/agentic-pipeline/tasks/task-${TASK_ID}/turns/turn-${TURN_ID}/` | Pre-execution |
+| `adr.md` | `./ai/agentic-pipeline/tasks/task-${TASK_ID}/turns/turn-${TURN_ID}/` | Post-execution |
+| `manifest.json` | `./ai/agentic-pipeline/tasks/task-${TASK_ID}/turns/turn-${TURN_ID}/` | Post-execution |
+
+## Every Task Requires
+
+| Artifact | Path |
+|---|---|
+| `task_context.md` | `./ai/agentic-pipeline/tasks/task-${TASK_ID}/` |
+| `task_status.json` | `./ai/agentic-pipeline/tasks/task-${TASK_ID}/` |
+| `task_summary.md` | `./ai/agentic-pipeline/tasks/task-${TASK_ID}/` |
+| `pull_request.md` | `./ai/agentic-pipeline/tasks/task-${TASK_ID}/` |
 
 ## Post-Execution Always Runs
 
-Even if execution fails, complete all post-execution steps.
-A turn without all 4 artifacts is incomplete.
+Even if execution fails, complete `/turn-end`.
+A turn without all required artifacts is incomplete.
 
 ## Registry
 
-Append one row to `./ai/agentic-pipeline/turns_index.csv` at the end of every turn.
-Tag the commit: `git tag turn/${TURN_ID} && git push origin turn/${TURN_ID}`
+Append one row to `./ai/agentic-pipeline/tasks_index.csv` when a new task is created.
+Update that row as the task status changes.
 
 ## Full Spec
 
-Invoke `/session-start` for turn state initialization.
-See `context_orchestration.md` for full 10-step lifecycle with bash scripts.
+- Invoke `/session-start` once per session
+- Invoke `/task-init` when current branch is `main` or `master`
+- Invoke `/turn-init` when already on a task branch
+- Invoke `/turn-end` after every coding prompt
+- Invoke `/task-close` when the user declares the task branch ready for review

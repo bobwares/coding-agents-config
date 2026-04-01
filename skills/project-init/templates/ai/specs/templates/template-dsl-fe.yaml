@@ -1,0 +1,170 @@
+# UI DSL Specification
+# Document: dsl-fe-{{DOMAIN}}-{{CAPABILITY}}-v1.0.yaml
+# Domain: {{DOMAIN}}
+# Capability: {{CAPABILITY}}
+# Version: 1.0.0
+# Status: Draft
+# Last Updated: {{CURRENT_DATE}}
+# References:
+#   - wire-ux-{{DOMAIN}}-{{CAPABILITY}}-v1.0.md
+#   - screen-fe-{{DOMAIN}}-catalog-v1.0.md
+#   - ddd-shared-{{DOMAIN}}-core-v1.0.md
+#   - api-be-{{DOMAIN}}-rest-v1.0.yaml
+
+metadata:
+  screenId: SCR-XXX
+  capability: "{{CAPABILITY}}"
+  domain: "{{DOMAIN}}"
+  version: "1.0.0"
+  status: draft
+  route: "/[route]"
+  title: "[Screen Title]"
+  description: "[Screen purpose]"
+
+# Page-level configuration
+page:
+  layout: standard  # standard | sidebar | wizard | modal
+  permissions:
+    view: "[permission]"
+    edit: "[permission]"
+
+# Data sources and API bindings
+dataSources:
+  - id: primary
+    type: api
+    endpoint: "/api/[resource]"
+    method: GET
+    # Parameters from route or context
+    params:
+      id: "$route.params.id"
+
+# Layout sections
+sections:
+  - id: header
+    type: pageHeader
+    title: "[Page Title]"
+    subtitle: "[Optional subtitle]"
+    actions:
+      - id: primaryAction
+        label: "[Action Label]"
+        type: button
+        variant: primary
+        action:
+          type: navigate
+          target: "/[route]"
+        permission: "[permission]"
+
+  - id: mainContent
+    type: card
+    title: "[Section Title]"
+    # Section visibility rules
+    visibility:
+      condition: "true"  # Or expression like "data.status === 'active'"
+
+    widgets:
+      - id: field1
+        type: textInput
+        label: "[Field Label]"
+        binding: "data.fieldName"
+        required: true
+        validation:
+          - type: required
+            message: "[Field] is required"
+          - type: maxLength
+            value: 100
+            message: "Maximum 100 characters"
+        placeholder: "[Placeholder text]"
+
+      - id: field2
+        type: select
+        label: "[Field Label]"
+        binding: "data.fieldName"
+        required: true
+        options:
+          source: static  # static | api | enum
+          values:
+            - value: "option1"
+              label: "Option 1"
+            - value: "option2"
+              label: "Option 2"
+
+      - id: field3
+        type: datePicker
+        label: "[Field Label]"
+        binding: "data.fieldName"
+        required: false
+        format: "YYYY-MM-DD"
+
+  - id: actionsSection
+    type: actionBar
+    position: bottom
+    widgets:
+      - id: submitBtn
+        type: button
+        label: "Save"
+        variant: primary
+        action:
+          type: submit
+          endpoint: "/api/[resource]"
+          method: POST
+          payload: "$form"
+          onSuccess:
+            type: navigate
+            target: "/[success-route]"
+          onError:
+            type: toast
+            message: "Failed to save. Please try again."
+        permission: "[permission]"
+
+      - id: cancelBtn
+        type: button
+        label: "Cancel"
+        variant: secondary
+        action:
+          type: navigate
+          target: "/[cancel-route]"
+
+# State definitions
+states:
+  loading:
+    sections:
+      mainContent:
+        skeleton: true
+
+  empty:
+    condition: "data.items.length === 0"
+    sections:
+      mainContent:
+        display: emptyState
+        message: "No items found"
+        action:
+          label: "Create New"
+          target: "/[create-route]"
+
+  error:
+    sections:
+      mainContent:
+        display: errorState
+        message: "Failed to load data"
+        action:
+          label: "Retry"
+          type: reload
+
+# Validation rules (form-level)
+validation:
+  rules:
+    - id: crossFieldValidation
+      condition: "[expression]"
+      message: "[Error message]"
+      fields: ["field1", "field2"]
+
+# Responsive behavior
+responsive:
+  mobile:
+    sections:
+      mainContent:
+        layout: stack
+  tablet:
+    sections:
+      mainContent:
+        layout: twoColumn

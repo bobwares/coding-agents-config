@@ -1,37 +1,33 @@
-# Turn Context — Turn {{TURN_ID}}
-
+# Turn Context — Task {{TASK_ID}} / Turn {{TURN_ID}}
 
 ## User Prompt
 
-{{respond with the first 50 lines of the prompt.}}
-
+{{FIRST_50_LINES_OF_PROMPT}}
 
 ## Variables
 
 | Variable               | Value                                           |
 |------------------------|-------------------------------------------------|
+| TASK_ID                | {{TASK_ID}}                                     |
 | TURN_ID                | {{TURN_ID}}                                     |
 | TURN_START_TIME        | {{TURN_START_TIME}}                             |
-| TURN_END_TIME          | {{TURN_END_TIME}}                               |
-| TURN_ELAPSED_TIME      | {{TURN_END_TIME}} - {{TURN_START_TIME}}         |
+| TURN_END_TIME          | [pending]                                       |
+| TURN_ELAPSED_TIME      | [pending]                                       |
 | TARGET_PROJECT         | {{TARGET_PROJECT}}                              |
+| CURRENT_TASK_DIRECTORY | {{CURRENT_TASK_DIRECTORY}}                      |
 | CURRENT_TURN_DIRECTORY | {{CURRENT_TURN_DIRECTORY}}                      |
 | EXECUTION_TRACE_FILE   | {{CURRENT_TURN_DIRECTORY}}/execution_trace.json |
 | CLI_NAME               | {{CLI_NAME}}                                    |
 | MODEL_ID               | {{MODEL_ID}}                                    |
 | CODING_AGENT           | {{CODING_AGENT}}                                |
-| Active Branch          | {{ACTIVE_BRANCH}}                               |
-| Task Description       | {{TASK_DESCRIPTION}}                            |
-
-
+| ACTIVE_BRANCH          | {{ACTIVE_BRANCH}}                               |
+| TASK_DESCRIPTION       | {{TASK_DESCRIPTION}}                            |
 
 ## Activated Skills
 
 | Skill            | Activation Type              |
 |------------------|------------------------------|
 | {{DOMAIN_SKILL}} | Auto-activated based on task |
-
-
 
 ## Turn Execution Tracking
 
@@ -41,9 +37,3 @@
 | Skills executed (finalize at session-end) | {{SKILLS_EXECUTED}}              |
 | Agents executed (finalize at session-end) | {{AGENTS_EXECUTED}}              |
 | Source of truth                           | `execution_trace.json`           |
-
-## Agent Routing
-
-| Task Type     | Assigned Agent     |
-|---------------|--------------------|
-| {{TASK_TYPE}} | {{ASSIGNED_AGENT}} |

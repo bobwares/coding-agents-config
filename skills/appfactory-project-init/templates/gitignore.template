@@ -1,0 +1,38 @@
+# Operating system
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+.npm/
+
+# Build output
+.next/
+dist/
+build/
+out/
+coverage/
+.turbo/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# AppFactory temporary artifacts
+AI/tmp/
+AI/output/

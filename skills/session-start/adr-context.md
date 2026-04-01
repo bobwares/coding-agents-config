@@ -1,63 +1,52 @@
 # ADR Rules — Architecture Decision Records
 
-Every turn produces exactly one `adr.md` in `./ai/agentic-pipeline/turns/turn-${TURN_ID}/`.
+Every turn produces exactly one `adr.md` in:
+
+`./ai/agentic-pipeline/tasks/task-${TASK_ID}/turns/turn-${TURN_ID}/`
 
 ## Full ADR Format
 
-Use template: `${HOME}/.claude/templates/adr_template.md`
+Use template:
+
+`${HOME}/.claude/templates/adr_template.md`
 
 ## When to Write a Full ADR
 
-| Scenario                                        | Full ADR |
-|-------------------------------------------------|:--------:|
-| Choosing between design patterns                |   Yes    |
-| Selecting a new library or framework            |   Yes    |
-| Changing an API contract                        |   Yes    |
-| Introducing infrastructure (queues, caches)     |   Yes    |
-| Modifying data model with trade-offs            |   Yes    |
-| Changing cross-cutting concerns (auth, logging) |   Yes    |
-
----
+| Scenario | Full ADR |
+|---|:---:|
+| Choosing between design patterns | Yes |
+| Selecting a new library or framework | Yes |
+| Changing an API contract | Yes |
+| Introducing infrastructure (queues, caches) | Yes |
+| Modifying data model with trade-offs | Yes |
+| Changing cross-cutting concerns (auth, logging) | Yes |
 
 ## When a Minimal ADR is Acceptable
 
-| Scenario                          | Minimal |
-|-----------------------------------|:-------:|
-| Bug fix with no design choices    |   Yes   |
-| Following established pattern     |   Yes   |
-| Renaming variables or files       |   Yes   |
-| Formatting or style changes       |   Yes   |
-| Adding tests to existing behavior |   Yes   |
+| Scenario | Minimal |
+|---|:---:|
+| Bug fix with no design choices | Yes |
+| Following established pattern | Yes |
+| Renaming variables or files | Yes |
+| Formatting or style changes | Yes |
+| Adding tests to existing behavior | Yes |
 
-**Minimal ADR format** :
-```
-# ADR - Turn {{TURN_ID}}: {{DECISION_TITLE}}
+## Minimal ADR Format
+
+```md
+# ADR — Task {{TASK_ID}} Turn {{TURN_ID}}: {{DECISION_TITLE}}
 
 - **Date**: {{UTC_ISO8601}}
-- **Time**: 
 - **Agent**: AI Coding Agent ({{MODEL_NAME}})
 - **Status**: Accepted
 
----No architectural decision made this turn — [brief description of what was done].
-
+No architectural decision made this turn — {{BRIEF_DESCRIPTION}}.
 ```
 
 ## Multiple Decisions
 
-If multiple architectural decisions in one turn, document all in one `adr.md` with numbered sections:
-
-```markdown
-# ADR - Turn 5: Multiple Decisions
-
-## Decision 1: Repository Pattern
-...
-
-## Decision 2: Redis for Sessions
-...
-```
-
----
+If multiple architectural decisions occur in one turn, document them in one `adr.md` using numbered sections.
 
 ## Timing
 
-ADRs are written in **Step 8** of the turn lifecycle (Post-Execution), after execution completes.
+`adr.md` is written during `/turn-end` after execution completes.
