@@ -1,22 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $# -lt 2 ]]; then
-  echo "usage: $0 <repo_root> <task_id>" >&2
-  exit 1
-fi
-
-repo_root="$1"
-task_id="$2"
-turns_root="$repo_root/ai/agentic-pipeline/tasks/task-${task_id}/turns"
+repo_root="${1:-.}"
+tasks_root="$repo_root/ai/agentic-pipeline/tasks"
 max_seen=0
 
-if [[ -d "$turns_root" ]]; then
+if [[ -d "$tasks_root" ]]; then
   shopt -s nullglob
-  for dir in "$turns_root"/turn-*; do
+  for dir in "$tasks_root"/task-*; do
     [[ -d "$dir" ]] || continue
     base_name="${dir##*/}"
-    if [[ "$base_name" =~ ^turn-([0-9]{3})$ ]]; then
+    if [[ "$base_name" =~ ^task-([0-9]{3})$ ]]; then
       value=$((10#${BASH_REMATCH[1]}))
       if (( value > max_seen )); then
         max_seen=$value

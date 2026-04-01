@@ -13,10 +13,10 @@ Before responding to any coding or repo-modifying prompt, execute this workflow 
 3. If the current branch is `main` or `master`:
    - Invoke `/task-init`
    - This must:
-      - resolve the next zero-padded task id (`001`, `002`, ...)
-      - create and switch to `task/TXXX`
-      - initialize `./ai/agentic-pipeline/tasks/task-XXX/`
-      - initialize `turn-001`
+     - resolve the next zero-padded task id (`001`, `002`, ...)
+     - create and switch to `task/TXXX`
+     - initialize `./ai/agentic-pipeline/tasks/task-XXX/`
+     - initialize `turn-001`
 
 4. If the current branch matches `task/TXXX` or `task/TXXX-*`:
    - Invoke `/turn-init`
@@ -44,7 +44,7 @@ If the branch is `main` or `master`, `/task-init` must run successfully before a
 
 ## Branch Rules
 
-- Task branch format: `task/TXXX`
+- Task branch format: `task/TXXX` 
 - Never commit directly to `main` or `master`
 - Never skip `/turn-end`
 
@@ -114,8 +114,3 @@ AI Coding Agent Change:
 Every turn must produce exactly one `adr.md`, either full or minimal, according to the ADR rules.
 
 Respond `CLAUDE.md loaded`
-
-
-## Container Constants
-
-- GitHub profile: https://github.com/bobwares

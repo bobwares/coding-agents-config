@@ -5,7 +5,7 @@
 set -euo pipefail
 
 INPUT=$(cat)
-TOOL=$(echo "$INPUT" | jq -r '.tool_name // ""')
+TOOL=$(echo "$INPUT" | jq -r '.tool_name // ""' 2>/dev/null || echo "")
 
 case "$TOOL" in
   write_file|str_replace_based_edit|create_file|bash) ;;
