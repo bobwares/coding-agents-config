@@ -1,0 +1,23 @@
+{
+  "taskId": "001",
+  "turnId": "002",
+  "branch": "task/T001",
+  "startedAt": "2026-04-03T21:35:25Z",
+  "endedAt": "2026-04-03T21:37:52Z",
+  "status": "completed",
+  "filesChanged": [
+    "ai/agentic-pipeline/tasks/task-001/task_status.json",
+    "ai/agentic-pipeline/tasks/task-001/turns/turn-002/turn_context.md",
+    "ai/agentic-pipeline/tasks/task-001/turns/turn-002/execution_trace.json",
+    "ai/agentic-pipeline/tasks/task-001/turns/turn-002/adr.md",
+    "ai/agentic-pipeline/tasks/task-001/turns/turn-002/manifest.json",
+    "skills/af-build-ddd/SKILL.md",
+    "skills/af-build-ddd/templates/ddd-template.md",
+    "skills/af-build-dsl/SKILL.md",
+    "skills/af-build-dsl/templates/domain-dsl-template.yaml",
+    "skills/af-build-plan/SKILL.md",
+    "skills/af-build-plan/templates/execution-plan-template.md",
+    "skills/af-build-prd/SKILL.md",
+    "skills/af-build-prd/templates/prd-template.md"
+  ]
+}

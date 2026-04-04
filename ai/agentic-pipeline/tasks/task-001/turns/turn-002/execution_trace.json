@@ -1,0 +1,13 @@
+{
+  "taskId": "001",
+  "turnId": "002",
+  "startedAt": "2026-04-03T21:35:25Z",
+  "skillsExecuted": [
+    "session-start",
+    "turn-init",
+    "skill-creator",
+    "turn-end"
+  ],
+  "agentsExecuted": [],
+  "notes": "Renamed the build-* skill directories to af-build-*, updated each SKILL.md front matter and heading to the new skill names, refreshed template self-references, and verified the old top-level build-* directories no longer exist."
+}

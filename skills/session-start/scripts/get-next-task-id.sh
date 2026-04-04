@@ -1,4 +1,14 @@
 #!/usr/bin/env bash
+# App: coding-agents-config
+# File: get-next-task-id.sh
+# Version: 0.1.0
+# Task: 001
+# Turns: 001
+# Author: AI Coding Agent (unknown)
+# Date: 2026-04-03T16:31:45Z
+# Description: Resolve the next zero-padded task id from ai/agentic-pipeline/tasks.
+# Log:
+# 001, 001, 0.1.0, 2026/04/03, 04:31 PM UTC, AI Coding Agent (unknown)
 set -euo pipefail
 
 repo_root="${1:-.}"
@@ -20,5 +30,4 @@ if [[ -d "$tasks_root" ]]; then
   shopt -u nullglob
 fi
 
-printf '%03d
-' $((max_seen + 1))
+printf '%03d\n' $((max_seen + 1))

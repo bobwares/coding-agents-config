@@ -1,0 +1,21 @@
+{
+  "taskId": "001",
+  "turnId": "005",
+  "branch": "task/T001",
+  "startedAt": "2026-04-03T22:07:17Z",
+  "endedAt": "2026-04-03T22:10:12Z",
+  "status": "completed",
+  "filesChanged": [
+    "ai/agentic-pipeline/tasks/task-001/task_status.json",
+    "ai/agentic-pipeline/tasks/task-001/turns/turn-005/turn_context.md",
+    "ai/agentic-pipeline/tasks/task-001/turns/turn-005/execution_trace.json",
+    "ai/agentic-pipeline/tasks/task-001/turns/turn-005/adr.md",
+    "ai/agentic-pipeline/tasks/task-001/turns/turn-005/manifest.json",
+    "skills/af-be-build-prd/SKILL.md",
+    "skills/af-be-build-ddd/SKILL.md",
+    "skills/af-be-build-dsl/SKILL.md",
+    "skills/af-be-build-plan/SKILL.md",
+    "skills/af-be-build-dsl/templates/domain-dsl-template.yaml",
+    "skills/af-be-build-plan/templates/execution-plan-template.md"
+  ]
+}

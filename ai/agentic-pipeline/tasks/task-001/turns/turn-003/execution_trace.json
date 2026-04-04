@@ -1,0 +1,12 @@
+{
+  "taskId": "001",
+  "turnId": "003",
+  "startedAt": "2026-04-03T21:58:09Z",
+  "skillsExecuted": [
+    "turn-init",
+    "skill-creator",
+    "turn-end"
+  ],
+  "agentsExecuted": [],
+  "notes": "Aligned the af-build skills to the customer-app ai/specs convention: backend PRD at ai/specs/spec-be-prd.md, backend DDD at ai/specs/spec-be-ddd.md, backend DSL at ai/specs/dls-be-ddd.yaml, and plan output at ai/specs/spec-be-plan.md. Removed default sidecar review-notes outputs and updated the plan and DSL templates to reference ai/specs/project.dsl.yaml and ai/specs/spec-be-ddd.md."
+}

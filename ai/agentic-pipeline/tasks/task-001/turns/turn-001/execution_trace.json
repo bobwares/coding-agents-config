@@ -1,0 +1,12 @@
+{
+  "taskId": "001",
+  "turnId": "001",
+  "startedAt": "2026-04-03T16:31:45Z",
+  "skillsExecuted": [
+    "session-start",
+    "task-init",
+    "turn-end"
+  ],
+  "agentsExecuted": [],
+  "notes": "Initialized task/T001 manually because the session-start and task-init helper scripts used CRLF line endings. Normalized the affected shell scripts to LF, added .gitattributes for *.sh, and verified the task/turn id helpers now execute successfully."
+}

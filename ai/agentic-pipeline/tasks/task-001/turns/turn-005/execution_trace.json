@@ -1,0 +1,12 @@
+{
+  "taskId": "001",
+  "turnId": "005",
+  "startedAt": "2026-04-03T22:07:17Z",
+  "skillsExecuted": [
+    "turn-init",
+    "skill-creator",
+    "turn-end"
+  ],
+  "agentsExecuted": [],
+  "notes": "Refocused the af-be-build skill set on backend application artifacts by tightening the PRD, DDD, DSL, and planning skill descriptions around backend services and modules, removing UI or frontend-oriented guidance, replacing DSL ui_* structures with backend service and persistence hints, and updating the backend plan template to emphasize APIs, persistence, integrations, and operational delivery."
+}

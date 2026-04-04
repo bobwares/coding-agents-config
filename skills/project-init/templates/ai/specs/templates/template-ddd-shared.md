@@ -21,11 +21,11 @@ This document defines the canonical domain model used across the **{{DOMAIN_TITL
 
 ### Context: [Context Name]
 
-| Attribute | Value |
-| --------- | ----- |
-| **Name** | [Context Name] |
-| **Responsibility** | [What this context owns] |
-| **Key Entities** | [List of entities] |
+| Attribute              | Value                               |
+|------------------------|-------------------------------------|
+| **Name**               | [Context Name]                      |
+| **Responsibility**     | [What this context owns]            |
+| **Key Entities**       | [List of entities]                  |
 | **Integration Points** | [How it connects to other contexts] |
 
 ## Entities

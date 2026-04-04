@@ -1,0 +1,10 @@
+{
+  "taskId": "001",
+  "branch": "task/T001",
+  "baseBranch": "main",
+  "status": "pr-open",
+  "createdAt": "2026-04-03T16:31:45Z",
+  "closedAt": null,
+  "pullRequestUrl": "https://github.com/bobwares/coding-agents-config/pull/15",
+  "totalTurns": 8
+}

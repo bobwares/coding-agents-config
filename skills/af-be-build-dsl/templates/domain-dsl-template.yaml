@@ -1,0 +1,150 @@
+dsl_version: "1.0"
+project:
+  name: "<project_name>"
+  title: "<project_title>"
+  source_document:
+    type: "ddd"
+    path: "ai/specs/spec-be-ddd.md"
+    version: "<ddd_version_or_unknown>"
+  intent: "Domain/application DSL derived from the DDD for planner and code generator consumption"
+
+domain:
+  name: "<domain_name>"
+  summary: "<brief_domain_summary>"
+  scope:
+    in_scope: []
+    out_of_scope: []
+  primary_outcomes: []
+
+ubiquitous_language:
+  - term: "<term>"
+    definition: "<business_definition>"
+    notes: ""
+
+shared_types:
+  enums: []
+  value_objects: []
+  common_rules: []
+
+bounded_contexts:
+  - id: "<context_id>"
+    name: "<Context Name>"
+    purpose: "<why this context exists>"
+    depends_on: []
+    source_refs: []
+
+    aggregates:
+      - id: "<aggregate_id>"
+        name: "<Aggregate Name>"
+        description: "<aggregate purpose>"
+        invariants: []
+        state_model:
+          initial_state: ""
+          states: []
+          transitions: []
+        fields: []
+
+    entities:
+      - id: "<entity_id>"
+        name: "<Entity Name>"
+        description: ""
+        parent_aggregate: ""
+        fields: []
+
+    value_objects:
+      - id: "<value_object_id>"
+        name: "<Value Object Name>"
+        description: ""
+        fields: []
+        validation_rules: []
+
+    enums:
+      - id: "<enum_id>"
+        name: "<Enum Name>"
+        values: []
+
+    commands:
+      - id: "<command_id>"
+        name: "<Command Name>"
+        actor_types: []
+        target: ""
+        preconditions: []
+        outcomes: []
+        events_emitted: []
+        api_operations: []
+        integration_points: []
+        background_jobs: []
+
+    events:
+      - id: "<event_id>"
+        name: "<Event Name>"
+        trigger: ""
+        payload_keys: []
+        consumers: []
+
+    rules:
+      - id: "<rule_id>"
+        statement: "<business rule or invariant>"
+        severity: "required"
+        applies_to: []
+
+    read_models: []
+
+    service_hints:
+      application_services: []
+      orchestrators: []
+      validations: []
+      background_jobs: []
+
+    api_hints:
+      resources: []
+      operations: []
+      notes: []
+
+    persistence_hints:
+      models: []
+      repositories: []
+      storage_notes: []
+      retention_notes: []
+
+workflows:
+  - id: "<workflow_id>"
+    name: "<Workflow Name>"
+    summary: ""
+    participating_contexts: []
+    steps: []
+    triggers: []
+    completion_conditions: []
+    failure_conditions: []
+
+policies:
+  - id: "<policy_id>"
+    name: "<Policy Name>"
+    scope: "<global|tenant|product|user_type>"
+    configurable: true
+    description: ""
+    affects:
+      contexts: []
+      workflows: []
+      rules: []
+
+roles:
+  - id: "<role_id>"
+    name: "<role_name>"
+    scope: ""
+    allowed_actions: []
+    restricted_actions: []
+
+integrations:
+  - id: "<integration_id>"
+    name: "<External System Name>"
+    type: "<provider|consumer|peer>"
+    purpose: ""
+    exchanged_information: []
+    constraints: []
+
+planner_hints:
+  implementation_order: []
+  high_risk_areas: []
+  unresolved_items: []
+  assumptions: []
