@@ -4,6 +4,10 @@
 
 Add backend AppFactory skills and close out task 001
 
+## URL
+
+https://github.com/bobwares/coding-agents-config/pull/15
+
 ## Summary
 
 - Normalize LF line endings for the pipeline helper shell scripts and protect `*.sh` files with `.gitattributes`.
