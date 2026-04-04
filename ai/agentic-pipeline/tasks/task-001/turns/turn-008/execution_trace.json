@@ -1,0 +1,13 @@
+{
+  "taskId": "001",
+  "turnId": "008",
+  "startedAt": "2026-04-04T17:14:41Z",
+  "skillsExecuted": [
+    "session-start",
+    "turn-init",
+    "task-close"
+  ],
+  "agentsExecuted": [],
+  "status": "in_progress",
+  "notes": "Closing task 001 by updating task artifacts, committing the branch, creating a pull request, and returning the local checkout to main."
+}

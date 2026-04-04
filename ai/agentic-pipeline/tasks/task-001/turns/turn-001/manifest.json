@@ -1,0 +1,25 @@
+{
+  "taskId": "001",
+  "turnId": "001",
+  "branch": "task/T001",
+  "startedAt": "2026-04-03T16:31:45Z",
+  "endedAt": "2026-04-03T16:35:57Z",
+  "status": "completed",
+  "filesChanged": [
+    ".gitattributes",
+    "ai/agentic-pipeline/tasks/task-001/pull_request.md",
+    "ai/agentic-pipeline/tasks/task-001/task_context.md",
+    "ai/agentic-pipeline/tasks/task-001/task_status.json",
+    "ai/agentic-pipeline/tasks/task-001/task_summary.md",
+    "ai/agentic-pipeline/tasks/task-001/turns/turn-001/adr.md",
+    "ai/agentic-pipeline/tasks/task-001/turns/turn-001/execution_trace.json",
+    "ai/agentic-pipeline/tasks/task-001/turns/turn-001/manifest.json",
+    "ai/agentic-pipeline/tasks/task-001/turns/turn-001/turn_context.md",
+    "ai/agentic-pipeline/tasks_index.csv",
+    "skills/appfactory-project-init/scripts/init-appfactory-project.sh",
+    "skills/project-init/scripts/init-appfactory-project.sh",
+    "skills/session-start/scripts/get-next-task-id.sh",
+    "skills/task-init/scripts/get-next-task-id.sh",
+    "skills/turn-init/scripts/get-next-turn-id.sh"
+  ]
+}

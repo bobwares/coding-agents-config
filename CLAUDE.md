@@ -118,4 +118,8 @@ Respond `CLAUDE.md loaded`
 
 ## Container Constants
 
-- GitHub profile: https://github.com/bobwares
+- GitHub profile = https://github.com/bobwares
+- AppFactory = ~/gallery/app-factory
+- AppFactory DSL =  ~/gallery/app-factory/tech-stack-profiles
+- AppFactory Implementations = ~/gallery/app-factory/tech-stack-implementations
+- application default directory = ~/generated-apps

@@ -1,0 +1,2 @@
+task_id,branch,status,created_at,closed_at,pull_request_url,total_turns
+001,task/T001,candidate,2026-04-03T16:31:45Z,,,8

@@ -1,0 +1,21 @@
+{
+  "taskId": "001",
+  "turnId": "007",
+  "branch": "task/T001",
+  "startedAt": "2026-04-04T07:04:16Z",
+  "endedAt": "2026-04-04T07:06:16Z",
+  "status": "completed",
+  "filesChanged": [
+    "skills/af-project-init/SKILL.md",
+    "skills/af-project-init/scripts/init-appfactory-project.sh",
+    "ai/agentic-pipeline/tasks/task-001/task_status.json",
+    "ai/agentic-pipeline/tasks/task-001/turns/turn-007/turn_context.md",
+    "ai/agentic-pipeline/tasks/task-001/turns/turn-007/execution_trace.json",
+    "ai/agentic-pipeline/tasks/task-001/turns/turn-007/adr.md",
+    "ai/agentic-pipeline/tasks/task-001/turns/turn-007/manifest.json"
+  ],
+  "validation": [
+    "bash -n skills/af-project-init/scripts/init-appfactory-project.sh",
+    "Smoke-tested the helper in a temporary /tmp directory with GitHub publishing suppressed"
+  ]
+}

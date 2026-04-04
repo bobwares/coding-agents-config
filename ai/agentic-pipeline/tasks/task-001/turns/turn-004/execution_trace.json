@@ -1,0 +1,12 @@
+{
+  "taskId": "001",
+  "turnId": "004",
+  "startedAt": "2026-04-03T22:03:12Z",
+  "skillsExecuted": [
+    "turn-init",
+    "skill-creator",
+    "turn-end"
+  ],
+  "agentsExecuted": [],
+  "notes": "Renamed the af-build-* skill directories to af-be-build-*, updated each SKILL.md front matter and heading, refreshed template self-references for the plan and PRD templates, and verified there are no remaining top-level skills named af-build-*."
+}
