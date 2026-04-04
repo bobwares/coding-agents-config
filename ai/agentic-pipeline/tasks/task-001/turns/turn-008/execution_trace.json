@@ -5,9 +5,11 @@
   "skillsExecuted": [
     "session-start",
     "turn-init",
-    "task-close"
+    "task-close",
+    "turn-end"
   ],
   "agentsExecuted": [],
-  "status": "in_progress",
-  "notes": "Closing task 001 by updating task artifacts, committing the branch, creating a pull request, and returning the local checkout to main."
+  "completedAt": "2026-04-04T17:55:29Z",
+  "status": "completed",
+  "notes": "Closed task 001 with commits 49d4e81 and 53c1c98, opened PR #15, and recorded the pull request metadata in the task artifacts."
 }

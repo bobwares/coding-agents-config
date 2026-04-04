@@ -11,8 +11,8 @@ task-close
 | TASK_ID                | 001                                                             |
 | TURN_ID                | 008                                                             |
 | TURN_START_TIME        | 2026-04-04T17:14:41Z                                            |
-| TURN_END_TIME          | [pending]                                                       |
-| TURN_ELAPSED_TIME      | [pending]                                                       |
+| TURN_END_TIME          | 2026-04-04T17:55:29Z                                            |
+| TURN_ELAPSED_TIME      | 00:40:48                                                        |
 | TARGET_PROJECT         | /Users/bobware/coding-agents-config                             |
 | CURRENT_TASK_DIRECTORY | /Users/bobware/coding-agents-config/ai/agentic-pipeline/tasks/task-001 |
 | CURRENT_TURN_DIRECTORY | /Users/bobware/coding-agents-config/ai/agentic-pipeline/tasks/task-001/turns/turn-008 |
@@ -36,6 +36,6 @@ task-close
 | Field                                     | Value                                  |
 |-------------------------------------------|----------------------------------------|
 | Skills requested in prompt                | task-close                             |
-| Skills executed (finalize at session-end) | session-start, turn-init, task-close   |
+| Skills executed (finalize at session-end) | session-start, turn-init, task-close, turn-end |
 | Agents executed (finalize at session-end) | none                                   |
 | Source of truth                           | `execution_trace.json`                 |

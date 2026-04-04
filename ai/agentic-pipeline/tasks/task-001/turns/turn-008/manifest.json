@@ -1,0 +1,33 @@
+{
+  "taskId": "001",
+  "turnId": "008",
+  "branch": "task/T001",
+  "startedAt": "2026-04-04T17:14:41Z",
+  "endedAt": "2026-04-04T17:55:29Z",
+  "status": "completed",
+  "filesChanged": [
+    "ai/agentic-pipeline/tasks/task-001/task_status.json",
+    "ai/agentic-pipeline/tasks/task-001/task_summary.md",
+    "ai/agentic-pipeline/tasks/task-001/pull_request.md",
+    "ai/agentic-pipeline/tasks/task-001/turns/turn-008/turn_context.md",
+    "ai/agentic-pipeline/tasks/task-001/turns/turn-008/execution_trace.json",
+    "ai/agentic-pipeline/tasks/task-001/turns/turn-008/adr.md",
+    "ai/agentic-pipeline/tasks/task-001/turns/turn-008/manifest.json",
+    "ai/agentic-pipeline/tasks_index.csv"
+  ],
+  "summary": "Closed task 001 by preparing the PR, publishing task/T001, opening pull request #15, and recording the PR metadata in the task registry.",
+  "validation": [
+    "bash -n skills/af-project-init/scripts/init-appfactory-project.sh",
+    "skills/session-start/scripts/get-next-task-id.sh .",
+    "skills/task-init/scripts/get-next-task-id.sh .",
+    "skills/turn-init/scripts/get-next-turn-id.sh . 001",
+    "Smoke-tested skills/af-project-init/scripts/init-appfactory-project.sh with APP_FACTORY_PROJECT_ID=customer-profile-app in /tmp"
+  ],
+  "artifacts": {
+    "pullRequestUrl": "https://github.com/bobwares/coding-agents-config/pull/15",
+    "commits": [
+      "49d4e81",
+      "53c1c98"
+    ]
+  }
+}
