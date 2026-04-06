@@ -18,4 +18,4 @@ Cleans up the skills directory by archiving 16 legacy skills that are no longer 
 
 ## Status
 
-Ready for review
+PR Open: https://github.com/bobwares/coding-agents-config/pull/16
