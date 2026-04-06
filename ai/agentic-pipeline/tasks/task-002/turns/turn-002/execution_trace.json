@@ -1,0 +1,9 @@
+{
+  "taskId": "002",
+  "turnId": "002",
+  "startedAt": "2026-04-04T00:10:00Z",
+  "skillsExecuted": ["turn-init", "turn-end"],
+  "agentsExecuted": [],
+  "completedAt": "2026-04-04T00:15:00Z",
+  "notes": "Restructured af-project-init from flat file to subdirectory in both ~/.claude/agents/ and repo agents/"
+}

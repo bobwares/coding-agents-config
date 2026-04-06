@@ -1,0 +1,15 @@
+{
+  "taskId": "002",
+  "turnId": "001",
+  "filesCreated": [
+    "~/.claude/agents/af-project-init.md"
+  ],
+  "filesModified": [],
+  "filesDeleted": [],
+  "skillsExecuted": ["session-start", "task-init", "turn-end"],
+  "agentsExecuted": [],
+  "branch": "task/T002",
+  "startedAt": "2026-04-04T00:00:00Z",
+  "completedAt": "2026-04-04T00:05:00Z",
+  "status": "completed"
+}
