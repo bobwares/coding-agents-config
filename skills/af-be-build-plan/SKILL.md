@@ -4,7 +4,7 @@ description: Generate a backend application execution plan from a domain DSL YAM
 context: project
 ---
 
-# af-be-build-plan
+# AppFactory Backend App Build Plan
 
 ## Purpose
 

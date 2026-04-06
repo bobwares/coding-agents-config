@@ -10,7 +10,6 @@ tools:
   - Write
   - Edit
   - Bash
-disallowedTools:
   - WebSearch
   - WebFetch
 permissionMode: default

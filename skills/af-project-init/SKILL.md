@@ -75,7 +75,7 @@ Use this skill when:
 
 read [App Factory]/projects/[projectId].yaml and store as projectObject.
 
-if [App Factory]/projects/[projectId].yaml does not exist 
+if [App Factory]/projects/[projectId].yaml does not exist
 then STOP execution of this SKILL.  Respond "Project Yaml does not exist."
 
 
@@ -88,7 +88,7 @@ then STOP execution of this SKILL.  Respond "Project Yaml does not exist."
 - else
   - Stop.  respond with message "The directory [application default directory]/[project name] already exists.".
 
-  
+
 ### Step 2
 
 Create the base directories:
