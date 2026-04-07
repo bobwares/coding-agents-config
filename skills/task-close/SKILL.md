@@ -15,7 +15,7 @@ Verify the most recent turn has been finalized.
 
 ## Step 2: Update Task-Level Artifacts
 
-Update these files under `./ai/agentic-pipeline/tasks/task-${TASK_ID}/`:
+Update these files under `./.appfactory/tasks/task-${TASK_ID}/`:
 
 - `task_status.json`
 - `task_summary.md`

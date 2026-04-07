@@ -18,7 +18,7 @@ fi
 
 repo_root="$1"
 task_id="$2"
-turns_root="$repo_root/ai/agentic-pipeline/tasks/task-${task_id}/turns"
+turns_root="$repo_root/.appfactory/tasks/task-${task_id}/turns"
 max_seen=0
 
 if [[ -d "$turns_root" ]]; then

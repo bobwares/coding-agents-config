@@ -21,7 +21,16 @@ input-hints:
   - discovery notes
   - stakeholder answers
 output-artifacts:
-  - ai/specs/spec-be-prd.md
+  - .appfactory/specs/spec-be-prd.md
+memory-integration:
+  reads_from:
+    - project.name
+    - config.target_project
+  writes_to:
+    - artifacts.prd.status
+    - artifacts.prd.updated_at
+    - artifacts.prd.generated_by
+    - progress.current_phase
 ---
 
 # af-be-build-prd
@@ -201,10 +210,10 @@ Use the template at `templates/prd-template.md` as the baseline output format.
 
 Unless the user specifies otherwise:
 
-1. Write the canonical backend PRD to `ai/specs/spec-be-prd.md`
+1. Write the canonical backend PRD to `.appfactory/specs/spec-be-prd.md`
 2. Keep unresolved items inside that file instead of creating a default sidecar notes file
 
-If the repo already uses a different `ai/specs` naming convention, preserve it.
+If the repo already uses a different `.appfactory/specs` naming convention, preserve it.
 
 ## Quality Checklist
 
@@ -229,7 +238,7 @@ User intent:
 Expected result:
 
 1. Read worksheet content.
-2. Produce `ai/specs/spec-be-prd.md`.
+2. Produce `.appfactory/specs/spec-be-prd.md`.
 3. Capture assumptions and open questions inline in the PRD.
 
 ### Example 2
@@ -251,3 +260,41 @@ If the input is too sparse to support a PRD, do not fabricate content. Instead:
 1. produce a skeletal PRD with only supported sections
 2. place unresolved topics in **Remaining Open Questions**
 3. explain the major gaps in **Assumptions** and **Remaining Open Questions**
+
+## Memory Integration
+
+This skill integrates with the AppFactory memory system via `af-memory`.
+
+### Pre-Execution
+
+Before generating the PRD:
+
+1. Read project context from memory:
+   ```
+   project_name = af-memory read project.name
+   target_project = af-memory read config.target_project
+   ```
+
+2. Update artifact status to in_progress:
+   ```
+   af-memory update-artifact prd in_progress af-be-build-prd
+   ```
+
+### Post-Execution
+
+After successfully generating the PRD:
+
+1. Update artifact status to completed:
+   ```
+   af-memory update-artifact prd completed af-be-build-prd
+   ```
+
+2. Advance pipeline phase:
+   ```
+   af-memory advance-phase ddd
+   ```
+
+3. Verify state update:
+   ```
+   af-memory status
+   ```

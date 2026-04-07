@@ -20,8 +20,8 @@
 
 | Input                      | Path / Reference               | Notes |
 |----------------------------|--------------------------------|-------|
-| **DDD DSL YAML**           | ./ai/specs/dls-be-ddd.yaml |       |
-| **Project DSL / Tech Stack Profile** | ./ai/specs/project.dsl.yaml | Selected stack profile comes from `application.tech_stack_profiles` |
+| **DDD DSL YAML**           | ./.appfactory/specs/dls-be-ddd.yaml |       |
+| **Project DSL / Tech Stack Profile** | ./.appfactory/specs/project.dsl.yaml | Selected stack profile comes from `application.tech_stack_profiles` |
 
 
 ## Planning Summary

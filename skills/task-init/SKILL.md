@@ -67,7 +67,7 @@ test "$ACTIVE_BRANCH" = "$TASK_BRANCH"
 ## Step 5: Create Task Directory Structure
 
 ```bash
-TASK_DIR="./ai/agentic-pipeline/tasks/task-${TASK_ID}"
+TASK_DIR="./.appfactory/tasks/task-${TASK_ID}"
 TURNS_DIR="$TASK_DIR/turns"
 TURN_ID="001"
 TURN_DIR="$TURNS_DIR/turn-${TURN_ID}"
@@ -78,10 +78,10 @@ mkdir -p "$TURN_DIR"
 
 Create these files:
 
-- `./ai/agentic-pipeline/tasks/task-${TASK_ID}/task_context.md`
-- `./ai/agentic-pipeline/tasks/task-${TASK_ID}/task_status.json`
-- `./ai/agentic-pipeline/tasks/task-${TASK_ID}/task_summary.md`
-- `./ai/agentic-pipeline/tasks/task-${TASK_ID}/pull_request.md`
+- `./.appfactory/tasks/task-${TASK_ID}/task_context.md`
+- `./.appfactory/tasks/task-${TASK_ID}/task_status.json`
+- `./.appfactory/tasks/task-${TASK_ID}/task_summary.md`
+- `./.appfactory/tasks/task-${TASK_ID}/pull_request.md`
 
 Use `templates/task_context.md` for `task_context.md`.
 
@@ -124,7 +124,7 @@ Use `templates/turn_context.md` for `turn_context.md`.
 
 ## Step 8: Append Tasks Registry
 
-Append one row to `./ai/agentic-pipeline/tasks_index.csv`.
+Append one row to `./.appfactory/tasks_index.csv`.
 Create the header row if the file does not yet exist.
 
 Suggested header:

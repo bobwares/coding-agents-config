@@ -2,6 +2,22 @@
 name: af-be-build-implementation
 description: Execute backend application generation by copying a selected App Factory tech stack implementation to the target project and generating domain code from the dsl-be-ddd.yaml specification.
 context: project
+memory-integration:
+  reads_from:
+    - project.name
+    - artifacts.dsl.path
+    - artifacts.plan.path
+    - artifacts.plan.status
+    - config.tech_stack
+    - config.tech_stack_path
+    - config.target_project
+  writes_to:
+    - artifacts.implementation.status
+    - artifacts.implementation.updated_at
+    - artifacts.implementation.generated_by
+    - progress.current_phase
+  requires:
+    - artifacts.plan.status: completed
 ---
 
 # af-be-build-implementation
@@ -61,7 +77,7 @@ The skill produces:
 
 1. A fully scaffolded backend project in the target directory
 2. Generated domain modules based on the DSL
-3. An implementation manifest at `ai/specs/implementation-manifest.yaml`
+3. An implementation manifest at `.appfactory/specs/implementation-manifest.yaml`
 
 ## Execution Procedure
 
@@ -189,7 +205,7 @@ Generate test scaffolds for:
 
 ### Phase 5: Implementation Manifest
 
-Generate `ai/specs/implementation-manifest.yaml`:
+Generate `.appfactory/specs/implementation-manifest.yaml`:
 
 ```yaml
 version: 1
@@ -330,3 +346,51 @@ When running this skill:
 6. report validation results;
 7. generate the implementation manifest;
 8. summarize what was created.
+
+## Memory Integration
+
+This skill integrates with the AppFactory memory system via `af-memory`.
+
+### Pre-Execution
+
+Before generating the implementation:
+
+1. Verify plan dependency is met:
+   ```
+   plan_status = af-memory read artifacts.plan.status
+   if plan_status != "completed":
+     ERROR: Plan must be completed before generating implementation
+   ```
+
+2. Read configuration from memory:
+   ```
+   dsl_path = af-memory read artifacts.dsl.path
+   plan_path = af-memory read artifacts.plan.path
+   tech_stack = af-memory read config.tech_stack
+   tech_stack_path = af-memory read config.tech_stack_path
+   target_project = af-memory read config.target_project
+   ```
+
+3. Update artifact status to in_progress:
+   ```
+   af-memory update-artifact implementation in_progress af-be-build-implementation
+   ```
+
+### Post-Execution
+
+After successfully generating the implementation:
+
+1. Update artifact status to completed:
+   ```
+   af-memory update-artifact implementation completed af-be-build-implementation
+   ```
+
+2. Advance pipeline phase to complete:
+   ```
+   af-memory advance-phase complete
+   ```
+
+3. Verify state update:
+   ```
+   af-memory status
+   ```

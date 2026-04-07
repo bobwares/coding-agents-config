@@ -66,7 +66,7 @@ echo "TURN_ID=$TURN_ID"
 ## Step 5: Create Turn Directory
 
 ```bash
-TASK_DIR="./ai/agentic-pipeline/tasks/task-${TASK_ID}"
+TASK_DIR="./.appfactory/tasks/task-${TASK_ID}"
 TURNS_DIR="$TASK_DIR/turns"
 TURN_DIR="$TURNS_DIR/turn-${TURN_ID}"
 mkdir -p "$TURN_DIR"
@@ -79,7 +79,7 @@ Create:
 - `turn_context.md`
 - `execution_trace.json`
 
-inside `./ai/agentic-pipeline/tasks/task-${TASK_ID}/turns/turn-${TURN_ID}/`
+inside `./.appfactory/tasks/task-${TASK_ID}/turns/turn-${TURN_ID}/`
 
 Use `templates/turn_context.md` for `turn_context.md`.
 
@@ -100,7 +100,7 @@ Use `templates/turn_context.md` for `turn_context.md`.
 
 Increment `totalTurns` in:
 
-`./ai/agentic-pipeline/tasks/task-${TASK_ID}/task_status.json`
+`./.appfactory/tasks/task-${TASK_ID}/task_status.json`
 
 ## Step 8: Display Turn Status
 

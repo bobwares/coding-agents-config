@@ -6,13 +6,13 @@
 # Turns: 001
 # Author: AI Coding Agent (unknown)
 # Date: 2026-04-03T16:31:45Z
-# Description: Resolve the next zero-padded task id from ai/agentic-pipeline/tasks.
+# Description: Resolve the next zero-padded task id from .appfactory/tasks.
 # Log:
 # 001, 001, 0.1.0, 2026/04/03, 04:31 PM UTC, AI Coding Agent (unknown)
 set -euo pipefail
 
 repo_root="${1:-.}"
-tasks_root="$repo_root/ai/agentic-pipeline/tasks"
+tasks_root="$repo_root/.appfactory/tasks"
 max_seen=0
 
 if [[ -d "$tasks_root" ]]; then

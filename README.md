@@ -66,8 +66,11 @@ coding-agents-config/
 │   └── ...
 ├── scripts/            # Automation scripts
 │   └── setup.sh
-├── ai/                 # Turn artifacts directory
-│   └── agentic-pipeline/turns/
+├── .appfactory/        # Task/turn tracking and specs
+│   ├── tasks/          # Task branches with turns
+│   ├── specs/          # Specifications
+│   ├── prompts/        # Prompt templates
+│   └── memory/         # Project memory
 ├── plugins/            # Plugin management
 ├── prompts/            # Prompt templates
 └── docs/               # Reference documentation

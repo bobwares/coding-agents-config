@@ -1,0 +1,48 @@
+{
+  "taskId": "002",
+  "turnId": "004",
+  "branch": "task/T002",
+  "startedAt": "2026-04-07T00:11:18Z",
+  "endedAt": "2026-04-07T00:15:22Z",
+  "status": "complete",
+  "description": "Migrate ai/ directory to .appfactory/",
+  "skillsExecuted": ["turn-init", "turn-end"],
+  "agentsExecuted": [],
+  "filesChanged": [
+    "CLAUDE.md",
+    "README.md",
+    "docs/migration-ai-to-appfactory.md",
+    "skills/task-init/SKILL.md",
+    "skills/task-init/scripts/get-next-task-id.sh",
+    "skills/turn-init/SKILL.md",
+    "skills/turn-init/scripts/get-next-turn-id.sh",
+    "skills/turn-end/SKILL.md",
+    "skills/task-close/SKILL.md",
+    "skills/session-start/turn-tracking-context.md",
+    "skills/session-start/adr-context.md",
+    "skills/session-start/scripts/get-next-task-id.sh",
+    "skills/af-project-init/SKILL.md",
+    "skills/af-project-init/scripts/init-appfactory-project.sh",
+    "skills/af-be-build-prd/SKILL.md",
+    "skills/af-be-build-ddd/SKILL.md",
+    "skills/af-be-build-dsl/SKILL.md",
+    "skills/af-be-build-dsl/templates/domain-dsl-template.yaml",
+    "skills/af-be-build-plan/SKILL.md",
+    "skills/af-be-build-plan/templates/execution-plan-template.md",
+    "skills/af-be-build-implementation/SKILL.md",
+    "agents/agent-architecture-planner.md"
+  ],
+  "directoriesCreated": [
+    ".appfactory/",
+    ".appfactory/specs/",
+    ".appfactory/memory/",
+    "archive/legacy-turns/"
+  ],
+  "directoriesMoved": [
+    "ai/agentic-pipeline/tasks/ -> .appfactory/tasks/",
+    "ai/prompts/ -> .appfactory/prompts/"
+  ],
+  "filesArchived": [
+    "ai/agentic-pipeline/turns/* -> archive/legacy-turns/"
+  ]
+}

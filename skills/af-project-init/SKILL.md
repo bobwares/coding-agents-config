@@ -7,6 +7,16 @@ triggers:
   - bootstrap new AppFactory repo
   - start new AppFactory project
   - create agentic pipeline AppFactory project
+memory-integration:
+  writes_to:
+    - project.name
+    - project.repository
+    - project.created_at
+    - config.tech_stack
+    - config.tech_stack_path
+    - config.target_project
+    - progress.current_phase
+    - directories.*
 ---
 
 # AppFactory Project Init
@@ -19,8 +29,8 @@ Use this skill to create the initial scaffold for a brand-new **AppFactory** pro
 
 At the repository root, this skill creates:
 
-1. `ai/prompts/`
-2. `ai/specs/`
+1. `.appfactory/prompts/`
+2. `.appfactory/specs/`
 3. `app`
 4. `.appfactory/provenance.json`
 5. `.gitignore`
@@ -36,15 +46,14 @@ When the directory is not already a Git repository, it also initializes Git on `
 ```
 [application default directory]/
 └── [project name]/
-    ├── ai/
+    ├── .appfactory/
     │   ├── prompts/
     │   │   └── .gitkeep
-    │   └── specs/
-    │       └── .gitkeep
+    │   ├── specs/
+    │   │   └── .gitkeep
+    │   └── provenance.json
     ├── app/
     │   └── .gitkeep
-    ├── .appfactory/
-    │   └── provenance.json
     ├── .gitignore
     └── README.md
 ```
@@ -75,7 +84,7 @@ Use this skill when:
 
 read [App Factory]/projects/[projectId].yaml and store as projectObject.
 
-if [App Factory]/projects/[projectId].yaml does not exist 
+if [App Factory]/projects/[projectId].yaml does not exist
 then STOP execution of this SKILL.  Respond "Project Yaml does not exist."
 
 
@@ -88,13 +97,13 @@ then STOP execution of this SKILL.  Respond "Project Yaml does not exist."
 - else
   - Stop.  respond with message "The directory [application default directory]/[project name] already exists.".
 
-  
+
 ### Step 2
 
 Create the base directories:
 
-- `ai/prompts`
-- `ai/specs`
+- `.appfactory/prompts`
+- `.appfactory/specs`
 - `app/`
 
 ### Step 3
@@ -103,7 +112,8 @@ copy [AppFactory Implementations][projectObject.tech_stack_profiles] to `app` di
 
 ### Step 4
 
-Create `.gitignore` with standard development and agentic-pipeline ignore rules.
+Create `.gitignore`
+with standard development and agentic-pipeline ignore rules.
 
 ### Step 5
 
@@ -162,3 +172,36 @@ This skill intentionally creates only the **initial scaffold**. It does not gene
 If `gh` is unavailable or unauthenticated, the scaffold still completes locally and the script reports that GitHub publishing was skipped.
 
 The helper script accepts an optional `APP_FACTORY_PROJECT_ID` environment variable or second positional argument. If neither is provided, it derives the project id from the target directory name.
+
+## Memory Integration
+
+This skill integrates with the AppFactory memory system via `af-memory`.
+
+### Post-Execution
+
+After successfully initializing the project:
+
+1. Initialize the memory state file:
+   ```
+   af-memory init [project-name]
+   ```
+
+2. Set project configuration:
+   ```
+   af-memory write project.name "[project-name]"
+   af-memory write project.repository "[repository-url]"
+   af-memory write project.created_at "[ISO_TIMESTAMP]"
+   af-memory write config.tech_stack "[tech-stack-name]"
+   af-memory write config.tech_stack_path "[tech-stack-path]"
+   af-memory write config.target_project "[target-path]"
+   ```
+
+3. Set initial pipeline phase:
+   ```
+   af-memory write progress.current_phase "prd"
+   ```
+
+4. Verify state initialization:
+   ```
+   af-memory status
+   ```

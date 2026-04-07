@@ -10,7 +10,6 @@ tools:
   - Write
   - Edit
   - Bash
-disallowedTools:
   - WebSearch
   - WebFetch
 permissionMode: default
@@ -47,10 +46,10 @@ Use this agent when any of the following are true:
 
 Prefer the following inputs when present:
 
-- PRD markdown under `./ai/specs/`
-- DDD markdown under `./ai/specs/`
-- DSL yaml under `./ai/specs/`, `./ai/dsl/`, or project root
-- task-planning prompts under `./ai/prompts/`
+- PRD markdown under `./.appfactory/specs/`
+- DDD markdown under `./.appfactory/specs/`
+- DSL yaml under `./.appfactory/specs/`, `./.appfactory/dsl/`, or project root
+- task-planning prompts under `./.appfactory/prompts/`
 - repository structure, existing modules, tests, and ADRs
 - governance or architecture templates if present
 
