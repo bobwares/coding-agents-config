@@ -20,3 +20,5 @@ Complete — ready for PR review
 |------|-------------|--------|
 | 001 | Initialize task and plan skill archival | complete |
 | 002 | Execute skill archival and agent updates | complete |
+| 003 | Record PR artifacts and update task status | complete |
+| 004 | Finalize task closeout | complete |

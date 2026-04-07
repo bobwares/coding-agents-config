@@ -4,7 +4,7 @@
   "baseBranch": "main",
   "status": "pr-open",
   "createdAt": "2026-04-04T00:00:00Z",
-  "closedAt": null,
+  "closedAt": "2026-04-06T00:00:00Z",
   "pullRequestUrl": "https://github.com/bobwares/coding-agents-config/pull/16",
-  "totalTurns": 2
+  "totalTurns": 4
 }

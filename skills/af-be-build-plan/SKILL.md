@@ -2,6 +2,20 @@
 name: af-be-build-plan
 description: Generate a backend application execution plan from a domain DSL YAML and a selected tech stack profile. Produces a step-by-step backend implementation plan optimized for single-turn execution when feasible, with explicit multi-turn recommendations when warranted.
 context: project
+memory-integration:
+  reads_from:
+    - project.name
+    - artifacts.dsl.path
+    - artifacts.dsl.status
+    - config.tech_stack
+    - config.tech_stack_path
+  writes_to:
+    - artifacts.plan.status
+    - artifacts.plan.updated_at
+    - artifacts.plan.generated_by
+    - progress.current_phase
+  requires:
+    - artifacts.dsl.status: completed
 ---
 
 # AppFactory Backend App Build Plan
@@ -30,7 +44,7 @@ The skill expects these inputs:
 
 Generate this file by default:
 
-1. `ai/specs/spec-be-plan.md`
+1. `.appfactory/specs/spec-be-plan.md`
 
 If the caller provides different output paths, use those paths.
 
@@ -167,3 +181,49 @@ A valid output must make it possible for a downstream execution agent to:
 4. know what artifacts to produce,
 5. know how completion will be verified.
 6. stay focused on backend modules, APIs, persistence, integrations, and operational concerns rather than client interaction work.
+
+## Memory Integration
+
+This skill integrates with the AppFactory memory system via `af-memory`.
+
+### Pre-Execution
+
+Before generating the plan:
+
+1. Verify DSL dependency is met:
+   ```
+   dsl_status = af-memory read artifacts.dsl.status
+   if dsl_status != "completed":
+     ERROR: DSL must be completed before generating plan
+   ```
+
+2. Read DSL path and tech stack from memory:
+   ```
+   dsl_path = af-memory read artifacts.dsl.path
+   tech_stack = af-memory read config.tech_stack
+   tech_stack_path = af-memory read config.tech_stack_path
+   ```
+
+3. Update artifact status to in_progress:
+   ```
+   af-memory update-artifact plan in_progress af-be-build-plan
+   ```
+
+### Post-Execution
+
+After successfully generating the plan:
+
+1. Update artifact status to completed:
+   ```
+   af-memory update-artifact plan completed af-be-build-plan
+   ```
+
+2. Advance pipeline phase:
+   ```
+   af-memory advance-phase implementation
+   ```
+
+3. Verify state update:
+   ```
+   af-memory status
+   ```

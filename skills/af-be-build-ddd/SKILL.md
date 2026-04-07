@@ -2,6 +2,18 @@
 name: af-be-build-ddd
 description: Generate a human-readable backend Domain-Driven Design document from an approved PRD. The output must translate business requirements into a backend application domain design optimized for downstream DSL generation, backend planning workflows, and AI coding agents.
 context: project
+memory-integration:
+  reads_from:
+    - project.name
+    - artifacts.prd.path
+    - artifacts.prd.status
+  writes_to:
+    - artifacts.ddd.status
+    - artifacts.ddd.updated_at
+    - artifacts.ddd.generated_by
+    - progress.current_phase
+  requires:
+    - artifacts.prd.status: completed
 ---
 
 # af-be-build-ddd
@@ -43,9 +55,9 @@ The PRD is the primary source of truth.
 
 By default, write the following file:
 
-1. `ai/specs/spec-be-ddd.md`
+1. `.appfactory/specs/spec-be-ddd.md`
 
-If the repo already uses a different `ai/specs` convention, preserve local project conventions.
+If the repo already uses a different `.appfactory/specs` convention, preserve local project conventions.
 
 ## Output Goals
 
@@ -351,3 +363,47 @@ A good output from this skill should let a reviewer answer:
 Use the included template as the default output shape unless the repo already has a stricter DDD template.
 
 `templates/ddd-template.md`
+
+## Memory Integration
+
+This skill integrates with the AppFactory memory system via `af-memory`.
+
+### Pre-Execution
+
+Before generating the DDD:
+
+1. Verify PRD dependency is met:
+   ```
+   prd_status = af-memory read artifacts.prd.status
+   if prd_status != "completed":
+     ERROR: PRD must be completed before generating DDD
+   ```
+
+2. Read PRD path from memory:
+   ```
+   prd_path = af-memory read artifacts.prd.path
+   ```
+
+3. Update artifact status to in_progress:
+   ```
+   af-memory update-artifact ddd in_progress af-be-build-ddd
+   ```
+
+### Post-Execution
+
+After successfully generating the DDD:
+
+1. Update artifact status to completed:
+   ```
+   af-memory update-artifact ddd completed af-be-build-ddd
+   ```
+
+2. Advance pipeline phase:
+   ```
+   af-memory advance-phase dsl
+   ```
+
+3. Verify state update:
+   ```
+   af-memory status
+   ```

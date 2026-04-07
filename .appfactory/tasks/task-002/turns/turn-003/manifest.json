@@ -1,0 +1,22 @@
+{
+  "taskId": "002",
+  "turnId": "003",
+  "branch": "task/T002",
+  "startedAt": "2026-04-06T23:46:01Z",
+  "completedAt": "2026-04-06T23:47:26Z",
+  "status": "completed",
+  "filesCreated": [
+    "docs/ai-to-appfactory-migration-analysis.md",
+    "ai/agentic-pipeline/tasks/task-002/turns/turn-003/turn_context.md",
+    "ai/agentic-pipeline/tasks/task-002/turns/turn-003/execution_trace.json",
+    "ai/agentic-pipeline/tasks/task-002/turns/turn-003/adr.md",
+    "ai/agentic-pipeline/tasks/task-002/turns/turn-003/manifest.json"
+  ],
+  "filesModified": [
+    "ai/agentic-pipeline/tasks/task-002/task_status.json",
+    "ai/agentic-pipeline/tasks_index.csv"
+  ],
+  "filesDeleted": [],
+  "skillsExecuted": ["turn-init", "turn-end"],
+  "agentsExecuted": []
+}

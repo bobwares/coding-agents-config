@@ -4,7 +4,7 @@ project:
   title: "<project_title>"
   source_document:
     type: "ddd"
-    path: "ai/specs/spec-be-ddd.md"
+    path: ".appfactory/specs/spec-be-ddd.md"
     version: "<ddd_version_or_unknown>"
   intent: "Domain/application DSL derived from the DDD for planner and code generator consumption"
 

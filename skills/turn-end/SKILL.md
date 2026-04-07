@@ -27,7 +27,7 @@ Use the ADR rules to choose full or minimal format.
 
 Path:
 
-`./ai/agentic-pipeline/tasks/task-${TASK_ID}/turns/turn-${TURN_ID}/adr.md`
+`./.appfactory/tasks/task-${TASK_ID}/turns/turn-${TURN_ID}/adr.md`
 
 ## Step 4: Write `manifest.json`
 
@@ -43,7 +43,7 @@ Write a manifest that records at least:
 
 Path:
 
-`./ai/agentic-pipeline/tasks/task-${TASK_ID}/turns/turn-${TURN_ID}/manifest.json`
+`./.appfactory/tasks/task-${TASK_ID}/turns/turn-${TURN_ID}/manifest.json`
 
 ## Step 5: Update `execution_trace.json`
 

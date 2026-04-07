@@ -2,6 +2,18 @@
 name: af-be-build-dsl
 description: Generate a backend application DSL YAML document from a human-readable Domain-Driven Design document. The output DSL is intended to be consumed by backend planning and backend code generation skills.
 context: project
+memory-integration:
+  reads_from:
+    - project.name
+    - artifacts.ddd.path
+    - artifacts.ddd.status
+  writes_to:
+    - artifacts.dsl.status
+    - artifacts.dsl.updated_at
+    - artifacts.dsl.generated_by
+    - progress.current_phase
+  requires:
+    - artifacts.ddd.status: completed
 ---
 
 # af-be-build-dsl
@@ -60,7 +72,7 @@ If supporting inputs are available, use them only to clarify the DDD. The DDD re
 
 Generate the following file unless the user explicitly requests a different path:
 
-1. `ai/specs/dls-be-ddd.yaml`
+1. `.appfactory/specs/dls-be-ddd.yaml`
 
 The YAML file must be the canonical output. Keep unresolved items and assumptions inside the YAML under `planner_hints.unresolved_items` and `planner_hints.assumptions` instead of creating a default sidecar notes file.
 
@@ -235,6 +247,50 @@ Do not:
 When running this skill:
 
 1. state what input document is being used;
-2. state that the YAML will be written to `ai/specs/dls-be-ddd.yaml`;
+2. state that the YAML will be written to `.appfactory/specs/dls-be-ddd.yaml`;
 3. summarize key assumptions briefly;
 4. then generate the artifacts.
+
+## Memory Integration
+
+This skill integrates with the AppFactory memory system via `af-memory`.
+
+### Pre-Execution
+
+Before generating the DSL:
+
+1. Verify DDD dependency is met:
+   ```
+   ddd_status = af-memory read artifacts.ddd.status
+   if ddd_status != "completed":
+     ERROR: DDD must be completed before generating DSL
+   ```
+
+2. Read DDD path from memory:
+   ```
+   ddd_path = af-memory read artifacts.ddd.path
+   ```
+
+3. Update artifact status to in_progress:
+   ```
+   af-memory update-artifact dsl in_progress af-be-build-dsl
+   ```
+
+### Post-Execution
+
+After successfully generating the DSL:
+
+1. Update artifact status to completed:
+   ```
+   af-memory update-artifact dsl completed af-be-build-dsl
+   ```
+
+2. Advance pipeline phase:
+   ```
+   af-memory advance-phase plan
+   ```
+
+3. Verify state update:
+   ```
+   af-memory status
+   ```

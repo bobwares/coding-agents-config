@@ -2,7 +2,7 @@
 
 Every turn produces exactly one `adr.md` in:
 
-`./ai/agentic-pipeline/tasks/task-${TASK_ID}/turns/turn-${TURN_ID}/`
+`./.appfactory/tasks/task-${TASK_ID}/turns/turn-${TURN_ID}/`
 
 ## Full ADR Format
 

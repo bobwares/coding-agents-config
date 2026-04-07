@@ -15,7 +15,7 @@ Before responding to any coding or repo-modifying prompt, execute this workflow 
    - This must:
       - resolve the next zero-padded task id (`001`, `002`, ...)
       - create and switch to `task/TXXX`
-      - initialize `./ai/agentic-pipeline/tasks/task-XXX/`
+      - initialize `./.appfactory/tasks/task-XXX/`
       - initialize `turn-001`
 
 4. If the current branch matches `task/TXXX` or `task/TXXX-*`:
@@ -51,7 +51,7 @@ If the branch is `main` or `master`, `/task-init` must run successfully before a
 ## Directory Structure
 
 ```text
-./ai/agentic-pipeline/
+./.appfactory/
   tasks/
     task-001/
       task_context.md
@@ -64,6 +64,9 @@ If the branch is `main` or `master`, `/task-init` must run successfully before a
           execution_trace.json
           adr.md
           manifest.json
+  specs/
+  prompts/
+  memory/
 ```
 
 ## Required Turn Artifacts
@@ -77,7 +80,7 @@ Every turn requires:
 
 These live under:
 
-`./ai/agentic-pipeline/tasks/task-XXX/turns/turn-XXX/`
+`./.appfactory/tasks/task-XXX/turns/turn-XXX/`
 
 ## Required Task Artifacts
 
@@ -90,13 +93,13 @@ Every task requires:
 
 These live under:
 
-`./ai/agentic-pipeline/tasks/task-XXX/`
+`./.appfactory/tasks/task-XXX/`
 
 ## Registries
 
-- Append one row to `./ai/agentic-pipeline/tasks_index.csv` when a new task is created
+- Append one row to `./.appfactory/tasks_index.csv` when a new task is created
 - Update that row as task status changes
-- Optional: maintain `./ai/agentic-pipeline/tasks/task-XXX/turns_index.csv`
+- Optional: maintain `./.appfactory/tasks/task-XXX/turns_index.csv`
 
 ## Commit Message Format
 
