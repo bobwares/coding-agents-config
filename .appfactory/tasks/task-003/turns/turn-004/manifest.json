@@ -1,0 +1,10 @@
+{
+  "taskId": "003",
+  "turnId": "004",
+  "branch": "task/T003",
+  "startedAt": "2026-04-07T20:14:48Z",
+  "endedAt": "2026-04-07T20:15:24Z",
+  "status": "complete",
+  "filesChanged": ["CLAUDE.md"],
+  "summary": "Moved environment variables to Container Constants section"
+}

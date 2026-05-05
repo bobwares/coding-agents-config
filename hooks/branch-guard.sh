@@ -2,11 +2,13 @@
 # hooks/branch-guard.sh
 # PreToolCall hook — blocks write tool calls when on main or master
 
-set -euo pipefail
+set -eo pipefail
 
 INPUT=$(cat)
 TOOL=$(echo "$INPUT" | jq -r '.tool_name // ""' 2>/dev/null || echo "")
+TOOL=$(echo "$TOOL" | tr '[:upper:]' '[:lower:]')
 
+# Only guard bash and write tools
 case "$TOOL" in
   write_file|str_replace_based_edit|create_file|bash) ;;
   *) exit 0 ;;

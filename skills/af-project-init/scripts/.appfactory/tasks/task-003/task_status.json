@@ -1,8 +1,15 @@
 {
   "taskId": "003",
-  "status": "in-progress",
-  "createdAt": "2026-05-04T16:54:00Z",
-  "totalTurns": 1,
-  "completedTurns": 0,
-  "lastUpdated": "2026-05-04T16:54:00Z"
+  "status": "in_progress",
+  "totalTurns": 2,
+  "completedTurns": 2,
+  "createdAt": "2026-05-04T17:00:00Z",
+  "lastUpdatedAt": "2026-05-04T17:30:00Z",
+  "branch": "task/T003",
+  "commits": 1,
+  "changes": {
+    "filesModified": 3,
+    "linesAdded": 64,
+    "linesRemoved": 13
+  }
 }

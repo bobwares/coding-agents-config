@@ -1,19 +1,20 @@
 ---
 name: af-ddd-tests
-description: Generate test scenarios and JUnit 5 test implementations from a Domain-Driven Design specification's worked examples. Produces unit tests, integration tests, e2e tests, edge cases, performance tests, and data validation tests.
+description: Generate Gherkin-style BDD scenarios from Domain-Driven Design and PRD specifications. Produces human-readable feature files organized by aggregate/bounded context for use with Cucumber and other BDD testing frameworks.
 context: project
 memory-integration:
    reads_from:
       - project.name
       - artifacts.ddd.path
       - artifacts.ddd.version
-      - artifacts.tests.path
+      - artifacts.prd.path
+      - artifacts.features.path
    writes_to:
-      - artifacts.tests.path
-      - artifacts.tests.status
-      - artifacts.tests.version
-      - artifacts.tests.generated_by
-      - artifacts.tests.updated_at
+      - artifacts.features.path
+      - artifacts.features.status
+      - artifacts.features.version
+      - artifacts.features.generated_by
+      - artifacts.features.updated_at
       - progress.current_phase
    requires:
       - artifacts.ddd.status: completed
@@ -23,29 +24,31 @@ memory-integration:
 
 ## Purpose
 
-Generate comprehensive test specification and JUnit 5 test implementations from a Domain-Driven Design (DDD) specification's worked examples.
+Generate comprehensive Gherkin-style BDD (Behavior-Driven Development) scenarios from a Domain-Driven Design (DDD) specification's worked examples and Product Requirements Document (PRD).
 
 This skill:
-1. Parses a DDD spec (v2.0+) to extract all worked examples
-2. Maps each example to test scenarios (unit, integration, e2e, edge case, performance)
-3. Generates test specifications (`.appfactory/specs/tests.md`)
-4. Generates JUnit 5 test implementations (`.appfactory/tests/...`)
+1. Parses a DDD spec (v2.0+) to extract all worked examples and aggregates
+2. Parses PRD to extract functional requirements and business rules
+3. Maps examples and requirements to Gherkin scenarios grouped by aggregate/bounded context
+4. Generates human-readable feature files (`.feature`) organized by domain concept
+5. Generates a Gherkin specification summary (`.appfactory/specs/gherkin-test-spec.md`)
 
-Output aligns with test pyramid: unit tests (mock externals) → integration tests (real DB) → e2e tests (full Spring context) → performance tests (JMH/Gatling).
+Output is fully compatible with Cucumber, Behave, and other Gherkin-based BDD frameworks.
 
 ## When To Use
 
 Use this skill when:
 
 1. A DDD specification exists with worked examples and is marked completed
-2. The next step is to generate test coverage for Claims Core implementation
-3. You need both test specification (planning) and test code (implementation)
-4. You want automated test generation from DDD examples to ensure coverage
+2. A PRD exists defining functional requirements and business rules
+3. You want to create human-readable BDD scenarios for stakeholder review and team alignment
+4. You want to bridge domain models (DDD) with automated testing via Gherkin
+5. You plan to implement step definitions in Cucumber, Behave, or similar BDD framework
 
 Do **not** use this skill if:
 - DDD specification is incomplete or not finalized
 - Worked examples are insufficient (< 10 scenarios)
-- Test framework/database not yet selected (assumes JUnit 5 + Spring Test + PostgreSQL)
+- You only need implementation-focused test code (in that case, use traditional test generation tools)
 
 ## Input
 
@@ -58,64 +61,66 @@ ddd_path=$(af_state_get "artifacts.ddd.path")
 
 Must contain:
 - ≥ 10 worked examples (typically 20 in v2.2.0+)
-- Clear example structure: **Scenario**, **Flow**, **Assertions**
-- All 9 state machine transitions exercised across examples
-- Edge cases (duplicate detection, immutability, failure modes)
+- Clear example structure with: Input, Business Process, State Change, Invariants, Events, Downstream
+- Bounded Contexts section defining aggregates/domain concepts
+- All major state transitions and invariants represented in examples
+- Edge cases, error scenarios, and data validation examples
+
+**PRD (Optional but Recommended)**:
+```bash
+prd_path=$(af_state_get "artifacts.prd.path")
+```
+
+Provides:
+- Functional requirements that map to scenarios
+- Business rules and policy constraints (become Then assertions)
+- Role definitions (actors in Given context)
+- Use cases and workflows
 
 ### Optional Parameters
 
-- `--test-framework`: Target framework (default: `junit5-spring`)
-- `--database`: Database type (default: `postgresql`)
-- `--coverage-target`: Line coverage target (default: `90`)
-- `--output-format`: `spec-only` | `code-only` | `both` (default: `both`)
+- `--output-location`: Target directory for feature files (default: `src/test/features/`)
+- `--aggregate-filter`: Generate feature files only for specific aggregates (comma-separated)
+- `--scenario-type`: Filter scenarios (default: `all`; options: `happy-path`, `edge-case`, `error-case`, `data-validation`)
+- `--include-spec-summary`: Generate Gherkin specification summary document (default: `true`)
 
 ## Output Files
 
-### Test Specification
+### Gherkin Feature Files
 
-**Path**: `.appfactory/specs/tests.md`
+**Path**: `src/test/features/` (configurable via `--output-location`)
 
-Comprehensive test specification with:
-- 6 test categories (unit, integration, e2e, edge case, performance, data validation)
-- ≥ 60 test scenarios derived from DDD examples
-- Clear test structure: Setup, Action, Assertions
-- Coverage matrix (state transitions, invariants, examples)
-- Implementation notes (framework, database, coverage target)
-
-### Test Code (JUnit 5)
-
-**Path**: `.appfactory/tests/`
-
-Generated test classes:
+One `.feature` file per aggregate/bounded context:
 ```
-.appfactory/tests/
-  unit/
-    StateTransitionTest.java
-    BusinessInvariantTest.java
-    FieldValidationTest.java
-  integration/
-    AdjudicationDeterminismTest.java
-    AccumulatorIdempotencyTest.java
-    AntiCorruptionLayerTest.java
-    EventPublishingTest.java
-  e2e/
-    Example01_HappyPath_ApprovedClaimTest.java
-    Example02_PreventiveService_NoDedTest.java
-    ... (one per worked example)
-  edge/
-    ConcurrencyTest.java
-    AuthorizationTest.java
-    ImmutabilityTest.java
-    ValidationTest.java
-  performance/
-    SubmissionLatencyTest.java
-    AdjudicationLatencyTest.java
-    ThroughputTest.java
-  validation/
-    DataValidationTest.java
+src/test/features/
+  claim-adjudication.feature         [Claim aggregate scenarios: approval, denial, review]
+  claim-submission.feature           [Claim submission: intake, validation, routing]
+  evidence-processing.feature        [Evidence aggregate: collection, quality assessment, storage]
+  policy-lookup.feature              [Policy aggregate: retrieval, caching, versioning]
+  event-publishing.feature           [Domain events: publishing, ordering, retry]
+  authorization.feature              [Access control: role verification, permissions]
+  data-validation.feature            [Field validation: formats, constraints, uniqueness]
 ```
 
-Each test class is runnable via JUnit 5, includes proper Spring Test setup, uses H2 or Testcontainers for DB.
+Each feature file contains:
+- Feature header: Business capability description + aggregate name
+- Background: Shared preconditions (system initialization, standard context)
+- Multiple Scenario blocks: Each from a DDD worked example or PRD requirement
+- Given/When/Then steps: Extracted from DDD example structure, business-readable language
+- Scenario Outline: For parameterized testing of variations and edge cases
+- Comments: Cross-references to DDD Example N and invariants verified
+
+### Gherkin Specification Summary
+
+**Path**: `.appfactory/specs/gherkin-test-spec.md`
+
+Comprehensive specification document with:
+- Document control metadata (title, version, author, dates)
+- Feature files summary table (file name, aggregate, scenario count, coverage scope)
+- Scenario traceability matrix (feature, scenario name, source DDD example, scenario type, verified invariants/events)
+- Detailed BDD specification sections for each feature (description, scenarios, assertions, business rules)
+- Coverage analysis (total scenarios, distribution by type, aggregates covered, state transitions, invariants verified)
+- Implementation guidance for Cucumber step definitions
 
 ## Process
 
@@ -132,38 +137,51 @@ Each test class is runnable via JUnit 5, includes proper Spring Test setup, uses
 3. Categorize by type: happy path, manual review, edge case, failure, etc.
 4. Build example-to-test mapping
 
-### Step 3: Generate Test Specification
+### Step 3: Group Scenarios by Aggregate/Bounded Context
 
-1. Create `.appfactory/specs/tests.md`
-2. Generate test scenarios for:
-   - **Unit Tests**: State transitions (9), invariants (10), validation (4)
-   - **Integration Tests**: Determinism (4), accumulators (4), anti-corruption (2), events (8)
-   - **E2E Tests**: One per worked example (typically 20)
-   - **Edge Cases**: Concurrency, auth, immutability, validation, policy, timeout, amounts
-   - **Performance**: Latency (p99), throughput, caching, idempotency
-   - **Data Validation**: Precision, uniqueness, format, constraints
-3. Organize by category with clear descriptions
-4. Include implementation notes and framework guidance
+1. Parse DDD Bounded Contexts section to identify aggregates
+2. For each aggregate, collect all relevant worked examples and PRD requirements
+3. Classify scenarios by type:
+   - **Happy Path**: Success cases with valid inputs and expected outcomes
+   - **Edge Cases**: Boundary conditions, maximum/minimum values, threshold crossing
+   - **Error Cases**: Validation failures, authorization denials, exception handling
+   - **Data Validation**: Format verification, constraint checking, uniqueness rules
+4. Organize scenarios logically within each aggregate's feature file
 
-### Step 4: Generate Test Code (Optional)
+### Step 4: Generate Gherkin Feature Files
 
-If `--output-format` is `code-only` or `both`:
+1. For each aggregate, create one `.feature` file in `src/test/features/`
+2. Populate with:
+   - **Feature header**: Business capability description referencing aggregate name
+   - **Background section**: Shared preconditions (system state, standard context)
+   - **Scenario blocks**: Each mapped from a DDD worked example
+     - Extract **Given** steps from DDD example's "Input" and context
+     - Extract **When** step from DDD example's "Business Process"
+     - Extract **Then** steps from DDD example's "State Change", "Invariants", "Events", "Downstream"
+   - **Scenario Outline blocks** (optional): For parameterized test variations
+   - **Comments**: Reference DDD Example numbers and invariant IDs
+3. Ensure all steps use business language (no implementation details)
+4. Verify Gherkin syntax is valid (can be parsed by Cucumber)
 
-1. Generate test class templates for each category
-2. Implement test methods with proper:
-   - Annotations (@Test, @BeforeEach, @Mock, @Transactional)
-   - Spring Test context setup
-   - Database initialization (Testcontainers or H2)
-   - Assertion methods
-3. Include utility methods (claimBuilder, policySnapshotFixture, etc.)
-4. Add JavaDoc comments linking to spec scenarios
+### Step 5: Generate Gherkin Specification Summary
 
-### Step 5: Update State
+1. Create `.appfactory/specs/gherkin-test-spec.md`
+2. Include:
+   - Document control metadata
+   - Feature files summary table (file, aggregate, scenario count)
+   - Scenario traceability matrix (feature → scenario → DDD Example source → verified invariants)
+   - Detailed scenario descriptions (Given-When-Then with business context)
+   - Coverage analysis (scenario distribution, aggregates covered, state transitions, invariants verified)
+3. Link each scenario to its source DDD Example
 
-1. Write `artifacts.tests.path` in state.yml
-2. Set `artifacts.tests.status` = `generated`
-3. Record `artifacts.tests.version` = `1.0.0`
-4. Set `artifacts.tests.generated_by` = `af-ddd-tests`
+### Step 6: Update State
+
+1. Write `artifacts.features.path` = `src/test/features/` in state.yml
+2. Set `artifacts.features.status` = `generated`
+3. Record `artifacts.features.version` = `1.0.0`
+4. Set `artifacts.features.generated_by` = `af-ddd-tests`
+5. Record `artifacts.features.scenario_count` = total number of scenarios generated
+6. Record `artifacts.features.feature_count` = number of feature files generated
 
 ## State Management
 
@@ -175,46 +193,58 @@ artifacts:
     path: .appfactory/specs/spec-be-ddd.md
     version: 2.2.0
     status: completed
-  tests:
-    path: .appfactory/specs/tests.md
+    bounded_contexts: [List]
+  prd:
+    path: .appfactory/specs/prd.md
+    version: 1.0.0
+    status: completed
 ```
 
 ### Write To State
 
 ```yaml
 artifacts:
-  tests:
-    path: .appfactory/specs/tests.md
+  features:
+    path: src/test/features/
     version: 1.0.0
     status: generated
     generated_by: af-ddd-tests
     updated_at: 2026-05-04T12:00:00Z
+    scenario_count: 68
+    feature_count: 7
+    coverage:
+      aggregates_covered: [Claim, Policy, Evidence, Event]
+      state_transitions_represented: 9
+      invariants_verified: 10
 ```
 
 ## Example Invocation
 
 ```bash
-# Generate both spec and code
-/af-ddd-tests
+# Generate feature files and specification summary (default)
+/af-be-ddd-tests
 
-# Generate specification only (for review)
-/af-ddd-tests --output-format spec-only
+# Generate feature files only for specific aggregates
+/af-be-ddd-tests --aggregate-filter Claim,Evidence
 
-# Generate code with custom coverage target
-/af-ddd-tests --output-format code-only --coverage-target 95
+# Generate only happy path scenarios
+/af-be-ddd-tests --scenario-type happy-path
 
-# Use alternate database
-/af-ddd-tests --database mysql
+# Generate feature files to custom location
+/af-be-ddd-tests --output-location features/
+
+# Generate without specification summary (feature files only)
+/af-be-ddd-tests --include-spec-summary false
 ```
 
 ## Dependencies
 
 - DDD specification v2.0+ with worked examples
-- JUnit 5 (Jupiter) framework
-- Spring Test framework
-- Testcontainers (for integration tests)
-- PostgreSQL or H2 (in-memory for tests)
-- Project POM/Gradle configured with test dependencies
+- PRD (optional) with functional requirements and business rules
+- Cucumber (for running feature files)
+- Gherkin parser/validator (built into most IDEs and CI tools)
+- Python (for parsing Markdown and generating files)
+- Bash (for orchestration and state management)
 
 ## Implementation Language
 
@@ -224,21 +254,30 @@ artifacts:
 
 ## Quality Gates
 
-1. **Specification completeness**: ≥ 60 test scenarios derived from ≥ 10 examples
-2. **Coverage**: All 9 state transitions, all 10 invariants, all 5 NFRs
-3. **Code generation**: All test classes syntactically valid Java
-4. **Traceability**: Each test scenario linked to source example
-5. **Documentation**: All test methods have clear JavaDoc
+1. **Specification completeness**: ≥ 50 scenarios derived from ≥ 10 DDD examples
+2. **Gherkin syntax validation**: All `.feature` files valid Gherkin (parseable by Cucumber)
+3. **Scenario structure**: Every scenario has Given-When-Then steps
+4. **Business language**: All steps use domain terms, no implementation details
+5. **Traceability**: Each scenario linked to DDD Example N or PRD requirement
+6. **Coverage**: ≥ 1 feature file per major aggregate/bounded context
+7. **State transitions**: All 9 state transitions represented across scenarios
+8. **Invariants**: All domain invariants verified in at least one scenario
+9. **Readability**: Non-technical stakeholders can understand scenarios without code knowledge
 
 ## Notes
 
-- Test code generation is optional (spec-only mode available for planning)
-- Generated code requires Spring Test context and database setup before running
-- E2E tests use Spring Boot test harness; may require `application-test.yml` configuration
-- Performance tests use JMH; run separately from unit/integration tests
-- All generated code includes TODOs for business logic assertions (to be completed during implementation)
+- Feature files are human-readable specifications, not executable code
+- Cucumber step definitions (Ruby, Python, Java, etc.) must be implemented separately to automate scenarios
+- Gherkin feature files serve as "living documentation" for stakeholders and developers
+- Specification summary document (gherkin-test-spec.md) provides traceability and coverage analysis
+- All generated feature files follow standard Gherkin conventions (Given-When-Then-And-But)
+- Feature organization by aggregate aligns with DDD bounded contexts and improves maintainability
+- Background sections reduce duplication of preconditions across scenarios within a feature
+- Scenario Outline enables parameterized testing of data variations and edge cases
 
 ---
 
-**Version**: 1.0.0  
-**Created**: 2026-05-04
+**Version**: 2.0.0  
+**Created**: 2026-05-04  
+**Last Updated**: 2026-05-05  
+**Change**: Refactored from JUnit 5 test code generation to Gherkin BDD feature file generation

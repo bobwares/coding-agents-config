@@ -39,7 +39,6 @@ Orchestrate backend Domain-Driven Design (DDD) workflow through controlled analy
 ## Workflow
 
 ### Phase 1: Read Configuration
-- Load `CLAUDE.md`
 - Extract `max_ddd_tries` (positive integer, required)
 - Hard stop if missing or invalid
 
@@ -60,21 +59,21 @@ Orchestrate backend Domain-Driven Design (DDD) workflow through controlled analy
 
 ### Phase 4: Test Generation
 - Invoke `af-be-ddd-tests` (runs regardless of loop outcome)
-- Hard stop if tests fail
+
 
 ### Phase 5: Report Results
-Print summary:
+write results to current turn directory.  doc: ddd-build-summary.md:
 - ✓ Backend DDD built
 - Analysis passes: N
 - Refactor attempts: N
 - Loop exit reason: "no refactoring required" OR "max attempts reached"
-- Tests: PASSED / FAILED
+- Tests: {created y/n}
 
 ## Hard Stops
 
 Skill terminates immediately and reports error if:
 
-- `CLAUDE.md` not found
+
 - `max_ddd_tries` missing
 - `max_ddd_tries` not a positive integer
 - Any required child skill unavailable
@@ -89,26 +88,3 @@ Skill terminates immediately and reports error if:
 2. **Child Skill Autonomy** — Preserve all outputs from invoked skills
 3. **Loop Termination** — Guaranteed exit via iteration limit or analysis decision
 4. **Failure Fast** — Hard stops on any child skill failure or config error
-
-## Configuration
-
-Reads from `CLAUDE.md`:
-
-```
-max_ddd_tries = <positive integer>
-```
-
-Example:
-
-```
-## Container Constants
-
-max_ddd_tries = 3
-```
-
-## See Also
-
-- `af-be-ddd-build` — Generate DDD specification
-- `af-be-ddd-analysis` — Validate and assess quality
-- `af-be-ddd-refactor` — Improve specification
-- `af-be-ddd-tests` — Generate test suite

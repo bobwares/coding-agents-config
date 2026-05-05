@@ -63,6 +63,7 @@
       "Read(~/.ssh/**)"
     ]
   },
+  "model": "opus[1m]",
   "hooks": {
     "PreToolUse": [
       {
@@ -83,7 +84,8 @@
   },
   "enabledPlugins": {
     "document-skills@anthropic-agent-skills": true,
-    "example-skills@anthropic-agent-skills": true
+    "example-skills@anthropic-agent-skills": true,
+    "caveman@caveman": true
   },
   "extraKnownMarketplaces": {
     "anthropic-agent-skills": {
@@ -91,8 +93,19 @@
         "source": "github",
         "repo": "anthropics/skills"
       }
+    },
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
     }
   },
-  "voiceEnabled": true,
-  "skipDangerousModePermissionPrompt": true
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "light",
+  "voiceEnabled": true
 }
