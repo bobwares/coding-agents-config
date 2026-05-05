@@ -1,0 +1,3 @@
+display_name: Eval Labeler
+short_description: Evaluate and compare model responses for coding tasks
+default_prompt: Evaluate the model responses in the specified run directory

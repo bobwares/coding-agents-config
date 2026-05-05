@@ -261,40 +261,50 @@ If the input is too sparse to support a PRD, do not fabricate content. Instead:
 2. place unresolved topics in **Remaining Open Questions**
 3. explain the major gaps in **Assumptions** and **Remaining Open Questions**
 
-## Memory Integration
+## State Integration
 
-This skill integrates with the AppFactory memory system via `af-memory`.
+This skill uses `scripts/af-state.sh` for state management.
 
 ### Pre-Execution
 
 Before generating the PRD:
 
-1. Read project context from memory:
-   ```
-   project_name = af-memory read project.name
-   target_project = af-memory read config.target_project
+1. Source the state script:
+   ```bash
+   source "$HOME/coding-agents-config/scripts/af-state.sh"
    ```
 
-2. Update artifact status to in_progress:
+2. Read output path from state:
+   ```bash
+   prd_path=$(af_state_get "artifacts.prd.path")
+   # Returns: ai/specs/spec-be-prd.md
    ```
-   af-memory update-artifact prd in_progress af-be-build-prd
+
+3. Update artifact status to in_progress:
+   ```bash
+   af_state_artifact_update "prd" "in_progress"
    ```
 
 ### Post-Execution
 
 After successfully generating the PRD:
 
-1. Update artifact status to completed:
-   ```
-   af-memory update-artifact prd completed af-be-build-prd
+1. Approve the artifact:
+   ```bash
+   af_state_artifact_approve "prd"
    ```
 
-2. Advance pipeline phase:
-   ```
-   af-memory advance-phase ddd
+2. Complete the PRD stage and start DDD:
+   ```bash
+   af_state_stage_done "prd"
+   af_state_stage_start "ddd"
    ```
 
 3. Verify state update:
+   ```bash
+   af_state_summary
    ```
-   af-memory status
-   ```
+
+### File Placement
+
+The PRD output path is read from state at `artifacts.prd.path`. By default this is `ai/specs/spec-be-prd.md` relative to the project root.

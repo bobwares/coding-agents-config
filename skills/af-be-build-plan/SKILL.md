@@ -182,48 +182,73 @@ A valid output must make it possible for a downstream execution agent to:
 5. know how completion will be verified.
 6. stay focused on backend modules, APIs, persistence, integrations, and operational concerns rather than client interaction work.
 
-## Memory Integration
+## State Integration
 
-This skill integrates with the AppFactory memory system via `af-memory`.
+This skill uses `scripts/af-state.sh` for state management.
 
 ### Pre-Execution
 
 Before generating the plan:
 
-1. Verify DSL dependency is met:
-   ```
-   dsl_status = af-memory read artifacts.dsl.status
-   if dsl_status != "completed":
-     ERROR: DSL must be completed before generating plan
+1. Source the state script:
+   ```bash
+   source "$HOME/coding-agents-config/scripts/af-state.sh"
    ```
 
-2. Read DSL path and tech stack from memory:
-   ```
-   dsl_path = af-memory read artifacts.dsl.path
-   tech_stack = af-memory read config.tech_stack
-   tech_stack_path = af-memory read config.tech_stack_path
+2. Verify DSL dependency is met:
+   ```bash
+   if ! af_state_stage_complete "dsl"; then
+     echo "ERROR: DSL stage must be complete before generating plan"
+     exit 1
+   fi
    ```
 
-3. Update artifact status to in_progress:
+3. Read DSL input path from state:
+   ```bash
+   dsl_path=$(af_state_get "artifacts.dsl.path")
+   # Returns: ai/specs/dsl-be-ddd.yaml
    ```
-   af-memory update-artifact plan in_progress af-be-build-plan
+
+4. Read plan output path from state:
+   ```bash
+   plan_path=$(af_state_get "artifacts.plan.path")
+   # Returns: ai/specs/spec-be-plan.md
+   ```
+
+5. Read tech stack from state:
+   ```bash
+   tech_stack=$(af_state_get "stack.profile")
+   ```
+
+6. Update artifact status to in_progress:
+   ```bash
+   af_state_artifact_update "plan" "in_progress"
    ```
 
 ### Post-Execution
 
 After successfully generating the plan:
 
-1. Update artifact status to completed:
-   ```
-   af-memory update-artifact plan completed af-be-build-plan
+1. Approve the artifact:
+   ```bash
+   af_state_artifact_approve "plan"
    ```
 
-2. Advance pipeline phase:
-   ```
-   af-memory advance-phase implementation
+2. Complete the plan stage and start implementation:
+   ```bash
+   af_state_stage_done "plan"
+   af_state_stage_start "implementation"
    ```
 
 3. Verify state update:
+   ```bash
+   af_state_summary
    ```
-   af-memory status
-   ```
+
+### File Paths
+
+| Artifact | State Path | Default Value |
+|----------|------------|---------------|
+| DSL (input) | `artifacts.dsl.path` | `ai/specs/dsl-be-ddd.yaml` |
+| Plan (output) | `artifacts.plan.path` | `ai/specs/spec-be-plan.md` |
+| Tech Stack | `stack.profile` | (from project YAML) |

@@ -251,46 +251,67 @@ When running this skill:
 3. summarize key assumptions briefly;
 4. then generate the artifacts.
 
-## Memory Integration
+## State Integration
 
-This skill integrates with the AppFactory memory system via `af-memory`.
+This skill uses `scripts/af-state.sh` for state management.
 
 ### Pre-Execution
 
 Before generating the DSL:
 
-1. Verify DDD dependency is met:
-   ```
-   ddd_status = af-memory read artifacts.ddd.status
-   if ddd_status != "completed":
-     ERROR: DDD must be completed before generating DSL
+1. Source the state script:
+   ```bash
+   source "$HOME/coding-agents-config/scripts/af-state.sh"
    ```
 
-2. Read DDD path from memory:
-   ```
-   ddd_path = af-memory read artifacts.ddd.path
+2. Verify DDD dependency is met:
+   ```bash
+   if ! af_state_stage_complete "ddd"; then
+     echo "ERROR: DDD stage must be complete before generating DSL"
+     exit 1
+   fi
    ```
 
-3. Update artifact status to in_progress:
+3. Read DDD input path from state:
+   ```bash
+   ddd_path=$(af_state_get "artifacts.ddd.path")
+   # Returns: ai/specs/spec-be-ddd.md
    ```
-   af-memory update-artifact dsl in_progress af-be-build-dsl
+
+4. Read DSL output path from state:
+   ```bash
+   dsl_path=$(af_state_get "artifacts.dsl.path")
+   # Returns: ai/specs/dsl-be-ddd.yaml
+   ```
+
+5. Update artifact status to in_progress:
+   ```bash
+   af_state_artifact_update "dsl" "in_progress"
    ```
 
 ### Post-Execution
 
 After successfully generating the DSL:
 
-1. Update artifact status to completed:
-   ```
-   af-memory update-artifact dsl completed af-be-build-dsl
+1. Approve the artifact:
+   ```bash
+   af_state_artifact_approve "dsl"
    ```
 
-2. Advance pipeline phase:
-   ```
-   af-memory advance-phase plan
+2. Complete the DSL stage and start plan:
+   ```bash
+   af_state_stage_done "dsl"
+   af_state_stage_start "plan"
    ```
 
 3. Verify state update:
+   ```bash
+   af_state_summary
    ```
-   af-memory status
-   ```
+
+### File Paths
+
+| Artifact | State Path | Default Value |
+|----------|------------|---------------|
+| DDD (input) | `artifacts.ddd.path` | `ai/specs/spec-be-ddd.md` |
+| DSL (output) | `artifacts.dsl.path` | `ai/specs/dsl-be-ddd.yaml` |
