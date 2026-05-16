@@ -4,23 +4,25 @@
 
 ### Document Metadata
 
-| Field | Value |
-|-------|-------|
+| Field              | Value                                        |
+|--------------------|----------------------------------------------|
 | **Document Title** | **[Project Name] Gherkin BDD Specification** |
-| **Version** | **1.0.0** |
-| **Status** | **Generated** |
-| **Author** | **AI Code Generation** |
-| **Prepared By** | **af-be-ddd-tests Skill v2.0.0** |
-| **Document Type** | **Gherkin BDD Specification** |
-| **Path/File Name** | `.appfactory/specs/gherkin-test-spec.md` |
-| **Created Date** | **[ISO Timestamp]** |
-| **Last Updated** | **[ISO Timestamp]** |
+| **Version**        | **0.1.0**                                    |
+| **Status**         | **Generated**                                |
+| **Author**         | **[Author Name]**                            |
+| **Prepared By**    | **[AI / Team Name]**                |
+| **Document Type**  | **Gherkin BDD Specification**                |
+| **Path/File Name** | `.appfactory/specs/gherkin-test-spec.md`     |
+| **Created Date**   | **[Month DD, YYYY, HH:MM AM/PM Central Time]** |
+| **Last Updated**   | **[Month DD, YYYY, HH:MM AM/PM Central Time]** |
 
 ### Version History
 
-| Version | Date | Author | Summary |
-|---------|------|--------|---------|
-| 1.0.0 | [ISO Timestamp] | AI Code Generation | Initial Gherkin specification generated from DDD and PRD |
+
+| Version | Date                                       | Author        | Summary       |
+|---------|--------------------------------------------|---------------|---------------|
+| 0.1.0   | [Month DD, YYYY, HH:MM AM/PM Central Time] | [Author Name] | Initial draft |
+
 
 ---
 

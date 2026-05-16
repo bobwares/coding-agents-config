@@ -1,5 +1,5 @@
 ---
-name: af-be-build-plan
+name: af-be-plan
 description: Generate a backend application execution plan from a domain DSL YAML and a selected tech stack profile. Produces a step-by-step backend implementation plan optimized for single-turn execution when feasible, with explicit multi-turn recommendations when warranted.
 context: project
 memory-integration:
@@ -18,7 +18,9 @@ memory-integration:
     - artifacts.dsl.status: completed
 ---
 
-# AppFactory Backend App Build Plan
+# Context 
+
+AppFactory Backend App Build Plan
 
 ## Purpose
 

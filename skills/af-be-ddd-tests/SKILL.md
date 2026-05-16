@@ -27,7 +27,7 @@ memory-integration:
 Generate comprehensive Gherkin-style BDD (Behavior-Driven Development) scenarios from a Domain-Driven Design (DDD) specification's worked examples and Product Requirements Document (PRD).
 
 This skill:
-1. Parses a DDD spec (v2.0+) to extract all worked examples and aggregates
+1. Parses a DDD spec to extract all worked examples and aggregates
 2. Parses PRD to extract functional requirements and business rules
 3. Maps examples and requirements to Gherkin scenarios grouped by aggregate/bounded context
 4. Generates human-readable feature files (`.feature`) organized by domain concept
@@ -60,7 +60,7 @@ ddd_path=$(af_state_get "artifacts.ddd.path")
 ```
 
 Must contain:
-- ≥ 10 worked examples (typically 20 in v2.2.0+)
+- ≥ 10 worked examples 
 - Clear example structure with: Input, Business Process, State Change, Invariants, Events, Downstream
 - Bounded Contexts section defining aggregates/domain concepts
 - All major state transitions and invariants represented in examples
@@ -88,11 +88,11 @@ Provides:
 
 ### Gherkin Feature Files
 
-**Path**: `src/test/features/` (configurable via `--output-location`)
+**Path**: `.appfactory/specs/test-features/` 
 
 One `.feature` file per aggregate/bounded context:
 ```
-src/test/features/
+.appfactory/specs/test-features/
   claim-adjudication.feature         [Claim aggregate scenarios: approval, denial, review]
   claim-submission.feature           [Claim submission: intake, validation, routing]
   evidence-processing.feature        [Evidence aggregate: collection, quality assessment, storage]
@@ -150,7 +150,7 @@ Comprehensive specification document with:
 
 ### Step 4: Generate Gherkin Feature Files
 
-1. For each aggregate, create one `.feature` file in `src/test/features/`
+1. For each aggregate, create one `.feature` file in `.appfactory/specs/test-features/`
 2. Populate with:
    - **Feature header**: Business capability description referencing aggregate name
    - **Background section**: Shared preconditions (system state, standard context)
@@ -176,7 +176,7 @@ Comprehensive specification document with:
 
 ### Step 6: Update State
 
-1. Write `artifacts.features.path` = `src/test/features/` in state.yml
+1. Write `artifacts.features.path` = `.appfactory/specs/test-features/` in state.yml
 2. Set `artifacts.features.status` = `generated`
 3. Record `artifacts.features.version` = `1.0.0`
 4. Set `artifacts.features.generated_by` = `af-ddd-tests`
@@ -275,9 +275,3 @@ artifacts:
 - Background sections reduce duplication of preconditions across scenarios within a feature
 - Scenario Outline enables parameterized testing of data variations and edge cases
 
----
-
-**Version**: 2.0.0  
-**Created**: 2026-05-04  
-**Last Updated**: 2026-05-05  
-**Change**: Refactored from JUnit 5 test code generation to Gherkin BDD feature file generation

@@ -1,5 +1,5 @@
 ---
-name: af-be-build-dsl
+name: af-be-ddd-dsl
 description: Generate a backend application DSL YAML document from a human-readable Domain-Driven Design document. The output DSL is intended to be consumed by backend planning and backend code generation skills.
 context: project
 memory-integration:
@@ -16,7 +16,7 @@ memory-integration:
     - artifacts.ddd.status: completed
 ---
 
-# af-be-build-dsl
+# Context
 
 ## Purpose
 

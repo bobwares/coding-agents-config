@@ -1,5 +1,5 @@
 ---
-name: af-be-build-implementation
+name: af-be-implementation
 description: Execute backend application generation by copying a selected App Factory tech stack implementation to the target project and generating domain code from the execution plan and BDD feature specifications.
 context: project
 memory-integration:

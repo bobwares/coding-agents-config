@@ -1,5 +1,5 @@
 ---
-name: af-be-build-prd
+name: af-be-prd-build
 description: Build a business-facing Product Requirements Document for a backend application, backend service, or backend platform module from a completed PRD worksheet. Use this skill when the user provides a PRD intake worksheet, questionnaire, discovery notes, or structured business answers and wants a polished backend-focused PRD draft.
 triggers:
   - build prd
@@ -33,7 +33,7 @@ memory-integration:
     - progress.current_phase
 ---
 
-# af-be-build-prd
+# Context
 
 ## Purpose
 

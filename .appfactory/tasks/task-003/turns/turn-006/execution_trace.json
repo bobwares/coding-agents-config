@@ -1,0 +1,12 @@
+{
+  "taskId": "003",
+  "turnId": "006",
+  "startedAt": "2026-05-05T00:00:00Z",
+  "endedAt": "2026-05-05T00:30:00Z",
+  "skillsExecuted": [
+    "turn-init",
+    "turn-end"
+  ],
+  "agentsExecuted": [],
+  "notes": "Updated af-be-build-implementation skill to use plan and BDD feature specs instead of DSL. Removed dsl.path dependency, added features.path and gherkin_spec.path inputs."
+}

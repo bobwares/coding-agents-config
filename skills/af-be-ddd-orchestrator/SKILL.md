@@ -1,5 +1,5 @@
 ---
-name: af-be-ddd
+name: af-be-ddd-orchestrator
 description: Orchestrate backend Domain-Driven Design workflow through build, analyze, refactor loop, and test phases
 context: project
 memory-integration:
@@ -16,13 +16,13 @@ memory-integration:
       - artifacts.prd.status: completed
 ---
 
-# af-be-ddd
+# Context
 
 Orchestrate backend Domain-Driven Design (DDD) workflow through controlled analysis and refactoring loops.
 
 ## Purpose
 
-`af-be-ddd` coordinates the complete backend DDD pipeline:
+`af-be-ddd-orchestrator` coordinates the complete backend DDD pipeline:
 
 1. **Build** — Generate initial DDD specification via `af-be-ddd-build`
 2. **Analyze** — Validate DDD quality via `af-be-ddd-analysis`
