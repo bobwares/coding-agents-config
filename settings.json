@@ -63,7 +63,7 @@
       "Read(~/.ssh/**)"
     ]
   },
-  "model": "opus[1m]",
+  "model": "opus",
   "hooks": {
     "PreToolUse": [
       {
