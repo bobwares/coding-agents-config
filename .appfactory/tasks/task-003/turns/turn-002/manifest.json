@@ -1,0 +1,18 @@
+{
+  "taskId": "003",
+  "turnId": "002",
+  "branch": "task/T003",
+  "startedAt": "2026-04-07T16:50:15Z",
+  "endedAt": "2026-04-07T16:52:33Z",
+  "status": "complete",
+  "filesChanged": [
+    "scripts/af-state.sh",
+    "skills/af-memory/SKILL.md",
+    "skills/af-project-init/SKILL.md",
+    "skills/af-be-build-prd/SKILL.md",
+    "skills/af-be-build-ddd/SKILL.md",
+    "skills/af-be-build-dsl/SKILL.md",
+    "skills/af-be-build-plan/SKILL.md"
+  ],
+  "summary": "Moved af-state.sh to project scripts/ and updated all af-* skills to use state.yaml for paths"
+}

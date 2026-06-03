@@ -1,5 +1,15 @@
 # Agentic Pipeline Context
 
+## Container Constants
+
+- AF_ROOT = ~/gallery/app-factory
+- AF_GITHUB_PROFILE = bobwares
+- AF_GENERATED_PROJECT_ROOT = ~/generated-apps
+- AF_TECH_STACK_DSL = ~/gallery/app-factory/tech-stack-profiles
+- AF_TECH_STACK_IMPLEMENTATIONS = ~/gallery/app-factory/tech-stack-implementations
+- max_ddd_tries = 3
+
+
 ## Mandatory Skill Invocations — Do This First
 
 Before responding to any coding or repo-modifying prompt, execute this workflow in order:
@@ -119,10 +129,3 @@ Every turn must produce exactly one `adr.md`, either full or minimal, according 
 Respond `CLAUDE.md loaded`
 
 
-## Container Constants
-
-- GitHub profile = https://github.com/bobwares
-- AppFactory = ~/gallery/app-factory
-- AppFactory DSL =  ~/gallery/app-factory/tech-stack-profiles
-- AppFactory Implementations = ~/gallery/app-factory/tech-stack-implementations
-- application default directory = ~/generated-apps

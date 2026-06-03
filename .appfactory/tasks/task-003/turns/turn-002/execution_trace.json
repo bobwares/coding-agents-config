@@ -1,0 +1,9 @@
+{
+  "taskId": "003",
+  "turnId": "002",
+  "startedAt": "2026-04-07T16:50:15Z",
+  "endedAt": "2026-04-07T16:52:33Z",
+  "skillsExecuted": ["turn-init", "turn-end"],
+  "agentsExecuted": [],
+  "notes": "Moved af-state.sh to scripts/ and updated af-project-init, af-be-build-prd, af-be-build-ddd, af-be-build-dsl, af-be-build-plan to use state.yaml for artifact paths"
+}

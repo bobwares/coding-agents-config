@@ -1,38 +1,116 @@
 #!/usr/bin/env bash
 # App: coding-agents-config
 # File: init-appfactory-project.sh
-# Version: 0.3.0
-# Task: 001
-# Turns: 001,007
-# Author: AI Coding Agent (unknown)
-# Date: 2026-04-04T16:40:00Z
-# Description: Initialize AppFactory scaffold, optionally copy stack implementations, emit provenance, bootstrap Git, and publish with GitHub CLI.
+# Version: 0.5.0
+# Task: 001,003,004
+# Turns: 001,007,008,009;001,002;001
+# Author: AI Coding Agent (claude-haiku-4-5-20251001)
+# Date: 2026-04-07T21:54:49Z
+# Description: Initialize AppFactory scaffold, optionally copy stack implementations, emit state.yaml, bootstrap Git, and publish with GitHub CLI.
 # Log:
 # 001, 001, 0.1.0, 2026/04/03, 04:31 PM UTC, AI Coding Agent (unknown)
 # 001, 007, 0.2.0, 2026/04/04, 07:04 AM UTC, AI Coding Agent (unknown)
+# 001, 008, 0.3.1, 2026/04/07, 06:40 PM UTC, AI Coding Agent (unknown)
 set -euo pipefail
+echo Initialization of new project.
 
 PROJECT_ROOT_INPUT="${1:-.}"
-APP_FACTORY_ROOT="${APP_FACTORY_ROOT:-$HOME/gallery/app-factory}"
-SKILL_REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+AF_FACTORY_ROOT="${AF_FACTORY_ROOT:-$HOME/gallery/app-factory}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SKILL_REPO_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+AF_GITHUB_PROFILE="${AF_GITHUB_PROFILE:-}"
+AF_CHECK_GITHUB_REPO_SCRIPT="${AF_CHECK_GITHUB_REPO_SCRIPT:-${SCRIPT_DIR}/check-github-repo.sh}"
 
-mkdir -p "${PROJECT_ROOT_INPUT}"
-PROJECT_ROOT="$(cd "${PROJECT_ROOT_INPUT}" && pwd)"
-PROJECT_NAME="$(basename "${PROJECT_ROOT}")"
+resolve_project_root() {
+    local input_path="$1"
+    if [[ "$input_path" = /* ]]; then
+        printf '%s\n' "$input_path"
+        return 0
+    fi
+    printf '%s/%s\n' "$(pwd)" "$input_path"
+}
+
+check_repo_exists() {
+    local owner="$1"
+    local repo_name="$2"
+
+    if [[ -n "$AF_CHECK_GITHUB_REPO_SCRIPT" ]]; then
+        bash "$AF_CHECK_GITHUB_REPO_SCRIPT" "$owner" "$repo_name"
+        return $?
+    fi
+
+    if ! command -v gh >/dev/null 2>&1; then
+        echo "ERROR: gh is not installed and AF_CHECK_GITHUB_REPO_SCRIPT is not set." >&2
+        return 1
+    fi
+
+    if ! gh auth status >/dev/null 2>&1; then
+        echo "ERROR: gh is not authenticated and AF_CHECK_GITHUB_REPO_SCRIPT is not set." >&2
+        return 1
+    fi
+
+    if gh repo view "$owner/$repo_name" --json nameWithOwner >/dev/null 2>&1; then
+        echo "true"
+    else
+        echo "false"
+    fi
+}
+
+PROJECT_ROOT="$(resolve_project_root "$PROJECT_ROOT_INPUT")"
+PROJECT_NAME="$(basename "$PROJECT_ROOT")"
 PROJECT_ID="${2:-${APP_FACTORY_PROJECT_ID:-$PROJECT_NAME}}"
-PROJECT_YAML="${APP_FACTORY_ROOT}/projects/${PROJECT_ID}.yaml"
+PROJECT_YAML="${AF_FACTORY_ROOT}/projects/${PROJECT_ID}.yaml"
+
+# ============================================================================
+# VALIDATION CHECKS - All must pass before proceeding
+# ============================================================================
+
+# Check 1: Project YAML must exist in projects directory
+if [[ ! -f "${PROJECT_YAML}" ]]; then
+    echo "ERROR: Project YAML does not exist: ${PROJECT_YAML}" >&2
+    echo "Create the project definition file first, then retry." >&2
+    exit 1
+fi
+
 README_PATH="${PROJECT_ROOT}/README.md"
 GITIGNORE_PATH="${PROJECT_ROOT}/.gitignore"
 PROMPTS_DIR="${PROJECT_ROOT}/.appfactory/prompts"
 SPECS_DIR="${PROJECT_ROOT}/.appfactory/specs"
+MEMORY_DIR="${PROJECT_ROOT}/.appfactory/memory"
 APP_DIR="${PROJECT_ROOT}/app"
-PROVENANCE_DIR="${PROJECT_ROOT}/.appfactory"
-PROVENANCE_PATH="${PROVENANCE_DIR}/provenance.json"
+STATE_FILE="${MEMORY_DIR}/state.yaml"
 
-mkdir -p "${PROMPTS_DIR}" "${SPECS_DIR}" "${APP_DIR}"
+if [[ -z "$AF_GITHUB_PROFILE" ]]; then
+    if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
+        AF_GITHUB_PROFILE="$(gh api user --jq '.login')"
+    else
+        echo "ERROR: AF_GITHUB_PROFILE is not set." >&2
+        exit 1
+    fi
+fi
+
+# Check 2: GitHub repository must NOT already exist
+REPO_EXISTS="$(check_repo_exists "$AF_GITHUB_PROFILE" "$PROJECT_ID")"
+if [[ "$REPO_EXISTS" == "true" ]]; then
+    echo "ERROR: GitHub repository already exists: https://github.com/${AF_GITHUB_PROFILE}/${PROJECT_ID}" >&2
+    exit 1
+fi
+
+# Check 3: Project directory must NOT already exist on disk
+if [[ -e "$PROJECT_ROOT" ]]; then
+    echo "ERROR: Project directory already exists: ${PROJECT_ROOT}" >&2
+    exit 1
+fi
+
+# ============================================================================
+# VALIDATION PASSED - Proceeding with project initialization
+# ============================================================================
+
+mkdir -p "${PROMPTS_DIR}" "${SPECS_DIR}" "${MEMORY_DIR}" "${APP_DIR}"
 
 touch "${PROMPTS_DIR}/.gitkeep"
 touch "${SPECS_DIR}/.gitkeep"
+touch "${MEMORY_DIR}/.gitkeep"
 touch "${APP_DIR}/.gitkeep"
 
 readme_content() {
@@ -148,9 +226,11 @@ fi
 
 echo "ENSURED ${PROMPTS_DIR}"
 echo "ENSURED ${SPECS_DIR}"
+echo "ENSURED ${MEMORY_DIR}"
 echo "ENSURED ${APP_DIR}"
 echo "ENSURED ${PROMPTS_DIR}/.gitkeep"
 echo "ENSURED ${SPECS_DIR}/.gitkeep"
+echo "ENSURED ${MEMORY_DIR}/.gitkeep"
 echo "ENSURED ${APP_DIR}/.gitkeep"
 
 if [[ -f "${PROJECT_YAML}" ]]; then
@@ -168,7 +248,7 @@ if [[ -f "${PROJECT_YAML}" ]]; then
         for ref in "${STACK_REFS[@]}"; do
             [[ -z "${ref}" ]] && continue
 
-            implementation_source="${APP_FACTORY_ROOT}/tech-stack-implementations/${ref}"
+            implementation_source="${AF_FACTORY_ROOT}/tech-stack-implementations/${ref}"
             if [[ -d "${implementation_source}" ]]; then
                 cp -R "${implementation_source}/." "${APP_DIR}/"
                 echo "COPIED ${implementation_source} -> ${APP_DIR}"
@@ -177,7 +257,7 @@ if [[ -f "${PROJECT_YAML}" ]]; then
                 echo "Warning: implementation path not found: ${implementation_source}"
             fi
 
-            profile_source="${APP_FACTORY_ROOT}/tech-stack-profiles/${ref}.yaml"
+            profile_source="${AF_FACTORY_ROOT}/tech-stack-profiles/${ref}.yaml"
             if [[ -f "${profile_source}" ]]; then
                 RESOLVED_PROFILE_PATHS+=("tech-stack-profiles/${ref}.yaml")
             else
@@ -185,54 +265,121 @@ if [[ -f "${PROJECT_YAML}" ]]; then
             fi
         done
 
-        mkdir -p "${PROVENANCE_DIR}"
+        # Generate state.yaml with provenance data
         RECORDED_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-        APP_FACTORY_COMMIT="$(git -C "${APP_FACTORY_ROOT}" rev-parse HEAD 2>/dev/null || true)"
+        APP_FACTORY_COMMIT="$(git -C "${AF_FACTORY_ROOT}" rev-parse HEAD 2>/dev/null || true)"
         SKILL_REPO_COMMIT="$(git -C "${SKILL_REPO_ROOT}" rev-parse HEAD 2>/dev/null || true)"
-        export RECORDED_AT PROJECT_ID PROJECT_DISPLAY_NAME PROJECT_DESCRIPTION APP_FACTORY_ROOT APP_FACTORY_COMMIT SKILL_REPO_ROOT SKILL_REPO_COMMIT
-        export PROJECT_YAML_REL="projects/${PROJECT_ID}.yaml"
-        export STACK_REFS_JOINED="$(printf '%s
-' "${STACK_REFS[@]}")"
-        export PROFILE_PATHS_JOINED="$(printf '%s
-' "${RESOLVED_PROFILE_PATHS[@]}")"
-        export IMPLEMENTATION_PATHS_JOINED="$(printf '%s
-' "${RESOLVED_IMPLEMENTATION_PATHS[@]}")"
+        PROFILE_PATH="${RESOLVED_PROFILE_PATHS[0]:-}"
+        IMPLEMENTATION_PATH="${RESOLVED_IMPLEMENTATION_PATHS[0]:-}"
+        STACK_REF="${STACK_REFS[0]:-none}"
 
-        ruby -r json -e '
-          split_lines = ->(value) { value.to_s.split("
-").reject(&:empty?) }
-          data = {
-            schemaVersion: "1.0.0",
-            recordedAt: ENV.fetch("RECORDED_AT"),
-            project: {
-              id: ENV.fetch("PROJECT_ID"),
-              name: ENV.fetch("PROJECT_DISPLAY_NAME", ""),
-              description: ENV.fetch("PROJECT_DESCRIPTION", ""),
-              projectYamlPath: ENV.fetch("PROJECT_YAML_REL")
-            },
-            appFactory: {
-              repositoryPath: ENV.fetch("APP_FACTORY_ROOT"),
-              commit: ENV.fetch("APP_FACTORY_COMMIT", ""),
-              stackProfileRefs: split_lines.call(ENV["STACK_REFS_JOINED"]),
-              resolvedProfilePaths: split_lines.call(ENV["PROFILE_PATHS_JOINED"]),
-              resolvedImplementationPaths: split_lines.call(ENV["IMPLEMENTATION_PATHS_JOINED"])
-            },
-            generator: {
-              skill: "af-project-init",
-              skillRepositoryPath: ENV.fetch("SKILL_REPO_ROOT"),
-              skillRepositoryCommit: ENV.fetch("SKILL_REPO_COMMIT", "")
-            }
-          }
-          File.write(ARGV[0], JSON.pretty_generate(data) + "
-")
-        ' "${PROVENANCE_PATH}"
+        cat > "${STATE_FILE}" <<EOF
+version: 1
+kind: appfactory-project-state
 
-        echo "CREATED ${PROVENANCE_PATH}"
+project:
+  id: "${PROJECT_ID}"
+  name: "${PROJECT_DISPLAY_NAME}"
+  description: "${PROJECT_DESCRIPTION}"
+  source_yaml: "projects/${PROJECT_ID}.yaml"
+
+stack:
+  profile: "${STACK_REF}"
+  profile_path: "${PROFILE_PATH:-null}"
+  implementation_path: "${IMPLEMENTATION_PATH:-null}"
+
+provenance:
+  recorded_at: "${RECORDED_AT}"
+  app_factory:
+    repository_path: "${AF_FACTORY_ROOT}"
+    commit: "${APP_FACTORY_COMMIT}"
+  generator:
+    skill: "af-project-init"
+    skill_repository_path: "${SKILL_REPO_ROOT}"
+    skill_repository_commit: "${SKILL_REPO_COMMIT}"
+
+artifacts:
+  prd:
+    path: ".appfactory/specs/spec-be-prd.md"
+    status: null
+    created_at: null
+    updated_at: null
+  ddd:
+    path: ".appfactory/specs/spec-be-ddd.md"
+    status: null
+    created_at: null
+    updated_at: null
+  dsl:
+    path: ".appfactory/specs/dsl-be-ddd.yaml"
+    status: null
+    created_at: null
+    updated_at: null
+  plan:
+    path: ".appfactory/specs/spec-be-plan.md"
+    status: null
+    created_at: null
+    updated_at: null
+  implementation_manifest:
+    path: ".appfactory/specs/implementation-manifest.yaml"
+    status: null
+    created_at: null
+
+workflow:
+  current_stage: init
+  stages:
+    init:
+      status: complete
+      completed_at: "${RECORDED_AT}"
+      skill_invocation: "af-project-init"
+      requires: []
+    prd:
+      status: pending
+      completed_at: null
+      skill_invocation: "af-be-build-prd"
+      requires:
+        - init
+    ddd:
+      status: pending
+      completed_at: null
+      skill_invocation: "af-be-build-ddd"
+      requires:
+        - prd
+    dsl:
+      status: pending
+      completed_at: null
+      skill_invocation: "af-be-build-dsl"
+      requires:
+        - ddd
+    plan:
+      status: pending
+      completed_at: null
+      skill_invocation: "af-be-build-plan"
+      requires:
+        - dsl
+    implementation:
+      status: pending
+      completed_at: null
+      skill_invocation: "af-be-build-implementation"
+      requires:
+        - plan
+
+runtime:
+  target_directory: "${PROJECT_ROOT}"
+  app_factory_home: "${AF_FACTORY_ROOT}"
+  bounded_contexts: []
+  turn_recommendation: null
+
+history:
+  - timestamp: "${RECORDED_AT}"
+    stage: init
+    action: completed
+    agent: "af-project-init"
+EOF
+
+        echo "CREATED ${STATE_FILE}"
     else
-        echo "Warning: ${PROJECT_YAML} does not define tech_stack_profiles. Skipping implementation copy and provenance generation."
+        echo "Warning: ${PROJECT_YAML} does not define tech_stack_profiles. Skipping implementation copy and state generation."
     fi
-else
-    echo "Warning: project yaml not found at ${PROJECT_YAML}. Skipping implementation copy and provenance generation."
 fi
 
 cd "${PROJECT_ROOT}"
@@ -243,6 +390,13 @@ else
     git branch -M main
 fi
 
+if ! git config user.name >/dev/null 2>&1; then
+    git config user.name "AppFactory"
+fi
+if ! git config user.email >/dev/null 2>&1; then
+    git config user.email "appfactory@local.invalid"
+fi
+
 git add .
 if ! git diff --cached --quiet; then
     git commit -m "Project Initialized by App Factory"
@@ -250,12 +404,14 @@ fi
 
 if command -v gh >/dev/null 2>&1; then
     if gh auth status >/dev/null 2>&1; then
-        GH_USER="$(gh api user --jq '.login')"
-        REPO_NAME="${PROJECT_NAME}"
-        REPO_FULL_NAME="${GH_USER}/${REPO_NAME}"
+        REPO_NAME="${PROJECT_ID}"
+        REPO_FULL_NAME="${AF_GITHUB_PROFILE}/${REPO_NAME}"
 
         if ! gh repo view "${REPO_FULL_NAME}" >/dev/null 2>&1; then
-            if ! gh repo create "${REPO_FULL_NAME}" --source=. --remote=origin --private --push 2>&1; then
+            echo "Creating GitHub repository: ${REPO_FULL_NAME}"
+            if gh repo create "${REPO_FULL_NAME}" --source=. --remote=origin --private --push; then
+                echo "Successfully created and pushed to: https://github.com/${REPO_FULL_NAME}"
+            else
                 echo "Warning: GitHub repo creation or push failed. You can retry with: gh repo create ${REPO_FULL_NAME} --source=. --push"
             fi
         else
@@ -263,7 +419,10 @@ if command -v gh >/dev/null 2>&1; then
                 gh repo set-default "${REPO_FULL_NAME}" >/dev/null 2>&1 || true
                 git remote add origin "git@github.com:${REPO_FULL_NAME}.git"
             fi
-            if ! git push -u origin main 2>&1; then
+            echo "Pushing to GitHub: ${REPO_FULL_NAME}"
+            if git push -u origin main; then
+                echo "Successfully pushed to: https://github.com/${REPO_FULL_NAME}"
+            else
                 echo "Warning: GitHub push failed. You can push manually with: git push -u origin main"
             fi
         fi

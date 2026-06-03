@@ -1,0 +1,63 @@
+Feature: [Aggregate/Bounded Context Business Capability]
+  As a [Actor/Role]
+  I want to [Business Goal]
+  So that [Business Value]
+
+  # This feature covers scenarios from:
+  # - DDD Aggregate: [Aggregate Root Name]
+  # - PRD Section: [Section Reference if applicable]
+
+  Background:
+    Given the system is initialized
+    And [shared precondition 1]
+    And [shared precondition 2]
+
+  Scenario: [Scenario Name - Business Outcome Description]
+    # From DDD Example N
+    # Verifies: [Invariant IDs], [State Transitions]
+    Given [precondition - system state setup]
+    And [precondition - actor context]
+    And [precondition - data state]
+    When [action - user or system initiates behavior]
+    Then [outcome - state change expected]
+    And [outcome - invariant verified]
+    And [outcome - event emitted or side effect]
+    And [outcome - downstream notification or workflow]
+
+  Scenario: [Happy Path Scenario Name]
+    # From DDD Example M
+    # Verifies: [Invariants], [State Transitions]
+    Given [setup]
+    When [action]
+    Then [outcome]
+
+  Scenario: [Edge Case - Boundary Condition]
+    # From DDD Example K
+    # Tests: [Threshold boundary], [Constraint validation]
+    # Verifies: [Invariants Protected]
+    Given [precondition at boundary]
+    When [action on boundary value]
+    Then [expected outcome at limit]
+    And [invariant still satisfied]
+
+  Scenario: [Error Case - Failure Mode]
+    # Tests error handling and validation
+    Given [precondition violating business rule]
+    When [action attempted]
+    Then [error state or rejection occurs]
+    And [appropriate error message conveyed]
+    And [no state mutation]
+
+  Scenario Outline: [Parameterized Scenario - Data Variation]
+    # Tests multiple data inputs systematically
+    # Verifies: [Invariants], [Validation Rules]
+    Given [setup with data <input_field>]
+    When [action on <input_field>]
+    Then [outcome matches <expected_result>]
+    And [invariant <inv_id> satisfied for <expected_result>]
+
+    Examples:
+      | input_field  | expected_result | inv_id |
+      | value1       | result1         | INV-01 |
+      | value2       | result2         | INV-02 |
+      | boundary_val | boundary_result | INV-03 |
