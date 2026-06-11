@@ -1,0 +1,42 @@
+layout:
+  id: project-plan-milestone-layout
+  name: Project Plan Milestone Layout
+  aliases:
+    - project-plan-milestone
+    - milestone plan
+    - project milestone
+    - project-plan-milestone-layout
+  category: Planning Patterns
+  purpose: >
+    Documents project phases, milestones, deliverables, dependencies,
+    acceptance criteria, and completion state.
+  source:
+    markdown: layout-patterns/project-plan-milestone-layout/README.md
+    html: layout-patterns/project-plan-milestone-layout/project-plan-milestone-layout.html
+  rendering:
+    base_layout: toc-layout
+    requires_document_metadata_header: true
+    navigation: table-of-contents
+    output_type: html
+  required_sections:
+    - Document Metadata
+    - Purpose
+    - Scope
+    - Milestone Summary
+    - Milestones
+    - Dependencies
+    - Risks
+    - Acceptance Criteria
+    - Completion Status
+  optional_sections:
+    - Assumptions
+    - Timeline
+    - Owners
+    - Open Questions
+    - Next Actions
+  calling_skill_instructions:
+    - Use this layout when the document represents project phases or milestone-based delivery.
+    - Each milestone should include deliverables and acceptance criteria.
+    - Show dependencies between milestones when sequencing matters.
+    - Include completion state for each milestone when known.
+    - Use the existing AppFactory Document Metadata header standard.

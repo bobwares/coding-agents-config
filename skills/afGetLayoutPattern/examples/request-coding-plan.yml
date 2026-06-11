@@ -1,0 +1,3 @@
+input:
+  layoutName: coding plan
+expected_context_file: patterns/planning/coding-plan-layout.yml

@@ -1,0 +1,3 @@
+input:
+  layoutName: testing plan
+expected_context_file: patterns/planning/test-plan-layout.yml

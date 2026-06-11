@@ -1,0 +1,40 @@
+layout:
+  id: task-breakdown-layout
+  name: Task Breakdown Layout
+  aliases:
+    - task-breakdown
+    - task breakdown
+    - tasks
+    - task-breakdown-layout
+  category: Planning Patterns
+  purpose: >
+    Breaks a larger body of work into executable tasks with sequencing and ownership.
+  source:
+    markdown: layout-patterns/task-breakdown-layout/README.md
+    html: layout-patterns/task-breakdown-layout/task-breakdown-layout.html
+  rendering:
+    base_layout: toc-layout
+    requires_document_metadata_header: true
+    navigation: table-of-contents
+    output_type: html
+  required_sections:
+    - Document Metadata
+    - Goal
+    - Task Summary
+    - Task List
+    - Dependencies
+    - Sequencing
+    - Acceptance Criteria
+    - Status
+  optional_sections:
+    - Owners
+    - Estimates
+    - Blockers
+    - Risks
+    - Next Actions
+  calling_skill_instructions:
+    - Use this layout when decomposing a larger objective into multiple executable tasks.
+    - Keep each task independently understandable.
+    - Include dependencies between tasks when order matters.
+    - Use status values consistently.
+    - Use the existing AppFactory Document Metadata header standard.

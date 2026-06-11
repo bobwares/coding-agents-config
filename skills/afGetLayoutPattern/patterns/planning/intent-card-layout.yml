@@ -1,0 +1,39 @@
+layout:
+  id: intent-card-layout
+  name: Intent Card Layout
+  aliases:
+    - intent-card
+    - intent
+    - intent card
+    - intent-card-layout
+  category: Planning Patterns
+  purpose: >
+    Defines one executable unit of development intent for an AI coding agent.
+  source:
+    markdown: layout-patterns/intent-card-layout/README.md
+    html: layout-patterns/intent-card-layout/intent-card-layout.html
+  rendering:
+    base_layout: toc-layout
+    requires_document_metadata_header: true
+    navigation: table-of-contents
+    output_type: html
+  required_sections:
+    - Document Metadata
+    - Intent
+    - Context
+    - Constraints
+    - Acceptance Criteria
+    - Implementation Notes
+    - Validation
+  optional_sections:
+    - Assumptions
+    - Out of Scope
+    - Files Expected To Change
+    - Risks
+    - Follow-up Tasks
+  calling_skill_instructions:
+    - Use this layout for a single executable development request.
+    - Keep the intent concise and action-oriented.
+    - Preserve constraints exactly when supplied by the user.
+    - Acceptance criteria must be testable.
+    - Use the existing AppFactory Document Metadata header standard.

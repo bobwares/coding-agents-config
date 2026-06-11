@@ -1,0 +1,40 @@
+layout:
+  id: test-plan-layout
+  name: Test Plan Layout
+  aliases:
+    - test-plan
+    - test plan
+    - testing plan
+    - test-plan-layout
+  category: Planning Patterns
+  purpose: >
+    Defines test scope, scenarios, validation commands, expected outcomes, and coverage gaps.
+  source:
+    markdown: layout-patterns/test-plan-layout/README.md
+    html: layout-patterns/test-plan-layout/test-plan-layout.html
+  rendering:
+    base_layout: toc-layout
+    requires_document_metadata_header: true
+    navigation: table-of-contents
+    output_type: html
+  required_sections:
+    - Document Metadata
+    - Test Objective
+    - Scope
+    - Test Scenarios
+    - Test Data
+    - Validation Commands
+    - Expected Results
+    - Coverage Gaps
+  optional_sections:
+    - Test Environment
+    - Preconditions
+    - Negative Tests
+    - Regression Tests
+    - Automation Notes
+  calling_skill_instructions:
+    - Use this layout when defining how a change or system will be validated.
+    - Separate scenario descriptions from validation commands.
+    - Include expected results for each scenario when possible.
+    - Explicitly call out known coverage gaps.
+    - Use the existing AppFactory Document Metadata header standard.

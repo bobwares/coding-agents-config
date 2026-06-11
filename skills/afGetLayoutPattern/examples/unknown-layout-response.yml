@@ -1,0 +1,9 @@
+error:
+  code: unsupported_layout_pattern
+  message: Requested layout pattern is not supported by AF-GetLayoutPattern.
+  supported_layouts:
+    - Intent Card Layout
+    - Coding Plan Layout
+    - Task Breakdown Layout
+    - Test Plan Layout
+    - Project Plan Milestone Layout

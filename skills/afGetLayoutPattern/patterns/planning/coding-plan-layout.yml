@@ -1,0 +1,41 @@
+layout:
+  id: coding-plan-layout
+  name: Coding Plan Layout
+  aliases:
+    - coding-plan
+    - coding plan
+    - implementation plan
+    - coding-plan-layout
+  category: Planning Patterns
+  purpose: >
+    Defines an ordered implementation plan for changing code safely and consistently.
+  source:
+    markdown: layout-patterns/coding-plan-layout/README.md
+    html: layout-patterns/coding-plan-layout/coding-plan-layout.html
+  rendering:
+    base_layout: toc-layout
+    requires_document_metadata_header: true
+    navigation: table-of-contents
+    output_type: html
+  required_sections:
+    - Document Metadata
+    - Objective
+    - Current State
+    - Target State
+    - Implementation Steps
+    - Files Expected To Change
+    - Test Plan
+    - Risks
+    - Done Criteria
+  optional_sections:
+    - Assumptions
+    - Dependencies
+    - Rollback Plan
+    - Open Questions
+    - Follow-up Tasks
+  calling_skill_instructions:
+    - Use this layout when the output is a sequencing plan for code changes.
+    - Describe implementation steps in execution order.
+    - Separate target state from implementation mechanics.
+    - Include validation commands when known.
+    - Use the existing AppFactory Document Metadata header standard.

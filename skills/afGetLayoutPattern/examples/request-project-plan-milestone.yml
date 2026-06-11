@@ -1,0 +1,3 @@
+input:
+  layoutName: project milestone
+expected_context_file: patterns/planning/project-plan-milestone-layout.yml
