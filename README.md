@@ -18,16 +18,24 @@ Run the setup script — it creates all symlinks and backs up any existing files
 bash scripts/setup.sh
 ```
 
+It links into three places:
+
+- `~/.claude/` — `skills`, `agents`, `rules`, `hooks`, `context`, `scripts`, `plugins`, `CLAUDE.md`, `settings.json`
+- `~/.codex/` — `agents`, `AGENTS.md`
+- `./.claude/` (repo-local) — `CLAUDE.md`
+
 <details>
 <summary>Manual symlink commands</summary>
 
 ```sh
 ln -s ~/coding-agents-config/skills ~/.claude/skills
+ln -s ~/coding-agents-config/agents ~/.claude/agents
 ln -s ~/coding-agents-config/hooks ~/.claude/hooks
-ln -s ~/coding-agents-config/templates ~/.claude/templates
 ln -s ~/coding-agents-config/scripts ~/.claude/scripts
 ln -s ~/coding-agents-config/CLAUDE.md ~/.claude/CLAUDE.md
 ln -s ~/coding-agents-config/settings.json ~/.claude/settings.json
+ln -s ~/coding-agents-config/agents ~/.codex/agents
+ln -s ~/coding-agents-config/AGENTS.md ~/.codex/AGENTS.md
 ```
 
 If any of these already exist, back them up first (`mv <target> <target>.bak`).
@@ -38,9 +46,9 @@ If any of these already exist, back them up first (`mv <target> <target>.bak`).
 ```sh
 ls -la ~/.claude/skills        # should point to ~/coding-agents-config/skills
 ls -la ~/.claude/hooks         # should point to ~/coding-agents-config/hooks
-ls -la ~/.claude/templates     # should point to ~/coding-agents-config/templates
 ls -la ~/.claude/CLAUDE.md     # should point to ~/coding-agents-config/CLAUDE.md
 ls -la ~/.claude/settings.json # should point to ~/coding-agents-config/settings.json
+ls -la ~/.codex/AGENTS.md      # should point to ~/coding-agents-config/AGENTS.md
 ```
 
 ## Structure
@@ -50,30 +58,37 @@ coding-agents-config/
 ├── CLAUDE.md           # Global instructions — turn protocol, branch rules
 ├── AGENTS.md           # Agent loader directive
 ├── settings.json       # Claude Code settings (model, permissions)
+├── agents/             # Agent definitions
+│   └── agent-architecture-planner.md
 ├── hooks/              # Shell hooks triggered by Claude Code events
 │   └── branch-guard.sh # Prevents edits on main/master
-├── skills/             # Slash-command skills
-│   ├── .system/        # Meta-skills (skill-creator, skill-installer)
+├── skills/             # Slash-command skills (24)
+│   ├── .system/        # Meta-skills (skill-creator, skill-installer, ...)
 │   ├── session-start/  # Initialize session context
-│   ├── turn-init/      # Create turn directory and artifacts
-│   ├── turn-end/       # Finalize turn with PR, ADR, manifest
-│   ├── branch-guard/   # Create turn branch if on main
-│   └── ...             # Other skills
-├── templates/          # Turn lifecycle templates
-│   ├── adr_template.md
-│   ├── pull_request_template.md
-│   ├── manifest.schema.json
-│   └── ...
-├── scripts/            # Automation scripts
-│   └── setup.sh
-├── .appfactory/        # Task/turn tracking and specs
-│   ├── tasks/          # Task branches with turns
-│   ├── specs/          # Specifications
-│   ├── prompts/        # Prompt templates
-│   └── memory/         # Project memory
-├── plugins/            # Plugin management
-├── prompts/            # Prompt templates
-└── docs/               # Reference documentation
+│   ├── task-init/       # Create task branch and turn-001 artifacts
+│   ├── turn-init/       # Create turn directory and artifacts
+│   ├── turn-end/        # Finalize turn with PR, ADR, manifest
+│   ├── task-close/      # Finalize task branch and open PR
+│   ├── branch-guard/    # Create turn branch if on main
+│   ├── af-*/            # AppFactory backend DDD/codegen pipeline skills
+│   ├── dsl-utils/       # DSL model interpreter reference
+│   ├── e2e-tests/       # HTTP test artifact reference
+│   ├── ui-utils/        # UI implementation language reference
+│   ├── unit-tests/      # Test-implementation sync reference
+│   └── eval-labeler/    # Label and score model-response evaluations
+├── scripts/             # Automation scripts
+│   ├── setup.sh         # Create ~/.claude symlinks
+│   └── af-state.sh      # AppFactory state.yaml helpers
+├── .appfactory/         # Task/turn tracking and specs
+│   ├── tasks/           # Task branches with turns
+│   ├── tasks_index.csv  # Task registry
+│   ├── specs/           # Specifications
+│   ├── prompts/         # Prompt templates
+│   ├── memory/          # Project memory
+│   └── changelog.md     # Pipeline changelog
+├── archive/             # Retired/superseded skills and templates
+├── docs/                # Reference documentation
+└── .github/             # Issue/PR templates
 ```
 
 ## Execution Flow
@@ -163,38 +178,60 @@ flowchart TB
 | **Execution** | Execute task → Add headers → Bump versions | Modified files |
 | **Turn End** | Update context → Write PR → ADR → Manifest → Index → Tag | 5 artifacts complete |
 
-## Skills (9)
+## Skills (24)
 
 | Category | Skill | Description |
 |----------|-------|-------------|
-| **Session** | `session-start` | Initialize session, load context docs |
-| **Turn** | `turn-init` | Create turn directory and initial artifacts |
-| | `turn-end` | Finalize turn with PR, ADR, manifest |
-| | `branch-guard` | Create turn branch if on main/master |
-| **Scaffolding** | `schema-to-database` | Generate DB tables and entity code from JSON schema |
-| | `nestjs-prisma-resource` | Generate NestJS CRUD resource with Prisma |
-| | `nestjs-customer-crud-scaffold` | Scaffold NestJS customer CRUD app |
-| | `code-entity-to-crud` | Entity to CRUD generation |
-| **Utility** | `helloworld` | Test skill invocation |
+| **Session** | `session-start` | Load repository state and core pipeline context at session start |
+| **Task** | `task-init` | Initialize a new task branch and create task + turn-001 artifacts (runs on main/master) |
+| | `task-close` | Finalize the active task branch, push it, and open a pull request against main |
+| **Turn** | `turn-init` | Initialize the next turn within the active task branch |
+| | `turn-end` | Finalize the active turn after execution, even on failure |
+| | `branch-guard` | Create a turn-scoped branch if currently on main or master |
+| **AppFactory — Orchestration** | `af-orchestrator` | Orchestrate the App Factory software development lifecycle |
+| | `af-project-init` | Export required env vars and initialize an AppFactory project |
+| | `af-memory` | CRUD operations on `.appfactory/state.yaml` for pipeline state |
+| **AppFactory — Backend DDD** | `af-be-prd-build` | Build a business-facing backend PRD from an intake worksheet |
+| | `af-be-ddd-build` | Generate a backend Domain-Driven Design document from an approved PRD |
+| | `af-be-ddd-analysis` | Audit a generated DDD spec for quality, completeness, and PRD alignment |
+| | `af-be-ddd-refactor` | Apply targeted patches to a DDD spec based on analysis findings |
+| | `af-be-ddd-dsl` | Generate a backend application DSL YAML from a DDD document |
+| | `af-be-ddd-tests` | Generate Gherkin BDD feature files from DDD and PRD specs |
+| | `af-be-ddd-orchestrator` | Orchestrate the backend DDD build → analyze → refactor → test loop |
+| **AppFactory — Backend Build** | `af-be-plan` | Generate a backend execution plan from a domain DSL and tech-stack profile |
+| | `af-be-implementation` | Generate domain code from the execution plan and BDD feature specs |
+| **AppFactory — Ops** | `af-app-check` | Audit an application for production readiness (security, DB, deployment, quality) |
+| **Reference** | `dsl-utils` | DSL model interpreter reference material |
+| | `e2e-tests` | HTTP test artifact reference material |
+| | `ui-utils` | UI implementation language reference material |
+| | `unit-tests` | Test-implementation sync reference material |
+| **Utility** | `eval-labeler` | Label and score model-response evaluations (Response A vs B) in run directories |
 
 ### Meta-Skills (.system)
 
 | Skill | Description |
 |-------|-------------|
-| `skill-creator` | Create new skills with SKILL.md |
-| `skill-installer` | Install skills from marketplaces |
+| `skill-creator` | Guide for creating new skills with a SKILL.md |
+| `skill-installer` | Install skills into the skills directory from a curated list or GitHub repo |
+| `plugin-creator` | Scaffold plugin directories with a `.codex-plugin/plugin.json` manifest |
+| `imagegen` | Generate or edit raster images for mockups, sprites, and visual assets |
+| `openai-docs` | Look up official OpenAI API/model documentation with citations |
 
 ## Templates
 
-| Template | Purpose |
-|----------|---------|
-| `adr_template.md` | Architecture Decision Record format |
-| `pull_request_template.md` | PR description format |
-| `manifest.schema.json` | Turn manifest JSON schema |
-| `metadata_header.txt` | Source file header format |
-| `branch_naming.md` | Branch naming conventions |
-| `commit_message.md` | Commit message format |
-| `tech-stack.template.md` | Tech stack documentation |
+There is no shared top-level `templates/` directory. Each skill that needs one ships its own
+`templates/` folder alongside its `SKILL.md` (e.g. `skills/af-be-ddd-build/templates/ddd-template.md`,
+`skills/af-be-plan/templates/execution-plan-template.md`, `skills/turn-init/templates/`).
+Turn/task artifact templates (ADR, manifest, PR body) live under `skills/turn-init/templates/`
+and `skills/task-init/templates/`.
+
+## Staging and Archive
+
+- `skills/.nestjs/` — in-progress NestJS/Prisma scaffolding skills (`nestjs-prisma-resource`,
+  `nestjs-crud-resource`, `nestjs-observability`, `app-from-dsl`, `field-mapper-generator`, `prisma`,
+  `nestjs-customer-crud-scaffold`) staged ahead of promotion into the active skill set.
+- `archive/` — retired or superseded skills and templates kept for reference (e.g. `code-entity-to-crud`,
+  `schema-to-database`, `shadcn`, `legacy-turns`). See `archive/README.md` and `archive/SUMMARY.md`.
 
 ## Hooks
 
