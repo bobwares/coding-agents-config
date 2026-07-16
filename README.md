@@ -1,6 +1,6 @@
 # coding-agents-config
 
-Agentic pipeline configuration for Claude Code. Enforces turn-based workflow with provenance tracking, branch protection, and governance rules.
+Agentic pipeline configuration for Claude Code and Codex. Enforces a task/turn-based workflow with provenance tracking, branch protection, and governance rules, plus the AppFactory skill set for DSL-driven application generation.
 
 ## Setup
 
@@ -18,16 +18,26 @@ Run the setup script — it creates all symlinks and backs up any existing files
 bash scripts/setup.sh
 ```
 
+It links into three locations:
+
+- `~/.claude/` — `skills`, `agents`, `rules`, `hooks`, `context`, `scripts`, `plugins`, `CLAUDE.md`, `settings.json`
+- `~/.codex/` — `agents`, `AGENTS.md`
+- `./.claude/` (repo-local) — `CLAUDE.md`
+
+Some targets (`rules`, `context`, `plugins`) don't exist in this repo yet; the script still links them so they pick up content automatically if added later.
+
 <details>
 <summary>Manual symlink commands</summary>
 
 ```sh
 ln -s ~/coding-agents-config/skills ~/.claude/skills
+ln -s ~/coding-agents-config/agents ~/.claude/agents
 ln -s ~/coding-agents-config/hooks ~/.claude/hooks
-ln -s ~/coding-agents-config/templates ~/.claude/templates
 ln -s ~/coding-agents-config/scripts ~/.claude/scripts
 ln -s ~/coding-agents-config/CLAUDE.md ~/.claude/CLAUDE.md
 ln -s ~/coding-agents-config/settings.json ~/.claude/settings.json
+ln -s ~/coding-agents-config/agents ~/.codex/agents
+ln -s ~/coding-agents-config/AGENTS.md ~/.codex/AGENTS.md
 ```
 
 If any of these already exist, back them up first (`mv <target> <target>.bak`).
@@ -37,8 +47,8 @@ If any of these already exist, back them up first (`mv <target> <target>.bak`).
 
 ```sh
 ls -la ~/.claude/skills        # should point to ~/coding-agents-config/skills
+ls -la ~/.claude/agents        # should point to ~/coding-agents-config/agents
 ls -la ~/.claude/hooks         # should point to ~/coding-agents-config/hooks
-ls -la ~/.claude/templates     # should point to ~/coding-agents-config/templates
 ls -la ~/.claude/CLAUDE.md     # should point to ~/coding-agents-config/CLAUDE.md
 ls -la ~/.claude/settings.json # should point to ~/coding-agents-config/settings.json
 ```
@@ -47,160 +57,130 @@ ls -la ~/.claude/settings.json # should point to ~/coding-agents-config/settings
 
 ```
 coding-agents-config/
-├── CLAUDE.md           # Global instructions — turn protocol, branch rules
-├── AGENTS.md           # Agent loader directive
-├── settings.json       # Claude Code settings (model, permissions)
+├── CLAUDE.md           # Global instructions — task/turn protocol, branch rules
+├── AGENTS.md           # Codex loader directive (points at ~/.claude/CLAUDE.md)
+├── settings.json       # Claude Code settings (model, permissions, hooks, plugins)
 ├── hooks/              # Shell hooks triggered by Claude Code events
-│   └── branch-guard.sh # Prevents edits on main/master
-├── skills/             # Slash-command skills
-│   ├── .system/        # Meta-skills (skill-creator, skill-installer)
-│   ├── session-start/  # Initialize session context
-│   ├── turn-init/      # Create turn directory and artifacts
-│   ├── turn-end/       # Finalize turn with PR, ADR, manifest
-│   ├── branch-guard/   # Create turn branch if on main
-│   └── ...             # Other skills
-├── templates/          # Turn lifecycle templates
-│   ├── adr_template.md
-│   ├── pull_request_template.md
-│   ├── manifest.schema.json
-│   └── ...
+│   └── branch-guard.sh # Auto-creates a task branch on PreToolUse if on main/master
+├── agents/             # Standalone subagent definitions
+│   └── agent-architecture-planner.md
 ├── scripts/            # Automation scripts
-│   └── setup.sh
+│   ├── setup.sh        # Creates the symlinks described above
+│   └── af-state.sh     # Helpers for reading/writing .appfactory/memory/state.yaml
+├── skills/             # Slash-command skills (see below)
+├── docs/               # Reference documentation and migration notes
+├── archive/            # Superseded skill library (DSL-first full-stack generation, pre-AppFactory)
 ├── .appfactory/        # Task/turn tracking and specs
-│   ├── tasks/          # Task branches with turns
-│   ├── specs/          # Specifications
-│   ├── prompts/        # Prompt templates
-│   └── memory/         # Project memory
-├── plugins/            # Plugin management
-├── prompts/            # Prompt templates
-└── docs/               # Reference documentation
+│   ├── tasks/          # Task branches with turns (task_context.md, task_status.json, ...)
+│   ├── specs/          # PRD/DDD/DSL specification artifacts
+│   ├── prompts/        # Prompt templates used to drive the pipeline
+│   ├── memory/         # Pipeline state (state.yaml)
+│   ├── tasks_index.csv # Registry of all tasks and their status
+│   └── changelog.md
+└── .github/            # Issue templates, PR template
 ```
 
 ## Execution Flow
 
-The agentic pipeline enforces a strict turn-based workflow for all coding tasks:
+The pipeline enforces a strict task/turn workflow for all coding prompts, defined in `CLAUDE.md`:
 
 ```mermaid
 flowchart TB
-    subgraph SESSION["Session Lifecycle"]
-        START([User Prompt]) --> SS{First prompt<br/>of session?}
-        SS -->|Yes| SESSION_START["/session-start"]
-        SS -->|No| TURN_INIT
+    START([User Prompt]) --> FIRST{First prompt<br/>of session?}
+    FIRST -->|Yes| SESSION_START["/session-start<br/>load git state + context docs"]
+    FIRST -->|No| CHECK_BRANCH
+    SESSION_START --> CHECK_BRANCH
 
-        SESSION_START --> LOAD_GIT["Load Git State<br/>• git branch<br/>• git status<br/>• git log"]
-        LOAD_GIT --> LOAD_CTX["Load Context Docs<br/>• adr-context.md<br/>• governance-context.md<br/>• tech-standards-context.md<br/>• turn-tracking-context.md"]
-        LOAD_CTX --> BANNER["Display Session Banner"]
-        BANNER --> TURN_INIT
-    end
+    CHECK_BRANCH["git branch --show-current"] --> IS_MAIN{On main<br/>or master?}
+    IS_MAIN -->|Yes| TASK_INIT["/task-init<br/>next task id, create task/TXXX,<br/>init task-XXX + turn-001"]
+    IS_MAIN -->|No| IS_TASK{On task/TXXX<br/>or task/TXXX-*?}
+    IS_TASK -->|Yes| TURN_INIT["/turn-init<br/>next turn id inside active task"]
 
-    subgraph TURN["Turn Lifecycle"]
-        TURN_INIT["/turn-init"] --> RESOLVE_ID["Resolve TURN_ID<br/>get-next-turn-id.sh"]
-        RESOLVE_ID --> CREATE_DIR["Create Turn Directory<br/>turns/turn-N/"]
-        CREATE_DIR --> WRITE_CTX["Write turn_context.md"]
-        WRITE_CTX --> WRITE_TRACE["Write execution_trace.json"]
-        WRITE_TRACE --> TURN_BANNER["Display Turn Status"]
-    end
+    TASK_INIT --> EXEC
+    TURN_INIT --> EXEC["Execute user's request"]
 
-    subgraph BRANCH_GATE["Branch Protection Gate"]
-        TURN_BANNER --> CHECK_BRANCH["git branch --show-current"]
-        CHECK_BRANCH --> IS_MAIN{On main<br/>or master?}
-        IS_MAIN -->|Yes| HALT["HALT<br/>DO NOT WRITE CODE"]
-        HALT --> BRANCH_GUARD["/branch-guard"]
-        BRANCH_GUARD --> CREATE_BRANCH["git checkout -b<br/>turn/T{TURN_ID}"]
-        CREATE_BRANCH --> VERIFY["Verify branch switched"]
-        IS_MAIN -->|No| IS_TURN{On turn/T*<br/>branch?}
-        IS_TURN -->|Yes| PROCEED["Proceed"]
-        IS_TURN -->|No| WARN["Warn non-turn branch"]
-        WARN --> PROCEED
-        VERIFY --> PROCEED
-    end
-
-    subgraph EXECUTION["Task Execution"]
-        PROCEED --> EXEC["Execute User Task"]
-        EXEC --> ADD_HEADERS["Add Metadata Headers<br/>to all modified files"]
-        ADD_HEADERS --> BUMP_VERSION["Bump File Versions<br/>SemVer"]
-    end
-
-    subgraph POST_EXEC["Post-Execution (/turn-end)"]
-        BUMP_VERSION --> TURN_END["/turn-end"]
-        TURN_END --> CAPTURE_GIT["Capture Git State"]
-        CAPTURE_GIT --> UPDATE_CTX["Update turn_context.md<br/>• TURN_END_TIME<br/>• TURN_ELAPSED_TIME<br/>• SKILLS_EXECUTED<br/>• AGENTS_EXECUTED"]
-        UPDATE_CTX --> UPDATE_TRACE["Update execution_trace.json"]
-        UPDATE_TRACE --> WRITE_PR["Write pull_request.md"]
-        WRITE_PR --> WRITE_ADR["Write adr.md<br/>Full or Minimal"]
-        WRITE_ADR --> WRITE_MANIFEST["Write manifest.json<br/>SHA-256 checksums"]
-        WRITE_MANIFEST --> UPDATE_INDEX["Update turns_index.csv"]
-        UPDATE_INDEX --> TAG["git tag turn/{TURN_ID}"]
-        TAG --> CHECK_UNCOMMITTED{Uncommitted<br/>changes?}
-        CHECK_UNCOMMITTED -->|Yes| COMMIT["Commit with format:<br/>AI Coding Agent Change:"]
-        CHECK_UNCOMMITTED -->|No| COMPLETE
-        COMMIT --> COMPLETE["Turn Complete"]
-    end
-
-    subgraph ARTIFACTS["Turn Artifacts"]
-        direction LR
-        A1["turn_context.md"]
-        A2["execution_trace.json"]
-        A3["pull_request.md"]
-        A4["adr.md"]
-        A5["manifest.json"]
-    end
-
-    WRITE_CTX -.-> A1
-    WRITE_TRACE -.-> A2
-    WRITE_PR -.-> A3
-    WRITE_ADR -.-> A4
-    WRITE_MANIFEST -.-> A5
+    EXEC --> TURN_END["/turn-end<br/>always runs, even on failure"]
+    TURN_END --> READY{User signals<br/>task ready for review?}
+    READY -->|Yes| TASK_CLOSE["/task-close<br/>push branch, open PR"]
+    READY -->|No| DONE([Turn complete])
+    TASK_CLOSE --> DONE
 ```
 
-### Turn Protocol Summary
+**Hard gate**: no write or edit action may occur on `main`/`master` — `/task-init` must succeed first. `hooks/branch-guard.sh` enforces this at the tool-call level as a backstop, auto-creating `task/T<next-id>` if a write is attempted on `main`/`master`.
 
-| Phase | Steps | Outputs |
-|-------|-------|---------|
-| **Session Start** | Load git state → Load 4 context docs → Display banner | Context loaded |
-| **Turn Init** | Resolve ID → Create dir → Write context + trace | `turn_context.md`, `execution_trace.json` |
-| **Branch Gate** | Check branch → HALT if main → Create turn branch | Safe branch |
-| **Execution** | Execute task → Add headers → Bump versions | Modified files |
-| **Turn End** | Update context → Write PR → ADR → Manifest → Index → Tag | 5 artifacts complete |
+### Task and turn artifacts
 
-## Skills (9)
+| Scope | Location | Files |
+|-------|----------|-------|
+| Task | `.appfactory/tasks/task-XXX/` | `task_context.md`, `task_status.json`, `task_summary.md`, `pull_request.md` |
+| Turn | `.appfactory/tasks/task-XXX/turns/turn-XXX/` | `turn_context.md`, `execution_trace.json`, `adr.md`, `manifest.json` |
 
-| Category | Skill | Description |
-|----------|-------|-------------|
-| **Session** | `session-start` | Initialize session, load context docs |
-| **Turn** | `turn-init` | Create turn directory and initial artifacts |
-| | `turn-end` | Finalize turn with PR, ADR, manifest |
-| | `branch-guard` | Create turn branch if on main/master |
-| **Scaffolding** | `schema-to-database` | Generate DB tables and entity code from JSON schema |
-| | `nestjs-prisma-resource` | Generate NestJS CRUD resource with Prisma |
-| | `nestjs-customer-crud-scaffold` | Scaffold NestJS customer CRUD app |
-| | `code-entity-to-crud` | Entity to CRUD generation |
-| **Utility** | `helloworld` | Test skill invocation |
+Task ids are global and zero-padded (`001`, `002`, ...); turn ids reset per task. `.appfactory/tasks_index.csv` tracks every task's branch, status, and PR URL.
 
-### Meta-Skills (.system)
+## Skills
+
+### Task/turn lifecycle
 
 | Skill | Description |
 |-------|-------------|
-| `skill-creator` | Create new skills with SKILL.md |
-| `skill-installer` | Install skills from marketplaces |
+| `session-start` | Load repository state and core pipeline context at the start of every session |
+| `task-init` | Initialize a new task branch and create task + turn-001 artifacts (run when on main/master) |
+| `turn-init` | Initialize the next turn within the active task branch |
+| `turn-end` | Finalize the active turn after execution, even on failure |
+| `task-close` | Finalize the active task branch, push it, and open a PR against main |
+| `branch-guard` | Model-disabled fallback; mirrors `hooks/branch-guard.sh` to create a turn-scoped branch off main |
 
-## Templates
+### AppFactory pipeline (`af-*`)
 
-| Template | Purpose |
-|----------|---------|
-| `adr_template.md` | Architecture Decision Record format |
-| `pull_request_template.md` | PR description format |
-| `manifest.schema.json` | Turn manifest JSON schema |
-| `metadata_header.txt` | Source file header format |
-| `branch_naming.md` | Branch naming conventions |
-| `commit_message.md` | Commit message format |
-| `tech-stack.template.md` | Tech stack documentation |
+DSL-driven backend application generation, orchestrated end-to-end by `af-orchestrator`:
+
+| # | Phase | Skill | Invoked by | Description |
+|---|-------|-------|------------|-------------|
+| 1 | Initialization | `af-project-init` | `af-orchestrator` | Export required env vars and invoke the AppFactory init helper script |
+| 2 | Requirements | `af-be-prd-build` | `af-orchestrator` | Build a business-facing PRD from intake worksheets/questionnaires |
+| 3 | Domain-Driven Design | `af-be-ddd-orchestrator` | `af-orchestrator` | Orchestrate the DDD build → analyze → refactor loop |
+| 4 | | `af-be-ddd-build` | `af-be-ddd-orchestrator` | Generate a human-readable DDD document from an approved PRD |
+| 5 | | `af-be-ddd-analysis` | `af-be-ddd-orchestrator` | Audit a DDD document for quality, completeness, and PRD alignment |
+| 6 | | `af-be-ddd-refactor` | `af-be-ddd-orchestrator` | Apply targeted patches to the DDD based on analysis findings |
+| 7 | Testing specs | `af-be-ddd-tests` | `af-be-ddd-orchestrator` | Generate Gherkin BDD feature files from DDD + PRD, organized by aggregate |
+| 8 | Planning | `af-be-plan` | `af-orchestrator` | Generate a step-by-step backend execution plan from DSL + tech stack profile |
+| 9 | DSL generation | `af-be-ddd-dsl` | `af-be-implementation` | Generate the backend application DSL YAML from the DDD document |
+| 10 | Implementation | `af-be-implementation` | `af-orchestrator` | Copy the target tech stack implementation and generate domain code from the plan + BDD specs |
+| 11 | Validation | `af-app-check` | `af-orchestrator` | Audit the generated app for production readiness (security, database, deployment, code quality) |
+| 12 | Cross-cutting | `af-memory` | All `af-*` skills | CRUD operations on `.appfactory/memory/state.yaml` for pipeline state |
+
+### Category skills
+
+These directories group sub-skills used during `af-be-implementation`:
+
+| Category | Sub-skill | Description |
+|----------|-----------|--------------|
+| `dsl-utils/` | `dsl-model-interpreter` | Parse and validate app-dsl YAML specifications before code generation |
+| `e2e-tests/` | `http-test-artifacts` | Generate `.http` request files for REST client endpoint testing |
+| `ui-utils/` | `ui-implementation-language` | Declarative YAML standard for framework-neutral UI page/widget definitions |
+| `unit-tests/` | `test-implementation-sync` | Keep unit tests synchronized with actual service/DTO implementations |
+
+### Utility
+
+| Skill | Description |
+|-------|-------------|
+| `eval-labeler` | Process `Eval.md` files to generate structured notes and labeled model-response comparisons |
+
+## Agents
+
+| Agent | Model | Description |
+|-------|-------|--------------|
+| `agent-architecture-planner` | sonnet | Reads PRD/DDD/DSL and repo structure to produce architecture decisions, module maps, task plans, and review artifacts for downstream coding agents |
 
 ## Hooks
 
 | Hook | Trigger | Purpose |
 |------|---------|---------|
-| `branch-guard.sh` | PreToolUse(Edit) | Block edits on main/master |
+| `branch-guard.sh` | `PreToolUse` (bash/write/edit tools) | Auto-create a `task/T<next-id>` branch when a write is attempted on `main`/`master` |
+
+## Archive
+
+`archive/` holds the original DSL-first full-stack skill library (`app-from-dsl`, `prisma-persistence`, `nestjs-crud-resource`, `react-form-page`, etc.) that predates the AppFactory pipeline. See `archive/README.md` and `archive/SUMMARY.md` for its taxonomy and generation flow; `docs/migration-ai-to-appfactory.md` and `docs/ai-to-appfactory-migration-analysis.md` document the migration to `.appfactory/`.
 
 ## Adding a new skill
 
@@ -211,7 +191,7 @@ skills/my-skill/
 └── SKILL.md
 ```
 
-The `.system/skill-creator` meta-skill can guide you through creating one — invoke it from Claude Code.
+`SKILL.md` needs a frontmatter `name` and `description` (used for model-invocation matching); set `disable-model-invocation: true` for skills that should only run via an explicit hook or another skill.
 
 ## Syncing across machines
 
