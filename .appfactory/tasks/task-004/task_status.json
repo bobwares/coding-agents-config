@@ -1,0 +1,10 @@
+{
+  "taskId": "004",
+  "branch": "claude/awesome-turing-3rpy5d",
+  "baseBranch": "main",
+  "status": "active",
+  "createdAt": "2026-07-21T14:07:01Z",
+  "closedAt": null,
+  "pullRequestUrl": null,
+  "totalTurns": 1
+}

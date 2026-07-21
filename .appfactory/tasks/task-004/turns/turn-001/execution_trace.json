@@ -1,0 +1,9 @@
+{
+  "taskId": "004",
+  "turnId": "001",
+  "startedAt": "2026-07-21T14:07:01Z",
+  "endedAt": "2026-07-21T14:35:00Z",
+  "skillsExecuted": ["session-start (project skill, applied manually)"],
+  "agentsExecuted": [],
+  "notes": "Audited the repo (skills/, hooks/, scripts/, .appfactory/, settings.json, archive/) and rewrote README.md to match current reality: corrected the skills inventory (37 skills across af-*, .nestjs/, .system/, and pipeline-lifecycle categories), fixed the setup.sh symlink targets, corrected the structure tree, and redrew the execution-flow diagram to match the task-init/turn-init/turn-end/task-close model described in CLAUDE.md."
+}

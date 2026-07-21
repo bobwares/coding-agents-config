@@ -1,0 +1,40 @@
+{
+  "taskId": "004",
+  "turnId": "001",
+  "branch": "claude/awesome-turing-3rpy5d",
+  "startedAt": "2026-07-21T14:07:01Z",
+  "endedAt": "2026-07-21T14:35:00Z",
+  "status": "complete",
+  "filesChanged": [
+    {
+      "path": "README.md",
+      "action": "modified",
+      "sha256": "e2ffdf2a7de36aa4f5258d43e31dbc27288a0e2b465a929aa2d9aeeba4f81cd"
+    },
+    {
+      "path": ".appfactory/tasks/task-004/task_context.md",
+      "action": "created",
+      "sha256": "c8d7f5cc072b86985f4ff0425a561d8a8f13848f0fa5e24874207541aeaba47c"
+    },
+    {
+      "path": ".appfactory/tasks/task-004/task_status.json",
+      "action": "created",
+      "sha256": "eec57326de9cf8eb91a9dc71df16b48c3ffdb8f69ce1b7ba17ea986072bb1bf5"
+    },
+    {
+      "path": ".appfactory/tasks/task-004/turns/turn-001/turn_context.md",
+      "action": "created",
+      "sha256": "760ef45af0057f2d2063edea6217ecfd1658a9a5b9333f8b20740eb61a052848"
+    },
+    {
+      "path": ".appfactory/tasks/task-004/turns/turn-001/execution_trace.json",
+      "action": "created",
+      "sha256": "3823cffbd4486f87cd0acf6657f797702b16ffc133548b0e0a2007ff061fb320"
+    },
+    {
+      "path": ".appfactory/tasks/task-004/turns/turn-001/adr.md",
+      "action": "created",
+      "sha256": "d13f1b5b944770564be15285afdf55111785cde0c14a1f5a98b7c35da2662b63"
+    }
+  ]
+}
