@@ -1,0 +1,10 @@
+{
+  "taskId": "004",
+  "branch": "claude/awesome-turing-c12zhh",
+  "baseBranch": "main",
+  "status": "active",
+  "createdAt": "2026-07-26T14:05:09Z",
+  "closedAt": null,
+  "pullRequestUrl": null,
+  "totalTurns": 1
+}
