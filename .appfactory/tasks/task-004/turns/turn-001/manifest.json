@@ -1,0 +1,20 @@
+{
+  "taskId": "004",
+  "turnId": "001",
+  "branch": "claude/awesome-turing-vo56rc",
+  "startedAt": "2026-08-03T14:05:00Z",
+  "endedAt": "2026-08-03T14:15:00Z",
+  "status": "completed",
+  "filesChanged": [
+    "README.md",
+    ".appfactory/tasks_index.csv",
+    ".appfactory/tasks/task-004/task_context.md",
+    ".appfactory/tasks/task-004/task_status.json",
+    ".appfactory/tasks/task-004/task_summary.md",
+    ".appfactory/tasks/task-004/pull_request.md",
+    ".appfactory/tasks/task-004/turns/turn-001/turn_context.md",
+    ".appfactory/tasks/task-004/turns/turn-001/execution_trace.json",
+    ".appfactory/tasks/task-004/turns/turn-001/adr.md",
+    ".appfactory/tasks/task-004/turns/turn-001/manifest.json"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "taskId": "004",
+  "branch": "claude/awesome-turing-vo56rc",
+  "baseBranch": "main",
+  "status": "active",
+  "createdAt": "2026-08-03T14:05:00Z",
+  "closedAt": null,
+  "pullRequestUrl": null,
+  "totalTurns": 1
+}
