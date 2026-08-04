@@ -15,8 +15,8 @@
   ],
   "commits": [
     {
-      "sha": "pending",
-      "message": "AI Coding Agent Change: Update README to match current repo structure",
+      "sha": "38e45c2",
+      "message": "AI Coding Agent Change: Rewrite README.md to match the current repository structure and skill set",
       "timestamp": "2026-08-04T00:20:00Z"
     }
   ],
@@ -38,6 +38,6 @@
   "notes": [
     "Documentation-only change; no skill, hook, or script behavior modified.",
     "README content verified directly against the working tree (skills/, agents/, hooks/, scripts/, docs/, archive/, .appfactory/).",
-    "Commit sha recorded once the commit is created (see follow-up manifest update)."
+    "Commit sha 38e45c2 recorded after the commit that introduced this turn's artifacts."
   ]
 }
