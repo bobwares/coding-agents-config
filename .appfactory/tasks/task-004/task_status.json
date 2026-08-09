@@ -1,0 +1,10 @@
+{
+  "taskId": "004",
+  "branch": "claude/awesome-turing-68i9hd",
+  "baseBranch": "main",
+  "status": "active",
+  "createdAt": "2026-08-09T14:10:46Z",
+  "closedAt": null,
+  "pullRequestUrl": null,
+  "totalTurns": 1
+}
