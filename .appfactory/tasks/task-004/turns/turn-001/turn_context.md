@@ -39,7 +39,7 @@ describes the repo as it exists today.
      `archive/templates/`
 
 ## Commit
-(recorded after commit — see git log)
+a34f063: AI Coding Agent Change: Resync README.md with current repo structure
 
 ## Files Changed
 - README.md
