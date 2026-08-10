@@ -1,0 +1,14 @@
+{
+  "taskId": "004",
+  "turnId": "001",
+  "startedAt": "2026-08-10T00:00:00Z",
+  "endedAt": "2026-08-10T00:30:00Z",
+  "skillsExecuted": [
+    "turn-init",
+    "turn-end"
+  ],
+  "agentsExecuted": [
+    "general-purpose (repo structure survey for README update)"
+  ],
+  "notes": "Rewrote README.md Setup, Structure, Execution Flow, Skills, Agents, Hooks, and Templates sections to match the current repository state (23 skills + 5 meta-skills, task/turn branch model, agents/ dir, archive/templates location)."
+}

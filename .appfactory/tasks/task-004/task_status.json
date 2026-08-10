@@ -1,0 +1,10 @@
+{
+  "taskId": "004",
+  "branch": "claude/awesome-turing-eao5nb",
+  "baseBranch": "main",
+  "status": "active",
+  "createdAt": "2026-08-10T00:00:00Z",
+  "closedAt": null,
+  "pullRequestUrl": null,
+  "totalTurns": 1
+}
