@@ -1,6 +1,6 @@
 # coding-agents-config
 
-Agentic pipeline configuration for Claude Code. Enforces turn-based workflow with provenance tracking, branch protection, and governance rules.
+Agentic pipeline configuration for Claude Code and Codex. Enforces turn-based workflow with provenance tracking, branch protection, and governance rules, plus an "App Factory" skill pipeline for DSL-driven backend generation.
 
 ## Setup
 
@@ -12,7 +12,7 @@ git clone <repo-url> ~/coding-agents-config
 
 ### 2. Create symlinks (automated)
 
-Run the setup script — it creates all symlinks and backs up any existing files:
+Run the setup script — it symlinks the repo into `~/.claude`, `~/.codex`, and a repo-local `./.claude`, backing up any existing files first:
 
 ```sh
 bash scripts/setup.sh
@@ -22,15 +22,25 @@ bash scripts/setup.sh
 <summary>Manual symlink commands</summary>
 
 ```sh
-ln -s ~/coding-agents-config/skills ~/.claude/skills
-ln -s ~/coding-agents-config/hooks ~/.claude/hooks
-ln -s ~/coding-agents-config/templates ~/.claude/templates
-ln -s ~/coding-agents-config/scripts ~/.claude/scripts
-ln -s ~/coding-agents-config/CLAUDE.md ~/.claude/CLAUDE.md
+# Into ~/.claude/
+ln -s ~/coding-agents-config/skills     ~/.claude/skills
+ln -s ~/coding-agents-config/agents     ~/.claude/agents
+ln -s ~/coding-agents-config/hooks      ~/.claude/hooks
+ln -s ~/coding-agents-config/scripts    ~/.claude/scripts
+ln -s ~/coding-agents-config/CLAUDE.md  ~/.claude/CLAUDE.md
 ln -s ~/coding-agents-config/settings.json ~/.claude/settings.json
+
+# Into ~/.codex/
+ln -s ~/coding-agents-config/agents    ~/.codex/agents
+ln -s ~/coding-agents-config/AGENTS.md ~/.codex/AGENTS.md
+
+# Repo-local mirror (so a Claude Code session started inside this repo also sees it)
+ln -s ~/coding-agents-config/CLAUDE.md ~/coding-agents-config/.claude/CLAUDE.md
 ```
 
 If any of these already exist, back them up first (`mv <target> <target>.bak`).
+
+`scripts/setup.sh` also links `rules/`, `context/`, and `plugins/` into `~/.claude/` for forward compatibility — those directories aren't present in this repo yet, so those particular symlinks are currently dangling until such directories are added.
 </details>
 
 ### 3. Verify
@@ -38,43 +48,51 @@ If any of these already exist, back them up first (`mv <target> <target>.bak`).
 ```sh
 ls -la ~/.claude/skills        # should point to ~/coding-agents-config/skills
 ls -la ~/.claude/hooks         # should point to ~/coding-agents-config/hooks
-ls -la ~/.claude/templates     # should point to ~/coding-agents-config/templates
 ls -la ~/.claude/CLAUDE.md     # should point to ~/coding-agents-config/CLAUDE.md
 ls -la ~/.claude/settings.json # should point to ~/coding-agents-config/settings.json
+ls -la ~/.codex/AGENTS.md      # should point to ~/coding-agents-config/AGENTS.md
 ```
 
 ## Structure
 
 ```
 coding-agents-config/
-├── CLAUDE.md           # Global instructions — turn protocol, branch rules
-├── AGENTS.md           # Agent loader directive
-├── settings.json       # Claude Code settings (model, permissions)
-├── hooks/              # Shell hooks triggered by Claude Code events
-│   └── branch-guard.sh # Prevents edits on main/master
-├── skills/             # Slash-command skills
-│   ├── .system/        # Meta-skills (skill-creator, skill-installer)
-│   ├── session-start/  # Initialize session context
-│   ├── turn-init/      # Create turn directory and artifacts
-│   ├── turn-end/       # Finalize turn with PR, ADR, manifest
-│   ├── branch-guard/   # Create turn branch if on main
-│   └── ...             # Other skills
-├── templates/          # Turn lifecycle templates
-│   ├── adr_template.md
-│   ├── pull_request_template.md
-│   ├── manifest.schema.json
-│   └── ...
-├── scripts/            # Automation scripts
-│   └── setup.sh
-├── .appfactory/        # Task/turn tracking and specs
-│   ├── tasks/          # Task branches with turns
-│   ├── specs/          # Specifications
-│   ├── prompts/        # Prompt templates
-│   └── memory/         # Project memory
-├── plugins/            # Plugin management
-├── prompts/            # Prompt templates
-└── docs/               # Reference documentation
+├── CLAUDE.md            # Global instructions — turn protocol, branch rules
+├── AGENTS.md            # Codex loader directive → "read and load ~/.claude/CLAUDE.md"
+├── settings.json        # Claude Code settings (model, permissions, hooks, plugins)
+├── package.json         # npm dependency (caveman)
+├── agents/              # Agent definitions
+│   └── agent-architecture-planner.md
+├── hooks/               # Shell hooks triggered by Claude Code events
+│   └── branch-guard.sh  # PreToolUse hook — auto-creates a task branch on main/master
+├── skills/               # Slash-command skills
+│   ├── session-start/    # Initialize session, load context docs
+│   ├── task-init/        # Create task branch + task/turn-001 artifacts
+│   ├── turn-init/        # Create the next turn's artifacts
+│   ├── turn-end/         # Finalize a turn (ADR, manifest, trace)
+│   ├── task-close/       # Finalize a task, push, open PR
+│   ├── branch-guard/     # Create a turn branch if on main/master
+│   ├── af-*/             # App Factory backend DDD pipeline (13 skills — PRD → DDD → DSL → plan → build → test)
+│   ├── dsl-utils/, ui-utils/, unit-tests/, e2e-tests/  # DSL parsing, UI-DSL spec, test-sync, HTTP test artifacts
+│   ├── eval-labeler/     # Label model-response evals
+│   ├── .nestjs/          # NestJS + Prisma code-generation skills (8)
+│   └── .system/          # Vendor skills bundled by Codex (skill-creator, skill-installer, imagegen, ...)
+├── scripts/              # Automation scripts
+│   ├── setup.sh          # Symlinks this repo into ~/.claude and ~/.codex
+│   └── af-state.sh       # Read/write .appfactory/state.yaml
+├── docs/                 # Reference and migration documentation
+├── archive/               # Retired/legacy skill drafts kept for reference
+├── .appfactory/           # Task/turn tracking, specs, prompts, memory
+│   ├── tasks/             # Task branches with turns
+│   ├── specs/
+│   ├── prompts/
+│   ├── memory/
+│   ├── changelog.md
+│   └── tasks_index.csv
+└── .github/               # Issue and pull request templates
 ```
+
+Note: earlier revisions of this README described a top-level `templates/` directory. That directory does not currently exist in the repo — `task-init` and `turn-init` each ship their own `templates/` subfolder, and older shared templates now live under `archive/templates/`.
 
 ## Execution Flow
 
@@ -158,49 +176,77 @@ flowchart TB
 | Phase | Steps | Outputs |
 |-------|-------|---------|
 | **Session Start** | Load git state → Load 4 context docs → Display banner | Context loaded |
-| **Turn Init** | Resolve ID → Create dir → Write context + trace | `turn_context.md`, `execution_trace.json` |
-| **Branch Gate** | Check branch → HALT if main → Create turn branch | Safe branch |
+| **Task Init** (on `main`/`master`) | Resolve next task id → `git checkout -b task/TXXX` → Create task dir + turn-001 | `task_context.md`, `task_status.json`, `task_summary.md`, `pull_request.md`, turn-001 artifacts |
+| **Turn Init** (on `task/TXXX`) | Resolve next turn id → Create dir → Write context + trace | `turn_context.md`, `execution_trace.json` |
 | **Execution** | Execute task → Add headers → Bump versions | Modified files |
-| **Turn End** | Update context → Write PR → ADR → Manifest → Index → Tag | 5 artifacts complete |
+| **Turn End** | Update context → Write ADR → Write manifest → Update trace | `adr.md`, `manifest.json` |
+| **Task Close** (on review) | Finalize task artifacts → push → open PR against `main` | Pull request |
 
-## Skills (9)
+## Skills
 
-| Category | Skill | Description |
-|----------|-------|-------------|
-| **Session** | `session-start` | Initialize session, load context docs |
-| **Turn** | `turn-init` | Create turn directory and initial artifacts |
-| | `turn-end` | Finalize turn with PR, ADR, manifest |
-| | `branch-guard` | Create turn branch if on main/master |
-| **Scaffolding** | `schema-to-database` | Generate DB tables and entity code from JSON schema |
-| | `nestjs-prisma-resource` | Generate NestJS CRUD resource with Prisma |
-| | `nestjs-customer-crud-scaffold` | Scaffold NestJS customer CRUD app |
-| | `code-entity-to-crud` | Entity to CRUD generation |
-| **Utility** | `helloworld` | Test skill invocation |
+The `skills/` directory holds all slash-command skills. Skills live either directly under `skills/<name>/`, or nested one level under a namespace directory (`.nestjs/`, `.system/`, `dsl-utils/`, `ui-utils/`, `unit-tests/`, `e2e-tests/`).
 
-### Meta-Skills (.system)
+### Governance — Turn Protocol
 
 | Skill | Description |
 |-------|-------------|
-| `skill-creator` | Create new skills with SKILL.md |
-| `skill-installer` | Install skills from marketplaces |
+| `session-start` | Load repository state and core pipeline context at the start of every session. |
+| `task-init` | Initialize a new task branch (`task/TXXX`) and create task + turn-001 artifacts. Runs when on `main`/`master`. |
+| `turn-init` | Initialize the next turn within the active task branch. |
+| `turn-end` | Finalize the active turn (ADR, manifest, execution trace). Runs after every coding prompt. |
+| `task-close` | Finalize the active task, push it, and open a pull request against `main`. |
+| `branch-guard` | Create a turn-scoped branch (`turn/TNNN`) if on `main`/`master`. |
 
-## Templates
+### App Factory — Backend DDD Pipeline (`af-*`)
 
-| Template | Purpose |
-|----------|---------|
-| `adr_template.md` | Architecture Decision Record format |
-| `pull_request_template.md` | PR description format |
-| `manifest.schema.json` | Turn manifest JSON schema |
-| `metadata_header.txt` | Source file header format |
-| `branch_naming.md` | Branch naming conventions |
-| `commit_message.md` | Commit message format |
-| `tech-stack.template.md` | Tech stack documentation |
+| Skill | Description |
+|-------|-------------|
+| `af-orchestrator` | Orchestrates the App Factory software development lifecycle end to end. |
+| `af-project-init` | Export required environment variables and initialize an AppFactory project. |
+| `af-memory` | CRUD operations against `.appfactory/state.yaml` for pipeline state tracking. |
+| `af-be-prd-build` | Build a business-facing backend PRD from an intake worksheet. |
+| `af-be-ddd-build` | Generate a backend Domain-Driven Design document from an approved PRD. |
+| `af-be-ddd-dsl` | Generate a backend application DSL YAML from a DDD document. |
+| `af-be-ddd-analysis` | Analyze a backend DDD/DSL for gaps or inconsistencies. |
+| `af-be-ddd-refactor` | Refactor a backend DDD/DSL based on analysis findings. |
+| `af-be-ddd-orchestrator` | Orchestrate the DDD build → analyze → refactor → test loop. |
+| `af-be-ddd-tests` | Generate Gherkin BDD feature files from DDD and PRD specifications. |
+| `af-be-plan` | Generate a backend execution plan from a domain DSL and tech-stack profile. |
+| `af-be-implementation` | Copy the selected tech-stack implementation and generate domain code from the plan and BDD specs. |
+| `af-app-check` | Audit an application for production readiness (security, database, deployment, code quality). |
+
+### DSL, UI, and Test Utilities
+
+| Skill | Description |
+|-------|-------------|
+| `dsl-utils/dsl-model-interpreter` | Parse and validate `app-dsl` YAML specifications before code generation. |
+| `ui-utils/ui-implementation-language` | Declarative YAML standard for framework-neutral UI page/widget/form specs. |
+| `unit-tests/test-implementation-sync` | Keep unit tests synchronized with actual service/DTO implementations. |
+| `e2e-tests/http-test-artifacts` | Generate `.http` request files for REST endpoint testing. |
+| `eval-labeler` | Process `Eval.md` files to generate structured notes and labeled model-response comparisons. |
+
+### NestJS / Prisma Code Generation (`.nestjs/`)
+
+| Skill | Description |
+|-------|-------------|
+| `app-from-dsl` | Orchestrates full-stack generation (entity, CRUD API, forms, tests) from `app-dsl` YAML. |
+| `field-mapper-generator` | Generate field mapper/converter utilities between UI, API, and persistence layers. |
+| `nestjs-crud-resource` | Generate a NestJS CRUD module (controller, service, DTOs) from a DSL backend spec. |
+| `nestjs-prisma-resource` | Generate a full NestJS + Prisma CRUD resource from an input schema. |
+| `nestjs-customer-crud-scaffold` | Non-interactive Nest CLI wrapper to scaffold a NestJS customer CRUD app. |
+| `nestjs-observability` | Add structured logging, correlation IDs, and Prisma query logging to a NestJS backend. |
+| `prisma/prisma-guidelines` | Prisma ORM development guidelines and constraints. |
+| `prisma/prisma-persistence` | Generate Prisma schema and migrations from a DSL persistence model. |
+
+### System (`.system/`)
+
+Vendor skills bundled by Codex, not authored by this project: `skill-creator`, `skill-installer`, `imagegen`, `openai-docs`, `plugin-creator`.
 
 ## Hooks
 
 | Hook | Trigger | Purpose |
 |------|---------|---------|
-| `branch-guard.sh` | PreToolUse(Edit) | Block edits on main/master |
+| `branch-guard.sh` | `PreToolUse` (Bash / write tools) | Auto-creates a task branch instead of allowing edits directly on `main`/`master`. |
 
 ## Adding a new skill
 
