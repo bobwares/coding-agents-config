@@ -1,0 +1,10 @@
+{
+  "taskId": "004",
+  "branch": "claude/awesome-turing-wspe49",
+  "baseBranch": "main",
+  "status": "active",
+  "createdAt": "2026-09-12T14:05:21Z",
+  "closedAt": null,
+  "pullRequestUrl": null,
+  "totalTurns": 1
+}
